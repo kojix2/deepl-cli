@@ -1,35 +1,52 @@
 # DeepL Translator CLI
 
-A command-line interface (CLI) tool for translating text using DeepL API.
+A simple command-line interface (CLI) tool for translating text using [DeepL API](https://www.deepl.com/pro-api/). This tool allows you to quickly and easily translate text via the command line without going to the [DeepL website](https://www.deepl.com/).
+
+## Requirements
+
+- Crystal programming language installed on your system
+- A DeepL API key
 
 ## Installation
 
-1. Clone this repository
-2. [Get a valid API key from DeepL](https://www.deepl.com/pro-api)
+1. Clone this repository: `git clone https://github.com/yourusername/deepl-translator-cli.git`
+2. Change to the cloned directory: `cd deepl-translator-cli`
+3. Build the project using shards: `shards build`
+4. [Get a valid API key from DeepL](https://www.deepl.com/pro-api) and set it as an environment variable:
+
+```bash
+export DEEPL_API_KEY=your_api_key_here
+```
 
 ## Usage
 
+To use the DeepL Translator CLI, simply run the `deepl` command followed by the arguments you wish to pass.
+
 ```bash
-$ deepl [arguments]
+$ ./bin/deepl [arguments]
 ```
 
 ### Arguments
 
 Options available for the CLI tool:
 
-- `-f, --from=LANG`: Set the source language (default: AUTO)
-- `-t, --to=LANG`: Set the target language (default: EN)
-- `-v, --version`: Show the current version
-- `-h, --help`: Show the help message
+- `-f, --from=LANG`: Set the source language (default: AUTO). Example: `-f EN`.
+- `-t, --to=LANG`: Set the target language (default: EN). Example: `-t ES`.
+- `-v, --version`: Show the current version.
+- `-h, --help`: Show the help message.
 
 ### Example
 
+To translate the text "Hola mundo" from Spanish (ES) to English (EN):
+
 ```bash
-$ deepl --from=ES --to=EN "Hola mundo"
+$ ./bin/deepl --from=ES --to=EN "Hola mundo"
 Hello world
 ```
 
 ## Contributing
+
+If you would like to contribute to the development of this CLI tool, please follow the steps below:
 
 1. Fork this repository
 2. Create your feature branch (`git checkout -b my-new-feature`)
@@ -39,4 +56,6 @@ Hello world
 
 ## License
 
-This project is licensed under the MIT License. 
+This project is licensed under the MIT License.
+
+Happy translating!
