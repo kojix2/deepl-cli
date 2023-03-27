@@ -17,7 +17,7 @@ parser = OptionParser.new do |opts|
     puts opts
     exit
   end
-  opts.on_invalid_option do |flag|
+  opts.invalid_option do |flag|
     STDERR.puts "ERROR: #{flag} is not a valid option."
     STDERR.puts opts
     exit(1)
