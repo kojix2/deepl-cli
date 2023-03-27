@@ -9,8 +9,8 @@ A simple command-line interface (CLI) tool for translating text using [DeepL API
 
 ## Installation
 
-1. Clone this repository: `git clone https://github.com/yourusername/deepl-translator-cli.git`
-2. Change to the cloned directory: `cd deepl-translator-cli`
+1. Clone this repository: `git clone https://github.com/kojix2/deepl-cli.git`
+2. Change to the cloned directory: `cd deepl-cli`
 3. Build the project using shards: `shards build`
 4. [Get a valid API key from DeepL](https://www.deepl.com/pro-api) and set it as an environment variable:
 
