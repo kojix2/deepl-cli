@@ -4,8 +4,8 @@ A simple command-line interface (CLI) tool for translating text using [DeepL API
 
 ## Requirements
 
-- Crystal programming language installed on your system
-- A DeepL API key
+- [Crystal programming language](https://crystal-lang.org/)
+- [A DeepL API key](https://www.deepl.com/pro-api)
 
 ## Installation
 
