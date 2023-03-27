@@ -7,8 +7,8 @@ source_lang = ""
 
 parser = OptionParser.new do |opts|
   opts.banner = "Usage: deepl [arguments]"
-  opts.on("-f", "--from=LANG", "Source language [AUTO]") { |from| source_lang = from }
-  opts.on("-t", "--to=LANG", "Target language [EN]") { |to| target_lang = to }
+  opts.on("-f", "--from=LANG", "Source language [AUTO]") { |from| source_lang = from.upcase }
+  opts.on("-t", "--to=LANG", "Target language [EN]") { |to| target_lang = to.upcase }
   opts.on("-v", "--version", "Show version") do
     puts Deepl::VERSION
     exit
