@@ -1,0 +1,6 @@
+name: deepl
+version: 0.1.0
+
+targets:
+  deepl:
+    main: src/deepl.cr
