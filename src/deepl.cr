@@ -34,6 +34,13 @@ if input_text.empty?
 end
 
 translator = Deepl::Translator.new
-translated_text = translator.translate(input_text, target_lang, source_lang)
+
+begin
+  translated_text = translator.translate(input_text, target_lang, source_lang)
+rescue ex
+  STDERR.puts "ERROR: #{ex}"
+  exit(1)
+end
+
 
 puts translated_text

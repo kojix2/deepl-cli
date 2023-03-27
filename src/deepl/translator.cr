@@ -49,7 +49,11 @@ module Deepl
     def translate(text, target_lang, source_lang)
       response = request_translation(text, target_lang, source_lang)
       parsed_response = JSON.parse(response.body)
-      parsed_response.dig("translations", 0, "text")
+      begin
+        parsed_response.dig("translations", 0, "text")
+      rescue
+        raise RequestError.new("Error: #{parsed_response}")
+      end
     end
   end
 end
