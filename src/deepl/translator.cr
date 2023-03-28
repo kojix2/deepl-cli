@@ -76,5 +76,22 @@ module Deepl
     private def parse_languages_response(response)
       (Array(Hash(String, (String | Bool)))).from_json(response.body)
     end
+
+    def usage
+      response = request_usage
+      parse_usage_response(response)
+    rescue ex
+      raise RequestError.new("Error: #{ex.message}")
+    end
+
+    private def request_usage
+      HTTP::Client.get("#{API_ENDPOINT}/usage", headers: @http_headers)
+    rescue ex
+      raise RequestError.new("Error: #{ex.message}")
+    end
+
+    private def parse_usage_response(response)
+      Hash(String, Int32).from_json(response.body)
+    end
   end
 end

@@ -32,6 +32,10 @@ parser = OptionParser.new do |opts|
     end
     target_lang = to.upcase
   end
+  opts.on("-u", "--usage", "Check Usage and Limits") do
+    puts translator.usage.map { |k, v| "#{k}: #{v}" }.join("\n")
+    exit
+  end
   opts.on("-v", "--version", "Show version") do
     puts Deepl::VERSION
     exit
