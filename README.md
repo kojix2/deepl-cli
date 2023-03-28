@@ -40,7 +40,12 @@ Options available for the CLI tool:
 To translate the text "Hola mundo" from Spanish (ES) to English (EN):
 
 ```bash
-$ ./bin/deepl --from=ES --to=EN "Hola mundo"
+$ ./bin/deepl --from ES --to EN "Hola mundo"
+Hello world
+```
+
+```bash
+$ echo "Hola mundo" | ./bin/deepl --from ES --to EN
 Hello world
 ```
 
