@@ -56,8 +56,8 @@ parser.parse(ARGV)
 input_text = ARGV.join(" ")
 
 if input_text.empty?
-  STDERR.puts parser
-  exit(1)
+  stdin = STDIN.gets_to_end
+  input_text = stdin
 end
 
 begin
