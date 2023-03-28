@@ -33,7 +33,12 @@ if input_text.empty?
   exit(1)
 end
 
-translator = Deepl::Translator.new
+begin
+  translator = Deepl::Translator.new
+rescue Deepl::ApiKeyError
+  STDERR.puts "ERROR: Deepl API key not found. Please set the DEEPL_API_KEY environment variable."
+  exit(1)
+end
 
 begin
   translated_text = translator.translate(input_text, target_lang, source_lang)
