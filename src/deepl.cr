@@ -1,4 +1,6 @@
 require "option_parser"
+require "term-spinner"
+
 require "./deepl/translator"
 require "./deepl/version"
 
@@ -60,8 +62,13 @@ if input_text.empty?
   input_text = stdin
 end
 
+spinner = Term::Spinner.new
+
 begin
-  translated_text = translator.translate(input_text, target_lang, source_lang)
+  spinner = Term::Spinner.new(clear: true)
+  spinner.run do
+    translated_text = translator.translate(input_text, target_lang, source_lang)
+  end
 rescue ex
   STDERR.puts "ERROR: #{ex}"
   exit(1)

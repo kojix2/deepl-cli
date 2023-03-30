@@ -4,3 +4,8 @@ version: 0.1.0
 targets:
   deepl:
     main: src/deepl.cr
+
+dependencies:
+  term-spinner:
+    github: crystal-term/spinner
+    branch: master
