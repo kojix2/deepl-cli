@@ -63,6 +63,7 @@ if input_text.empty?
 end
 
 spinner = Term::Spinner.new
+translated_text = ""
 
 begin
   spinner = Term::Spinner.new(clear: true)
