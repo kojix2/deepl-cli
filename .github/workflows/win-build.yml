@@ -14,11 +14,19 @@ jobs:
       - uses: crystal-lang/install-crystal@v1
         with:
           crystal: latest
-      - run: |
+      - name: Install Crystal
+        run: |
           Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
           iex "& {$(irm get.scoop.sh)} -RunAsAdmin"
           scoop bucket add crystal-preview https://github.com/neatorobito/scoop-crystal
           scoop install crystal
-      - run: |
-          shards install
-          shards build
+      - name : Install dependencies
+        run: |
+          shards install --without-development --release
+      - name : Build executable
+        run: |
+          shards build --release
+      - uses: actions/upload-artifact@v3
+        with:
+          name: deepl-cli-${{ matrix.os }}
+          path: bin/deepl
