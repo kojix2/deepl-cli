@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 1.6.2">
+<meta name="crystal_docs.project_version" content="main">
+<meta name="crystal_docs.project_name" content="deepl">
+
+
+
+<link href="../css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../js/doc.js"></script>
+
+  <meta name="repository-name" content="deepl">
+  <title>Deepl::Translator - deepl main</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="../index.html">
+          deepl
+        </a>
+      </h1>
+
+      <span class="project-version">
+        main
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="deepl/Deepl" data-name="deepl">
+      <a href="../Deepl.html">Deepl</a>
+      
+        <ul>
+  
+  <li class=" " data-id="deepl/Deepl/ApiKeyError" data-name="deepl::apikeyerror">
+      <a href="../Deepl/ApiKeyError.html">ApiKeyError</a>
+      
+    </li>
+  
+  <li class=" " data-id="deepl/Deepl/RequestError" data-name="deepl::requesterror">
+      <a href="../Deepl/RequestError.html">RequestError</a>
+      
+    </li>
+  
+  <li class=" current" data-id="deepl/Deepl/Translator" data-name="deepl::translator">
+      <a href="../Deepl/Translator.html">Translator</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">class</span> Deepl::Translator
+
+</h1>
+
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Deepl/Translator.html">Deepl::Translator</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="defined-in" class="anchor" href="#defined-in">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Defined in:
+  </h2>
+  
+    
+      <a href="https://github.com/kojix2/deepl-cli/blob/2c6f1233d9340f2785d3c9fcebb618c1f211ce02/src/deepl/translator.cr#L9" target="_blank">
+        deepl/translator.cr
+      </a>
+    
+    <br/>
+  
+
+
+
+  
+    <h2>
+      <a id="constant-summary" class="anchor" href="#constant-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+      Constant Summary
+    </h2>
+  
+  <dl>
+    
+      <dt class="entry-const" id="API_ENDPOINT">
+        <strong>API_ENDPOINT</strong> = <code><span class="s">&quot;https://api-free.deepl.com/v2&quot;</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="API_TRANSLATE_ENDPOINT">
+        <strong>API_TRANSLATE_ENDPOINT</strong> = <code><span class="s">&quot;</span><span class="i">#{</span><span class="t">API_ENDPOINT</span><span class="i">}</span><span class="s">/translate&quot;</span></code>
+      </dt>
+      
+    
+  </dl>
+
+
+
+  <h2>
+    <a id="constructors" class="anchor" href="#constructors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructors
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#new-class-method" class="signature"><strong>.new</strong></a>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#request_languages%28type%29-instance-method" class="signature"><strong>#request_languages</strong>(type)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#request_translation%28text%2Ctarget_lang%2Csource_lang%29-instance-method" class="signature"><strong>#request_translation</strong>(text, target_lang, source_lang)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#source_languages-instance-method" class="signature"><strong>#source_languages</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#target_languages-instance-method" class="signature"><strong>#target_languages</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#translate%28text%2Ctarget_lang%2Csource_lang%29-instance-method" class="signature"><strong>#translate</strong>(text, target_lang, source_lang)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#usage-instance-method" class="signature"><strong>#usage</strong></a>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+<div class="methods-inherited">
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+</div>
+
+
+  <h2>
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructor Detail
+  </h2>
+  
+    <div class="entry-detail" id="new-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>
+
+        <a class="method-permalink" href="#new-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/2c6f1233d9340f2785d3c9fcebb618c1f211ce02/src/deepl/translator.cr#L15" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+
+
+
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="request_languages(type)-instance-method">
+      <div class="signature">
+        
+        def <strong>request_languages</strong>(type)
+
+        <a class="method-permalink" href="#request_languages%28type%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/2c6f1233d9340f2785d3c9fcebb618c1f211ce02/src/deepl/translator.cr#L56" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="request_translation(text,target_lang,source_lang)-instance-method">
+      <div class="signature">
+        
+        def <strong>request_translation</strong>(text, target_lang, source_lang)
+
+        <a class="method-permalink" href="#request_translation%28text%2Ctarget_lang%2Csource_lang%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/2c6f1233d9340f2785d3c9fcebb618c1f211ce02/src/deepl/translator.cr#L30" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="source_languages-instance-method">
+      <div class="signature">
+        
+        def <strong>source_languages</strong>
+
+        <a class="method-permalink" href="#source_languages-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/2c6f1233d9340f2785d3c9fcebb618c1f211ce02/src/deepl/translator.cr#L69" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="target_languages-instance-method">
+      <div class="signature">
+        
+        def <strong>target_languages</strong>
+
+        <a class="method-permalink" href="#target_languages-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/2c6f1233d9340f2785d3c9fcebb618c1f211ce02/src/deepl/translator.cr#L62" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="translate(text,target_lang,source_lang)-instance-method">
+      <div class="signature">
+        
+        def <strong>translate</strong>(text, target_lang, source_lang)
+
+        <a class="method-permalink" href="#translate%28text%2Ctarget_lang%2Csource_lang%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/2c6f1233d9340f2785d3c9fcebb618c1f211ce02/src/deepl/translator.cr#L46" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="usage-instance-method">
+      <div class="signature">
+        
+        def <strong>usage</strong>
+
+        <a class="method-permalink" href="#usage-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/2c6f1233d9340f2785d3c9fcebb618c1f211ce02/src/deepl/translator.cr#L80" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+
+
+</div>
+
+</body>
+</html>
