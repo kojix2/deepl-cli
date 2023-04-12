@@ -1,0 +1,24 @@
+name: win-build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
+    strategy:
+      matrix:
+        os: ["windows"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: latest
+      - run: |
+          Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+          iex "& {$(irm get.scoop.sh)} -RunAsAdmin"
+          scoop bucket add crystal-preview https://github.com/neatorobito/scoop-crystal
+          scoop install crystal
+      - run: |
+          shards install
+          shards build
