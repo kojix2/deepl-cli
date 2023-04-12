@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
-        os: ["ubuntu", "macos"]
+        os: ["ubuntu", "macos", "windows"]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -23,5 +23,4 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: deepl-cli-${{ matrix.os }}
-          path: bin/deepl
-
+          path: bin/${{ matrix.os == 'windows' && 'deepl.exe' || 'deepl' }}
