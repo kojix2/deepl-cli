@@ -1,0 +1,29 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
+    strategy:
+      matrix:
+        os: ["ubuntu", "macos"]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: latest
+      - name: Install dependencies
+        run: shards install --without-development --release
+      - name: Build executable
+        run: shards build --release --static
+      - name: Rename executable for ${{ matrix.os }}
+        run: mv bin/deepl bin/deepl-${{ matrix.os }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: excutable-${{ matrix.os }}
+          path: bin/deepl-${{ matrix.os }}
+
