@@ -1,4 +1,4 @@
-# DeepL Translator CLI
+# DeepL CLI
 
 A simple command-line interface (CLI) tool for translating text using [DeepL API](https://www.deepl.com/pro-api/). This tool allows you to quickly and easily translate text via the command line without going to the [DeepL website](https://www.deepl.com/).
 
