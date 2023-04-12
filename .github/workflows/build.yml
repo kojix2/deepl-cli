@@ -20,10 +20,8 @@ jobs:
         run: shards install --without-development --release
       - name: Build executable
         run: shards build --release
-      - name: Rename executable for ${{ matrix.os }}
-        run: mv bin/deepl bin/deepl-${{ matrix.os }}
       - uses: actions/upload-artifact@v3
         with:
-          name: excutable-${{ matrix.os }}
-          path: bin/deepl-${{ matrix.os }}
+          name: deepl-cli-${{ matrix.os }}
+          path: bin/deepl
 
