@@ -13,7 +13,7 @@
 <script type="text/javascript" src="js/doc.js"></script>
 
   <meta name="repository-name" content="deepl-cli">
-  <title>Deepl - deepl-cli main</title>
+  <title>HTTP - deepl-cli main</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "";
   </script>
@@ -51,7 +51,7 @@
   <div class="types-list">
     <ul>
   
-  <li class="parent open current" data-id="deepl-cli/Deepl" data-name="deepl">
+  <li class="parent " data-id="deepl-cli/Deepl" data-name="deepl">
       <a href="Deepl.html">Deepl</a>
       
         <ul>
@@ -76,7 +76,7 @@
       
     </li>
   
-  <li class="parent " data-id="deepl-cli/HTTP" data-name="http">
+  <li class="parent open current" data-id="deepl-cli/HTTP" data-name="http">
       <a href="HTTP.html">HTTP</a>
       
         <ul>
@@ -100,13 +100,25 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">module</span> Deepl
+  <span class="kind">module</span> HTTP
 
 </h1>
 
 
 
 
+
+  <h2>
+    <a id="overview" class="anchor" href="#overview">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Overview
+  </h2>
+
+  <p>Monkey-patch <code><a href="HTTP/Client.html">HTTP::Client</a></code> to make it respect the <code>*_PROXY</code>
+environment variables</p>
 
 
 
@@ -131,40 +143,35 @@
   </h2>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/170bc9f65cfead67bdb342117a4e315dd515b9b1/src/deepl/translator.cr#L4" target="_blank">
-        deepl/translator.cr
+      <a href="https://github.com/kojix2/deepl-cli/blob/170bc9f65cfead67bdb342117a4e315dd515b9b1/lib/http_proxy/src/ext/http/client.cr#L3" target="_blank">
+        lib/http_proxy/src/ext/http/client.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/170bc9f65cfead67bdb342117a4e315dd515b9b1/src/deepl/version.cr#L1" target="_blank">
-        deepl/version.cr
+      <a href="https://github.com/kojix2/deepl-cli/blob/170bc9f65cfead67bdb342117a4e315dd515b9b1/lib/http_proxy/src/http/proxy/client.cr#L10" target="_blank">
+        lib/http_proxy/src/http/proxy/client.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/kojix2/deepl-cli/blob/170bc9f65cfead67bdb342117a4e315dd515b9b1/lib/http_proxy/src/http_proxy.cr#L8" target="_blank">
+        lib/http_proxy/src/http_proxy.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/kojix2/deepl-cli/blob/170bc9f65cfead67bdb342117a4e315dd515b9b1/src/utils/proxy.cr#L29" target="_blank">
+        utils/proxy.cr
       </a>
     
     <br/>
   
 
 
-
-  
-    <h2>
-      <a id="constant-summary" class="anchor" href="#constant-summary">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-      Constant Summary
-    </h2>
-  
-  <dl>
-    
-      <dt class="entry-const" id="VERSION">
-        <strong>VERSION</strong> = <code><span class="s">&quot;0.1.0&quot;</span></code>
-      </dt>
-      
-    
-  </dl>
 
 
 
