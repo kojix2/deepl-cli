@@ -30,6 +30,7 @@ jobs:
           docker exec alpine shards install --without-development --release --static
           docker exec alpine shards build --release --static
           docker exec alpine chmod +x bin/deepl
+          zip -j bin/deepl-linux.zip bin/deepl
 
       - name: Run Mac Build x64
         if: matrix.os == 'macos'
@@ -37,6 +38,7 @@ jobs:
           shards install --without-development --release
           shards build --release
           chmod +x bin/deepl
+          zip -j bin/deepl-macos.zip bin/deepl
 
       - name: Run Windows Build x64
         if: matrix.os == 'windows'
@@ -44,11 +46,13 @@ jobs:
           shards install --without-development --release
           shards build --release
           Set-ExecutionPolicy RemoteSigned -Scope Process
+          Compress-Archive -Path bin/deepl.exe -DestinationPath bin/deepl-windows.zip
           
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            bin/deepl
-            bin/deepl.exe
+            bin/deepl-linux.zip
+            bin/deepl-macos.zip
+            bin/deepl-windows.zip
             LICENSE.txt
