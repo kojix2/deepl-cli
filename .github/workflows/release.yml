@@ -26,6 +26,8 @@ jobs:
       - name: Run Linux Build
         if: matrix.os == 'ubuntu'
         run: |
+          mkdir -p bin
+          chmod 755 bin
           docker run -d --name alpine -v $(pwd):/workspace -w /workspace crystallang/crystal:latest-alpine tail -f /dev/null
           docker exec alpine shards install --without-development --release --static
           docker exec alpine shards build --release --static
