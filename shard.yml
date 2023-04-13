@@ -9,3 +9,5 @@ dependencies:
   term-spinner:
     github: crystal-term/spinner
     branch: master
+  http_proxy:
+    github: mamantoha/http_proxy

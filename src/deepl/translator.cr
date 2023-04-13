@@ -1,4 +1,4 @@
-require "http/client"
+require "http_proxy"
 require "json"
 
 module Deepl
