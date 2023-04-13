@@ -9,6 +9,11 @@ A simple command-line interface (CLI) tool for translating text using [DeepL API
 
 ## Installation
 
+Compiled binary versions of deepl-cli are uploaded to GitHub Release.
+(Windows version is also uploaded but does not work properly)
+
+### From source code
+
 1. Clone this repository: `git clone https://github.com/kojix2/deepl-cli.git`
 2. Change to the cloned directory: `cd deepl-cli`
 3. Build the project using shards: `shards build`
