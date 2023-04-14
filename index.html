@@ -119,17 +119,7 @@
 </a>Installation</h2>
 <p>Compiled binary versions of deepl-cli are uploaded to <a href="https://github.com/kojix2/deepl-cli/releases/latest">GitHub Release</a>.
 (Windows version is also uploaded but does not work properly)</p>
-<h3><a id="from-source-code" class="anchor" href="#from-source-code">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>From source code</h3>
-<ol>
-<li>Clone this repository: <code>git clone https://github.com/kojix2/deepl-cli.git</code></li>
-<li>Change to the cloned directory: <code>cd deepl-cli</code></li>
-<li>Build the project using shards: <code>shards build</code></li>
-<li><a href="https://www.deepl.com/pro-api">Get a valid API key from DeepL</a> and set it as an environment variable:</li>
-</ol>
+<p><a href="https://www.deepl.com/pro-api">Get a valid API key from DeepL</a> and set it as an environment variable:</p>
 <pre><code class="language-bash">export DEEPL_API_KEY=your_api_key_here</code></pre>
 <h2><a id="usage" class="anchor" href="#usage">
   <svg class="octicon-link" aria-hidden="true">
@@ -147,6 +137,7 @@
 <ul>
 <li><code>-f, --from=LANG</code>: Set the source language (default: AUTO). Example: <code>-f EN</code>.</li>
 <li><code>-t, --to=LANG</code>: Set the target language (default: EN). Example: <code>-t ES</code>.</li>
+<li><code>-u, --usage</code>: Check Usage and Limits</li>
 <li><code>-v, --version</code>: Show the current version.</li>
 <li><code>-h, --help</code>: Show the help message.</li>
 </ul>
