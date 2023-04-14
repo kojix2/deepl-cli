@@ -12,12 +12,7 @@ A simple command-line interface (CLI) tool for translating text using [DeepL API
 Compiled binary versions of deepl-cli are uploaded to [GitHub Release](https://github.com/kojix2/deepl-cli/releases/latest).
 (Windows version is also uploaded but does not work properly)
 
-### From source code
-
-1. Clone this repository: `git clone https://github.com/kojix2/deepl-cli.git`
-2. Change to the cloned directory: `cd deepl-cli`
-3. Build the project using shards: `shards build`
-4. [Get a valid API key from DeepL](https://www.deepl.com/pro-api) and set it as an environment variable:
+[Get a valid API key from DeepL](https://www.deepl.com/pro-api) and set it as an environment variable:
 
 ```bash
 export DEEPL_API_KEY=your_api_key_here
@@ -37,6 +32,7 @@ Options available for the CLI tool:
 
 - `-f, --from=LANG`: Set the source language (default: AUTO). Example: `-f EN`.
 - `-t, --to=LANG`: Set the target language (default: EN). Example: `-t ES`.
+- `-u, --usage`: Check Usage and Limits
 - `-v, --version`: Show the current version.
 - `-h, --help`: Show the help message.
 
