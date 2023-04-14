@@ -1,18 +1,13 @@
 # DeepL CLI
 
-A simple command-line interface (CLI) tool for translating text using [DeepL API](https://www.deepl.com/pro-api/). This tool allows you to quickly and easily translate text via the command line without going to the [DeepL website](https://www.deepl.com/).
-
-## Requirements
-
-- [Crystal programming language](https://crystal-lang.org/)
-- [A DeepL API key](https://www.deepl.com/pro-api)
+A simple command-line interface (CLI) tool for translating text using the [DeepL API](https://www.deepl.com/pro-api/). This tool allows you to quickly and easily translate text via the command line without having to visit the [DeepL website](https://www.deepl.com/).
 
 ## Installation
 
-Compiled binary versions of deepl-cli are uploaded to [GitHub Release](https://github.com/kojix2/deepl-cli/releases/latest).
-(Windows version is also uploaded but does not work properly)
+Compiled binary files can be downloaded from [GitHub Release](https://github.com/kojix2/deepl-cli/releases/latest).
+(Note: The Windows version is currently not working properly)
 
-[Get a valid API key from DeepL](https://www.deepl.com/pro-api) and set it as an environment variable:
+First, [obtain a valid API key from DeepL](https://www.deepl.com/pro-api), then set it as an environment variable:
 
 ```bash
 export DEEPL_API_KEY=your_api_key_here
@@ -33,6 +28,7 @@ Options available for the CLI tool:
 - `-f, --from=LANG`: Set the source language (default: AUTO). Example: `-f EN`.
 - `-t, --to=LANG`: Set the target language (default: EN). Example: `-t ES`.
 - `-u, --usage`: Check Usage and Limits
+- `-u, --usage`: Check Usage and Limits
 - `-v, --version`: Show the current version.
 - `-h, --help`: Show the help message.
 
@@ -41,13 +37,39 @@ Options available for the CLI tool:
 To translate the text "Hola mundo" from Spanish (ES) to English (EN):
 
 ```bash
-$ ./bin/deepl --from ES --to EN "Hola mundo"
+$ deepl --from ES --to EN "Hola mundo"
 Hello world
 ```
 
-```bash
-$ echo "Hola mundo" | ./bin/deepl --from ES --to EN
+Short options:
+
+```
+$ deepl -f es "Hola mundo"
 Hello world
+```
+
+From stream:
+
+```bash
+$ echo "Hola mundo" | deepl --from ES --to EN
+Hello world
+```
+
+Multiple lines:
+Press Ctrl+D when finished typing.
+This is especially useful when copy-pasting from the clipboard.
+
+```
+$ deepl -f es
+Hola
+mundo
+```
+
+Display a list of available languages
+
+```
+$ deepl -f
+$ deepl -t
 ```
 
 ## Contributing
