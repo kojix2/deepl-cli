@@ -7,8 +7,8 @@ module Deepl
   class RequestError < Exception; end
 
   class Translator
-    API_ENDPOINT           = "https://api-free.deepl.com/v2"
-    API_TRANSLATE_ENDPOINT = "#{API_ENDPOINT}/translate"
+    API_BASE_URL      = "https://api-free.deepl.com/v2"
+    API_TRANSLATE_URL = "#{API_BASE_URL}/translate"
 
     @http_headers : HTTP::Headers
 
@@ -27,24 +27,24 @@ module Deepl
       ENV.fetch("DEEPL_API_KEY") { raise ApiKeyError.new }
     end
 
-    def request_translation(text, target_lang, source_lang)
+    def get_translation(text, target_lang, source_lang)
       params = [
         "text=#{URI.encode_www_form(text)}",
         "target_lang=#{target_lang}",
       ]
       params << "source_lang=#{source_lang}" unless source_lang == "AUTO"
       request_payload = params.join("&")
-      send_post_request(request_payload)
+      execute_post_request(request_payload)
     end
 
-    private def send_post_request(request_data)
-      HTTP::Client.post(API_TRANSLATE_ENDPOINT, body: request_data, headers: @http_headers)
+    private def execute_post_request(request_payload)
+      HTTP::Client.post(API_TRANSLATE_URL, body: request_payload, headers: @http_headers)
     rescue ex
       raise RequestError.new("Error: #{ex.message}")
     end
 
     def translate(text, target_lang, source_lang)
-      response = request_translation(text, target_lang, source_lang)
+      response = get_translation(text, target_lang, source_lang)
       parsed_response = JSON.parse(response.body)
       begin
         parsed_response.dig("translations", 0, "text")
@@ -54,7 +54,7 @@ module Deepl
     end
 
     def request_languages(type)
-      HTTP::Client.get("#{API_ENDPOINT}/languages?type=#{type}", headers: @http_headers)
+      HTTP::Client.get("#{API_BASE_URL}/languages?type=#{type}", headers: @http_headers)
     rescue ex
       raise RequestError.new("Error: #{ex.message}")
     end
@@ -85,7 +85,7 @@ module Deepl
     end
 
     private def request_usage
-      HTTP::Client.get("#{API_ENDPOINT}/usage", headers: @http_headers)
+      HTTP::Client.get("#{API_BASE_URL}/usage", headers: @http_headers)
     rescue ex
       raise RequestError.new("Error: #{ex.message}")
     end
