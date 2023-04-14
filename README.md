@@ -28,7 +28,6 @@ Options available for the CLI tool:
 - `-f, --from=LANG`: Set the source language (default: AUTO). Example: `-f EN`.
 - `-t, --to=LANG`: Set the target language (default: EN). Example: `-t ES`.
 - `-u, --usage`: Check Usage and Limits
-- `-u, --usage`: Check Usage and Limits
 - `-v, --version`: Show the current version.
 - `-h, --help`: Show the help message.
 
