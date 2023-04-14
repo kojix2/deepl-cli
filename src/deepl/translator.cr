@@ -1,5 +1,5 @@
-require "http_proxy"
 require "json"
+require "./utils/proxy"
 
 module Deepl
   class ApiKeyError < Exception; end
