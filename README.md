@@ -9,7 +9,7 @@ A simple command-line interface (CLI) tool for translating text using [DeepL API
 
 ## Installation
 
-Compiled binary versions of deepl-cli are uploaded to GitHub Release.
+Compiled binary versions of deepl-cli are uploaded to [GitHub Release](https://github.com/kojix2/deepl-cli/releases/latest).
 (Windows version is also uploaded but does not work properly)
 
 ### From source code
