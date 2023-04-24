@@ -112,16 +112,23 @@
     <use href="#octicon-link"/>
   </svg>
 </a>DeepL CLI</h1>
-<p>A simple command-line interface (CLI) tool for translating text using the <a href="https://www.deepl.com/pro-api/">DeepL API</a>. This tool allows you to quickly and easily translate text via the command line without having to visit the <a href="https://www.deepl.com/">DeepL website</a>.</p>
+<p>A simple command-line interface (CLI) tool for translating text using the <a href="https://www.deepl.com/pro-api/">DeepL API</a>, written in Crystal programming language. This tool enables quick and easy text translation via the command line without visiting the <a href="https://www.deepl.com/">DeepL website</a>.</p>
+<h2><a id="prerequisites" class="anchor" href="#prerequisites">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Prerequisites</h2>
+<p>First, <a href="https://www.deepl.com/pro-api">obtain a valid API key from DeepL</a>, then set it as an environment variable:</p>
+<pre><code class="language-bash">export DEEPL_API_KEY=your_api_key_here</code></pre>
 <h2><a id="installation" class="anchor" href="#installation">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Installation</h2>
-<p>Compiled binary files can be downloaded from <a href="https://github.com/kojix2/deepl-cli/releases/latest">GitHub Release</a>.
-(Note: The Windows version is currently not working properly)</p>
-<p>First, <a href="https://www.deepl.com/pro-api">obtain a valid API key from DeepL</a>, then set it as an environment variable:</p>
-<pre><code class="language-bash">export DEEPL_API_KEY=your_api_key_here</code></pre>
+<p>Download the latest source code, then run the following commands:</p>
+<pre><code class="language-bash">cd deepl-cli
+shards build --release</code></pre>
+<p>A compiled binary file will be created in the <code>bin</code> folder.</p>
 <h2><a id="usage" class="anchor" href="#usage">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -136,28 +143,29 @@
 </a>Arguments</h3>
 <p>Options available for the CLI tool:</p>
 <ul>
+<li><code>-i, --input=TEXT</code>: Input text to translate.</li>
 <li><code>-f, --from=LANG</code>: Set the source language (default: AUTO). Example: <code>-f EN</code>.</li>
 <li><code>-t, --to=LANG</code>: Set the target language (default: EN). Example: <code>-t ES</code>.</li>
 <li><code>-u, --usage</code>: Check Usage and Limits</li>
 <li><code>-v, --version</code>: Show the current version.</li>
 <li><code>-h, --help</code>: Show the help message.</li>
 </ul>
-<h3><a id="example" class="anchor" href="#example">
+<h3><a id="examples" class="anchor" href="#examples">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
-</a>Example</h3>
+</a>Examples</h3>
 <p>To translate the text &quot;Hola mundo&quot; from Spanish (ES) to English (EN):</p>
-<pre><code class="language-bash">$ deepl --from ES --to EN &quot;Hola mundo&quot;
+<pre><code class="language-bash">$ deepl -i &quot;Hola mundo&quot; -f ES -t EN
 Hello world</code></pre>
 <p>Short options:</p>
-<pre><code class="language-crystal">$ deepl -f es &quot;Hola mundo&quot;
+<pre><code class="language-crystal">$ deepl -i &quot;Hola mundo&quot; -f es
 Hello world</code></pre>
 <p>From stream:</p>
-<pre><code class="language-bash">$ echo &quot;Hola mundo&quot; | deepl --from ES --to EN
+<pre><code class="language-bash">$ echo &quot;Hola mundo&quot; | deepl -f ES -t EN
 Hello world</code></pre>
 <p>Multiple lines:
-Press Ctrl+D when finished typing.
+Press <code>Ctrl+D</code> when finished typing.
 This is especially useful when copy-pasting from the clipboard.</p>
 <pre><code class="language-crystal">$ deepl -f es
 Hola
