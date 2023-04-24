@@ -1,17 +1,25 @@
 # DeepL CLI
 
-A simple command-line interface (CLI) tool for translating text using the [DeepL API](https://www.deepl.com/pro-api/). This tool allows you to quickly and easily translate text via the command line without having to visit the [DeepL website](https://www.deepl.com/).
+A simple command-line interface (CLI) tool for translating text using the [DeepL API](https://www.deepl.com/pro-api/), written in Crystal programming language. This tool enables quick and easy text translation via the command line without visiting the [DeepL website](https://www.deepl.com/).
 
-## Installation
-
-Compiled binary files can be downloaded from [GitHub Release](https://github.com/kojix2/deepl-cli/releases/latest).
-(Note: The Windows version is currently not working properly)
+## Prerequisites
 
 First, [obtain a valid API key from DeepL](https://www.deepl.com/pro-api), then set it as an environment variable:
 
 ```bash
 export DEEPL_API_KEY=your_api_key_here
 ```
+
+## Installation
+
+Download the latest source code, then run the following commands:
+
+```bash
+cd deepl-cli
+shards build --release
+```
+
+A compiled binary file will be created in the `bin` folder.
 
 ## Usage
 
@@ -25,37 +33,38 @@ $ ./bin/deepl [arguments]
 
 Options available for the CLI tool:
 
+- `-i, --input=TEXT`: Input text to translate.
 - `-f, --from=LANG`: Set the source language (default: AUTO). Example: `-f EN`.
 - `-t, --to=LANG`: Set the target language (default: EN). Example: `-t ES`.
 - `-u, --usage`: Check Usage and Limits
 - `-v, --version`: Show the current version.
 - `-h, --help`: Show the help message.
 
-### Example
+### Examples
 
 To translate the text "Hola mundo" from Spanish (ES) to English (EN):
 
 ```bash
-$ deepl --from ES --to EN "Hola mundo"
+$ deepl -i "Hola mundo" -f ES -t EN
 Hello world
 ```
 
 Short options:
 
 ```
-$ deepl -f es "Hola mundo"
+$ deepl -i "Hola mundo" -f es
 Hello world
 ```
 
 From stream:
 
 ```bash
-$ echo "Hola mundo" | deepl --from ES --to EN
+$ echo "Hola mundo" | deepl -f ES -t EN
 Hello world
 ```
 
 Multiple lines:
-Press Ctrl+D when finished typing.
+Press `Ctrl+D` when finished typing.
 This is especially useful when copy-pasting from the clipboard.
 
 ```
