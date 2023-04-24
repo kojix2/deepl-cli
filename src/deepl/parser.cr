@@ -46,14 +46,16 @@ module Deepl
 
     def show_source_languages
       translator.source_languages.each do |lang|
-        puts lang.values.map(&.to_s).join("\t")
+        language, name = lang.values.map(&.to_s)
+        puts "- #{language.ljust(7)}#{name}"
       end
       exit
     end
 
     def show_target_languages
       translator.target_languages.each do |lang|
-        puts lang.values.map(&.to_s).join("\t")
+        language, name, supports_formality = lang.values.map(&.to_s)
+        puts "- #{language.ljust(7)}#{name.ljust(20)}\t#{supports_formality}"
       end
       exit
     end
