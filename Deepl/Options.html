@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../js/doc.js"></script>
 
   <meta name="repository-name" content="deepl-cli">
-  <title>Deepl::Translator - deepl-cli main</title>
+  <title>Deepl::Options - deepl-cli main</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -61,7 +61,7 @@
       
     </li>
   
-  <li class=" " data-id="deepl-cli/Deepl/Options" data-name="deepl::options">
+  <li class=" current" data-id="deepl-cli/Deepl/Options" data-name="deepl::options">
       <a href="../Deepl/Options.html">Options</a>
       
     </li>
@@ -76,7 +76,7 @@
       
     </li>
   
-  <li class=" current" data-id="deepl-cli/Deepl/Translator" data-name="deepl::translator">
+  <li class=" " data-id="deepl-cli/Deepl/Translator" data-name="deepl::translator">
       <a href="../Deepl/Translator.html">Translator</a>
       
     </li>
@@ -110,12 +110,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> Deepl::Translator
+  <span class="kind">struct</span> Deepl::Options
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Deepl/Translator.html">Deepl::Translator</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Deepl/Options.html">Deepl::Options</a></li><li class="superclass">Struct</li><li class="superclass">Value</li><li class="superclass">Object</li></ul>
 
 
 
@@ -143,38 +143,14 @@
   </h2>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8ee75f0fdbe2dfe90f95ccd2917e7709d3a420e/src/deepl/translator.cr#L9" target="_blank">
-        deepl/translator.cr
+      <a href="https://github.com/kojix2/deepl-cli/blob/b8ee75f0fdbe2dfe90f95ccd2917e7709d3a420e/src/deepl/options.cr#L2" target="_blank">
+        deepl/options.cr
       </a>
     
     <br/>
   
 
 
-
-  
-    <h2>
-      <a id="constant-summary" class="anchor" href="#constant-summary">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-      Constant Summary
-    </h2>
-  
-  <dl>
-    
-      <dt class="entry-const" id="API_BASE_URL">
-        <strong>API_BASE_URL</strong> = <code><span class="s">&quot;https://api-free.deepl.com/v2&quot;</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="API_TRANSLATE_URL">
-        <strong>API_TRANSLATE_URL</strong> = <code><span class="s">&quot;</span><span class="i">#{</span><span class="t">API_BASE_URL</span><span class="i">}</span><span class="s">/translate&quot;</span></code>
-      </dt>
-      
-    
-  </dl>
 
 
 
@@ -210,37 +186,32 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#get_translation%28text%2Ctarget_lang%2Csource_lang%29-instance-method" class="signature"><strong>#get_translation</strong>(text, target_lang, source_lang)</a>
+        <a href="#input_text%3AString-instance-method" class="signature"><strong>#input_text</strong> : String</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#request_languages%28type%29-instance-method" class="signature"><strong>#request_languages</strong>(type)</a>
+        <a href="#input_text%3D%28input_text%3AString%29-instance-method" class="signature"><strong>#input_text=</strong>(input_text : String)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#source_languages-instance-method" class="signature"><strong>#source_languages</strong></a>
+        <a href="#source_lang%3AString-instance-method" class="signature"><strong>#source_lang</strong> : String</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#target_languages-instance-method" class="signature"><strong>#target_languages</strong></a>
+        <a href="#source_lang%3D%28source_lang%3AString%29-instance-method" class="signature"><strong>#source_lang=</strong>(source_lang : String)</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#translate%28text%2Ctarget_lang%2Csource_lang%29-instance-method" class="signature"><strong>#translate</strong>(text, target_lang, source_lang)</a>
+        <a href="#target_lang%3AString-instance-method" class="signature"><strong>#target_lang</strong> : String</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#translate%28option%29-instance-method" class="signature"><strong>#translate</strong>(option)</a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#usage-instance-method" class="signature"><strong>#usage</strong></a>
+        <a href="#target_lang%3D%28target_lang%3AString%29-instance-method" class="signature"><strong>#target_lang=</strong>(target_lang : String)</a>
         
       </li>
     
@@ -251,6 +222,16 @@
 
 
 <div class="methods-inherited">
+  
+    
+
+
+    
+
+
+    
+
+
   
     
 
@@ -295,7 +276,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/b8ee75f0fdbe2dfe90f95ccd2917e7709d3a420e/src/deepl/translator.cr#L15" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/b8ee75f0fdbe2dfe90f95ccd2917e7709d3a420e/src/deepl/options.cr#L7" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -314,114 +295,98 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="get_translation(text,target_lang,source_lang)-instance-method">
+    <div class="entry-detail" id="input_text:String-instance-method">
       <div class="signature">
         
-        def <strong>get_translation</strong>(text, target_lang, source_lang)
+        def <strong>input_text</strong> : String
 
-        <a class="method-permalink" href="#get_translation%28text%2Ctarget_lang%2Csource_lang%29-instance-method">#</a>
+        <a class="method-permalink" href="#input_text%3AString-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/b8ee75f0fdbe2dfe90f95ccd2917e7709d3a420e/src/deepl/translator.cr#L30" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/b8ee75f0fdbe2dfe90f95ccd2917e7709d3a420e/src/deepl/options.cr#L5" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="request_languages(type)-instance-method">
+    <div class="entry-detail" id="input_text=(input_text:String)-instance-method">
       <div class="signature">
         
-        def <strong>request_languages</strong>(type)
+        def <strong>input_text=</strong>(input_text : String)
 
-        <a class="method-permalink" href="#request_languages%28type%29-instance-method">#</a>
+        <a class="method-permalink" href="#input_text%3D%28input_text%3AString%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/b8ee75f0fdbe2dfe90f95ccd2917e7709d3a420e/src/deepl/translator.cr#L60" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/b8ee75f0fdbe2dfe90f95ccd2917e7709d3a420e/src/deepl/options.cr#L5" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="source_languages-instance-method">
+    <div class="entry-detail" id="source_lang:String-instance-method">
       <div class="signature">
         
-        def <strong>source_languages</strong>
+        def <strong>source_lang</strong> : String
 
-        <a class="method-permalink" href="#source_languages-instance-method">#</a>
+        <a class="method-permalink" href="#source_lang%3AString-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/b8ee75f0fdbe2dfe90f95ccd2917e7709d3a420e/src/deepl/translator.cr#L73" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/b8ee75f0fdbe2dfe90f95ccd2917e7709d3a420e/src/deepl/options.cr#L4" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="target_languages-instance-method">
+    <div class="entry-detail" id="source_lang=(source_lang:String)-instance-method">
       <div class="signature">
         
-        def <strong>target_languages</strong>
+        def <strong>source_lang=</strong>(source_lang : String)
 
-        <a class="method-permalink" href="#target_languages-instance-method">#</a>
+        <a class="method-permalink" href="#source_lang%3D%28source_lang%3AString%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/b8ee75f0fdbe2dfe90f95ccd2917e7709d3a420e/src/deepl/translator.cr#L66" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/b8ee75f0fdbe2dfe90f95ccd2917e7709d3a420e/src/deepl/options.cr#L4" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="translate(text,target_lang,source_lang)-instance-method">
+    <div class="entry-detail" id="target_lang:String-instance-method">
       <div class="signature">
         
-        def <strong>translate</strong>(text, target_lang, source_lang)
+        def <strong>target_lang</strong> : String
 
-        <a class="method-permalink" href="#translate%28text%2Ctarget_lang%2Csource_lang%29-instance-method">#</a>
+        <a class="method-permalink" href="#target_lang%3AString-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/b8ee75f0fdbe2dfe90f95ccd2917e7709d3a420e/src/deepl/translator.cr#L46" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/b8ee75f0fdbe2dfe90f95ccd2917e7709d3a420e/src/deepl/options.cr#L3" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="translate(option)-instance-method">
+    <div class="entry-detail" id="target_lang=(target_lang:String)-instance-method">
       <div class="signature">
         
-        def <strong>translate</strong>(option)
+        def <strong>target_lang=</strong>(target_lang : String)
 
-        <a class="method-permalink" href="#translate%28option%29-instance-method">#</a>
+        <a class="method-permalink" href="#target_lang%3D%28target_lang%3AString%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/b8ee75f0fdbe2dfe90f95ccd2917e7709d3a420e/src/deepl/translator.cr#L56" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="usage-instance-method">
-      <div class="signature">
-        
-        def <strong>usage</strong>
-
-        <a class="method-permalink" href="#usage-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/kojix2/deepl-cli/blob/b8ee75f0fdbe2dfe90f95ccd2917e7709d3a420e/src/deepl/translator.cr#L84" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/b8ee75f0fdbe2dfe90f95ccd2917e7709d3a420e/src/deepl/options.cr#L3" target="_blank">View source</a>]
         
       </div>
     </div>
