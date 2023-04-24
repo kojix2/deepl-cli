@@ -53,6 +53,10 @@ module Deepl
       end
     end
 
+    def translate(option)
+      translate(option.input_text, option.target_lang, option.source_lang)
+    end
+
     def request_languages(type)
       HTTP::Client.get("#{API_BASE_URL}/languages?type=#{type}", headers: @http_headers)
     rescue ex

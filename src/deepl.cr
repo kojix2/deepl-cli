@@ -2,10 +2,8 @@ require "option_parser"
 require "term-spinner"
 
 require "./deepl/translator"
+require "./deepl/parser"
 require "./deepl/version"
-
-target_lang = "EN"
-source_lang = "AUTO"
 
 begin
   translator = Deepl::Translator.new
@@ -14,52 +12,18 @@ rescue Deepl::ApiKeyError
   exit(1)
 end
 
-parser = OptionParser.new do |opts|
-  opts.banner = "Usage: deepl [arguments]"
-  opts.on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
-    if from.empty?
-      translator.source_languages.each do |lang|
-        puts lang.values.map { |i| i.to_s }.join("\t")
-      end
-      exit
-    end
-    source_lang = from.upcase
-  end
-  opts.on("-t", "--to [LANG]", "Target language [EN]") do |to|
-    if to.empty?
-      translator.target_languages.each do |lang|
-        puts lang.values.map { |i| i.to_s }.join("\t")
-      end
-      exit
-    end
-    target_lang = to.upcase
-  end
-  opts.on("-u", "--usage", "Check Usage and Limits") do
-    puts translator.usage.map { |k, v| "#{k}: #{v}" }.join("\n")
-    exit
-  end
-  opts.on("-v", "--version", "Show version") do
-    puts Deepl::VERSION
-    exit
-  end
-  opts.on("-h", "--help", "Show this help") do
-    puts opts
-    exit
-  end
-  opts.invalid_option do |flag|
-    STDERR.puts "ERROR: #{flag} is not a valid option."
-    STDERR.puts opts
+parser = Deepl::Parser.new(translator)
+
+option = parser.parse(ARGV)
+
+if option.input_text.empty?
+  begin
+    option.input_text = ARGF.gets_to_end
+  rescue ex
+    STDERR.puts parser
+    STDERR.puts "ERROR: #{ex}"
     exit(1)
   end
-end
-
-parser.parse(ARGV)
-
-input_text = ARGV.join(" ")
-
-if input_text.empty?
-  stdin = STDIN.gets_to_end
-  input_text = stdin
 end
 
 spinner = Term::Spinner.new
@@ -68,7 +32,7 @@ translated_text = ""
 begin
   spinner = Term::Spinner.new(clear: true)
   spinner.run do
-    translated_text = translator.translate(input_text, target_lang, source_lang)
+    translated_text = translator.translate(option)
   end
 rescue ex
   STDERR.puts "ERROR: #{ex}"
