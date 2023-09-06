@@ -21,6 +21,13 @@ shards build --release
 
 A compiled binary file will be created in the `bin` folder.
 
+#### Proxy settings (optional)
+
+```
+export HTTP_PROXY=http://[IP]:[port]
+export HTTPS_PROXY=https://[IP]:[port]
+```
+
 ## Usage
 
 To use the DeepL Translator CLI, simply run the `deepl` command followed by the arguments you wish to pass.
