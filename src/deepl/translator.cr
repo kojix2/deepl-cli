@@ -23,12 +23,21 @@ module Deepl
     private def build_http_headers
       HTTP::Headers{
         "Authorization" => "DeepL-Auth-Key #{api_key}",
+        "User-Agent"    => user_agent,
         "Content-Type"  => "application/x-www-form-urlencoded",
       }
     end
 
     private def api_key
       ENV.fetch("DEEPL_API_KEY") { raise ApiKeyError.new }
+    end
+
+    private def user_agent
+      {% if env("DEEPL_USER_AGENT") %}
+        "{{ env("DEEPL_USER_AGENT") }}"
+      {% else %}
+        "deepl-cli/#{VERSION}"
+      {% end %}
     end
 
     def get_translation(text, target_lang, source_lang)
