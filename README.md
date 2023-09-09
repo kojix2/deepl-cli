@@ -17,6 +17,7 @@ Download the latest source code, then run the following commands:
 ```bash
 cd deepl-cli
 shards build --release
+# DEEPL_API_PRO=1 shards build --release # for DeepL API Pro
 ```
 
 A compiled binary file will be created in the `bin` folder.

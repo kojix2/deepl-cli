@@ -7,7 +7,11 @@ module Deepl
   class RequestError < Exception; end
 
   class Translator
-    API_BASE_URL      = "https://api-free.deepl.com/v2"
+    API_BASE_URL = {% if env("DEEPL_API_PRO") %}
+                     "https://api.deepl.com/v2"
+                   {% else %}
+                     "https://api-free.deepl.com/v2"
+                   {% end %}
     API_TRANSLATE_URL = "#{API_BASE_URL}/translate"
 
     @http_headers : HTTP::Headers
