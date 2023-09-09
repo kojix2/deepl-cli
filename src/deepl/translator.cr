@@ -7,24 +7,30 @@ module Deepl
   class RequestError < Exception; end
 
   class Translator
-    API_BASE_URL = {% if env("DEEPL_API_PRO") %}
+    API_URL_BASE = {% if env("DEEPL_API_PRO") %}
                      "https://api.deepl.com/v2"
                    {% else %}
                      "https://api-free.deepl.com/v2"
                    {% end %}
-    API_TRANSLATE_URL = "#{API_BASE_URL}/translate"
-
-    @http_headers : HTTP::Headers
+    API_URL_TRANSLATE = "#{API_URL_BASE}/translate"
+    API_URL_DOCUMENT  = "#{API_URL_BASE}/document"
 
     def initialize
-      @http_headers = build_http_headers
     end
 
-    private def build_http_headers
+    private def http_headers_for_text
       HTTP::Headers{
         "Authorization" => "DeepL-Auth-Key #{api_key}",
         "User-Agent"    => user_agent,
         "Content-Type"  => "application/x-www-form-urlencoded",
+      }
+    end
+
+    private def http_headers_for_document(content_type)
+      HTTP::Headers{
+        "Authorization" => "DeepL-Auth-Key #{api_key}",
+        "User-Agent"    => user_agent,
+        "Content-Type"  => content_type,
       }
     end
 
@@ -40,24 +46,22 @@ module Deepl
       {% end %}
     end
 
-    def get_translation(text, target_lang, source_lang)
+    def translate(option)
+      if option.doc
+        translate_document(option)
+      else
+        translate_text(option.input, option.target_lang, option.source_lang)
+      end
+    end
+
+    def translate_text(text, target_lang, source_lang)
       params = [
         "text=#{URI.encode_www_form(text)}",
         "target_lang=#{target_lang}",
       ]
       params << "source_lang=#{source_lang}" unless source_lang == "AUTO"
       request_payload = params.join("&")
-      execute_post_request(request_payload)
-    end
-
-    private def execute_post_request(request_payload)
-      HTTP::Client.post(API_TRANSLATE_URL, body: request_payload, headers: @http_headers)
-    rescue ex
-      raise RequestError.new("Error: #{ex.message}")
-    end
-
-    def translate(text, target_lang, source_lang)
-      response = get_translation(text, target_lang, source_lang)
+      response = execute_post_request(API_URL_TRANSLATE, request_payload, http_headers_for_text)
       parsed_response = JSON.parse(response.body)
       begin
         parsed_response.dig("translations", 0, "text")
@@ -66,12 +70,28 @@ module Deepl
       end
     end
 
-    def translate(option)
-      translate(option.input, option.target_lang, option.source_lang)
+    def translate_document(option)
+      pp option
+      io = IO::Memory.new
+      builder = HTTP::FormData::Builder.new(io)
+      builder.field("source_lang", option.source_lang) unless option.source_lang == "AUTO"
+      builder.field("target_lang", option.target_lang)
+      content = File.open(option.input, "rb").gets_to_end
+      builder.file("file", content, HTTP::FormData::FileMetadata.new(option.input))
+      builder.finish
+
+      pp execute_post_request(API_URL_DOCUMENT, io, http_headers_for_document(builder.content_type))
+      raise NotImplementedError.new("Document translation is not implemented yet")
     end
 
-    def request_languages(type)
-      HTTP::Client.get("#{API_BASE_URL}/languages?type=#{type}", headers: @http_headers)
+    private def execute_post_request(url = url, body = body, headers = headers)
+      HTTP::Client.post(url, body: body, headers: headers)
+    rescue ex
+      raise RequestError.new("Error: #{ex.message}")
+    end
+
+  def request_languages(type)
+      HTTP::Client.get("#{API_URL_BASE}/languages?type=#{type}", headers: http_headers_for_text)
     rescue ex
       raise RequestError.new("Error: #{ex.message}")
     end
@@ -102,7 +122,7 @@ module Deepl
     end
 
     private def request_usage
-      HTTP::Client.get("#{API_BASE_URL}/usage", headers: @http_headers)
+      HTTP::Client.get("#{API_URL_BASE}/usage", headers: http_headers_for_text)
     rescue ex
       raise RequestError.new("Error: #{ex.message}")
     end

@@ -12,6 +12,9 @@ module Deepl
       @opt = Options.new
       @translator = translator
       self.banner = "Usage: deepl [arguments]"
+      on("doc", "Upload and translate a document") do
+        opt.doc = true
+      end
       on("-i", "--input [TEXT]", "Input text") do |text|
         opt.input = text
       end
@@ -61,7 +64,7 @@ module Deepl
     end
 
     def show_usage
-      puts Translator::API_BASE_URL
+      puts Translator::API_URL_BASE
       puts translator.usage.map { |k, v| "#{k}: #{v}" }.join("\n")
       exit
     end
