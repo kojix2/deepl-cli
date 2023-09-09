@@ -54,7 +54,7 @@ module Deepl
     end
 
     def translate(option)
-      translate(option.input_text, option.target_lang, option.source_lang)
+      translate(option.input, option.target_lang, option.source_lang)
     end
 
     def request_languages(type)

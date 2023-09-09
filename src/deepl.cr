@@ -16,9 +16,9 @@ parser = Deepl::Parser.new(translator)
 
 option = parser.parse(ARGV)
 
-if option.input_text.empty?
+if option.input.empty?
   begin
-    option.input_text = ARGF.gets_to_end
+    option.input = ARGF.gets_to_end
   rescue ex
     STDERR.puts parser
     STDERR.puts "ERROR: #{ex}"

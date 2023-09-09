@@ -13,7 +13,7 @@ module Deepl
       @translator = translator
       self.banner = "Usage: deepl [arguments]"
       on("-i", "--input [TEXT]", "Input text") do |text|
-        opt.input_text = text
+        opt.input = text
       end
       on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
         show_source_languages if from.empty?
