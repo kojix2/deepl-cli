@@ -55,13 +55,12 @@ module Deepl
     end
 
     def translate_text(text, target_lang, source_lang)
-      params = [
-        "text=#{URI.encode_www_form(text)}",
-        "target_lang=#{target_lang}",
-      ]
-      params << "source_lang=#{source_lang}" unless source_lang == "AUTO"
-      request_payload = params.join("&")
-      response = execute_post_request(API_URL_TRANSLATE, request_payload, http_headers_for_text)
+      params = HTTP::Params.build do |form|
+        form.add("text", text)
+        form.add("target_lang", target_lang)
+        form.add("source_lang", source_lang) unless source_lang == "AUTO"
+      end
+      response = execute_post_request(API_URL_TRANSLATE, params, http_headers_for_text)
       parsed_response = JSON.parse(response.body)
       begin
         parsed_response.dig("translations", 0, "text")
@@ -74,14 +73,14 @@ module Deepl
       pp option
       io = IO::Memory.new
       builder = HTTP::FormData::Builder.new(io)
-      builder.field("source_lang", option.source_lang) unless option.source_lang == "AUTO"
       builder.field("target_lang", option.target_lang)
-      content = File.open(option.input, "rb").gets_to_end
-      builder.file("file", content, HTTP::FormData::FileMetadata.new(option.input))
+      builder.field("source_lang", option.source_lang) unless option.source_lang == "AUTO"
+      file = File.open(option.input)
+      filename = File.basename(option.input)
+      builder.file("file", file, HTTP::FormData::FileMetadata.new(filename: filename))
       builder.finish
 
       pp execute_post_request(API_URL_DOCUMENT, io, http_headers_for_document(builder.content_type))
-      raise NotImplementedError.new("Document translation is not implemented yet")
     end
 
     private def execute_post_request(url = url, body = body, headers = headers)
@@ -90,7 +89,7 @@ module Deepl
       raise RequestError.new("Error: #{ex.message}")
     end
 
-  def request_languages(type)
+    def request_languages(type)
       HTTP::Client.get("#{API_URL_BASE}/languages?type=#{type}", headers: http_headers_for_text)
     rescue ex
       raise RequestError.new("Error: #{ex.message}")
