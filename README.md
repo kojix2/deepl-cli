@@ -17,7 +17,12 @@ Download the latest source code, then run the following commands:
 ```bash
 cd deepl-cli
 shards build --release
-# DEEPL_API_PRO=1 shards build --release # for DeepL API Pro
+```
+
+To use DeepL API Pro, compile with the environment variable DEEPL_API_PRO=1. (Note that this environment variable is loaded at compile time, so setting it at runtime will not change the behavior.)
+
+```
+DEEPL_API_PRO=1 shards build --release # for DeepL API Pro
 ```
 
 A compiled binary file will be created in the `bin` folder.
