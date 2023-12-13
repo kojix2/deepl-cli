@@ -1,7 +1,10 @@
 name: build
 
-on: [push, pull_request]
-
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '51 3 * * 6'  # Runs at 03:51, only on Saturday
 jobs:
   build:
     name: ${{ matrix.os }}
