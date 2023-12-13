@@ -1,5 +1,7 @@
 # DeepL CLI
 
+[![build](https://github.com/kojix2/deepl-cli/actions/workflows/build.yml/badge.svg)](https://github.com/kojix2/deepl-cli/actions/workflows/build.yml)
+
 A simple command-line interface (CLI) tool for translating text using the [DeepL API](https://www.deepl.com/pro-api/), written in Crystal programming language. This tool enables quick and easy text translation via the command line without visiting the [DeepL website](https://www.deepl.com/).
 
 ## Prerequisites
