@@ -19,7 +19,7 @@ cd deepl-cli
 shards build --release
 ```
 
-To use DeepL API Pro, compile with the environment variable DEEPL_API_PRO=1. (Note that this environment variable is loaded at compile time, so setting it at runtime will not change the behavior.)
+To use DeepL API Pro, compile with the environment variable DEEPL_API_PRO=1. 
 
 ```
 DEEPL_API_PRO=1 shards build --release # for DeepL API Pro
