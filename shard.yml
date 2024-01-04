@@ -3,7 +3,7 @@ version: 0.2.0
 
 targets:
   deepl:
-    main: src/deepl.cr
+    main: src/cli.cr
 
 dependencies:
   term-spinner:

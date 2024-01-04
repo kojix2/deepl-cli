@@ -1,0 +1,3 @@
+require "./deepl"
+
+Deepl.run
