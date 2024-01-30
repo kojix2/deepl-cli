@@ -47,9 +47,10 @@ module Deepl
     end
 
     def translate(option)
-      if option.doc
+      case option.sub_command
+      when SubCmd::Document
         translate_document(option)
-      else
+      when SubCmd::Text
         translate_text(option.input, option.target_lang, option.source_lang)
       end
     end
@@ -70,17 +71,24 @@ module Deepl
     end
 
     def translate_document(option)
-      pp option
       io = IO::Memory.new
       builder = HTTP::FormData::Builder.new(io)
       builder.field("target_lang", option.target_lang)
       builder.field("source_lang", option.source_lang) unless option.source_lang == "AUTO"
       file = File.open(option.input)
       filename = File.basename(option.input)
-      builder.file("file", file, HTTP::FormData::FileMetadata.new(filename: filename))
+      metadata = HTTP::FormData::FileMetadata.new(filename: filename)
+      headers = HTTP::Headers{"Content-Type" => "text/plain"}
+      builder.file("file", file, metadata, headers)
       builder.finish
 
-      pp execute_post_request(API_URL_DOCUMENT, io, http_headers_for_document(builder.content_type))
+      response = execute_post_request(API_URL_DOCUMENT, io, http_headers_for_document(builder.content_type))
+      parsed_response = JSON.parse(response.body)
+      begin
+        parsed_response.dig("document_id")
+      rescue
+        raise RequestError.new("Error: #{parsed_response}")
+      end
     end
 
     private def execute_post_request(url = url, body = body, headers = headers)

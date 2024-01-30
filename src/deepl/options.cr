@@ -1,8 +1,13 @@
 module Deepl
+  enum SubCmd : UInt8
+    Text
+    Document
+  end
+
   struct Options
     property target_lang : String = "EN"
     property source_lang : String = "AUTO"
     property input : String = ""
-    property doc : Bool = false
+    property sub_command : SubCmd = SubCmd::Text
   end
 end
