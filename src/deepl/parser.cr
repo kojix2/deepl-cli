@@ -26,6 +26,9 @@ module Deepl
         show_target_languages if to.empty?
         opt.target_lang = to.upcase
       end
+      on("-g ID", "--glossary ID", "Glossary ID") do |id|
+        opt.glossary_id = id
+      end
       on("-u", "--usage", "Check Usage and Limits") do
         show_usage
       end
