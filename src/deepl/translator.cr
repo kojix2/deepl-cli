@@ -2,9 +2,17 @@ require "json"
 require "./utils/proxy"
 
 module Deepl
-  class ApiKeyError < Exception; end
+  class ApiKeyError < Exception
+    def initialize
+      super("DEEPL_API_KEY is not set")
+    end
+  end
 
-  class RequestError < Exception; end
+  class RequestError < Exception
+    def initialize(message)
+      super(message)
+    end
+  end
 
   class Translator
     API_URL_BASE = {% if env("DEEPL_API_PRO") %}
@@ -16,6 +24,8 @@ module Deepl
     API_URL_DOCUMENT  = "#{API_URL_BASE}/document"
 
     def initialize
+      api_key # raise error if not set
+      super
     end
 
     private def http_headers_for_text
@@ -66,8 +76,8 @@ module Deepl
       parsed_response = JSON.parse(response.body)
       begin
         parsed_response.dig("translations", 0, "text")
-      rescue
-        raise RequestError.new("Error: #{parsed_response}")
+      rescue ex
+        raise RequestError.new("#{ex.class} #{ex.message}")
       end
     end
 
@@ -87,35 +97,35 @@ module Deepl
       parsed_response = JSON.parse(response.body)
       begin
         parsed_response.dig("document_id")
-      rescue
-        raise RequestError.new("Error: #{parsed_response}")
+      rescue ex
+        raise RequestError.new("#{ex.class} #{ex.message}")
       end
     end
 
     private def execute_post_request(url = url, body = body, headers = headers)
       HTTP::Client.post(url, body: body, headers: headers)
     rescue ex
-      raise RequestError.new("Error: #{ex.message}")
+      raise RequestError.new("#{ex.class} #{ex.message}")
     end
 
     def request_languages(type)
       HTTP::Client.get("#{API_URL_BASE}/languages?type=#{type}", headers: http_headers_for_text)
     rescue ex
-      raise RequestError.new("Error: #{ex.message}")
+      raise RequestError.new("#{ex.class} #{ex.message}")
     end
 
     def target_languages
       response = request_languages("target")
       parse_languages_response(response)
     rescue ex
-      raise RequestError.new("Error: #{ex.message}")
+      raise RequestError.new("#{ex.class} #{ex.message}")
     end
 
     def source_languages
       response = request_languages("source")
       parse_languages_response(response)
     rescue ex
-      raise RequestError.new("Error: #{ex.message}")
+      raise RequestError.new("#{ex.class} #{ex.message}")
     end
 
     private def parse_languages_response(response)
@@ -126,13 +136,13 @@ module Deepl
       response = request_usage
       parse_usage_response(response)
     rescue ex
-      raise RequestError.new("Error: #{ex.message}")
+      raise RequestError.new("#{ex.class} #{ex.message}")
     end
 
     private def request_usage
       HTTP::Client.get("#{API_URL_BASE}/usage", headers: http_headers_for_text)
     rescue ex
-      raise RequestError.new("Error: #{ex.message}")
+      raise RequestError.new("#{ex.class} #{ex.message}")
     end
 
     private def parse_usage_response(response)
