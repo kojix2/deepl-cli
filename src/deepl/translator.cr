@@ -14,6 +14,12 @@ module Deepl
     end
   end
 
+  class UnknownSubCommandError < Exception
+    def initialize
+      super("Unknown sub command")
+    end
+  end
+
   class Translator
     API_URL_BASE = {% if env("DEEPL_API_PRO") %}
                      "https://api.deepl.com/v2"
@@ -21,7 +27,7 @@ module Deepl
                      "https://api-free.deepl.com/v2"
                    {% end %}
     API_URL_TRANSLATE = "#{API_URL_BASE}/translate"
-    API_URL_DOCUMENT  = "#{API_URL_BASE}/document"
+    # API_URL_DOCUMENT  = "#{API_URL_BASE}/document"
 
     def initialize
       api_key # raise error if not set
@@ -36,13 +42,13 @@ module Deepl
       }
     end
 
-    private def http_headers_for_document(content_type)
-      HTTP::Headers{
-        "Authorization" => "DeepL-Auth-Key #{api_key}",
-        "User-Agent"    => user_agent,
-        "Content-Type"  => content_type,
-      }
-    end
+    # private def http_headers_for_document(content_type)
+    #   HTTP::Headers{
+    #     "Authorization" => "DeepL-Auth-Key #{api_key}",
+    #     "User-Agent"    => user_agent,
+    #     "Content-Type"  => content_type,
+    #   }
+    # end
 
     private def api_key
       ENV.fetch("DEEPL_API_KEY") { raise ApiKeyError.new }
@@ -58,10 +64,12 @@ module Deepl
 
     def translate(option)
       case option.sub_command
-      when SubCmd::Document
-        translate_document(option)
+      # when SubCmd::Document
+      #   translate_document(option)
       when SubCmd::Text
         translate_text(option.input, option.target_lang, option.source_lang, option.glossary_id)
+      else
+        raise UnknownSubCommandError.new
       end
     end
 
@@ -81,26 +89,26 @@ module Deepl
       end
     end
 
-    def translate_document(option)
-      io = IO::Memory.new
-      builder = HTTP::FormData::Builder.new(io)
-      builder.field("target_lang", option.target_lang)
-      builder.field("source_lang", option.source_lang) unless option.source_lang == "AUTO"
-      file = File.open(option.input)
-      filename = File.basename(option.input)
-      metadata = HTTP::FormData::FileMetadata.new(filename: filename)
-      headers = HTTP::Headers{"Content-Type" => "text/plain"}
-      builder.file("file", file, metadata, headers)
-      builder.finish
+    # def translate_document(option)
+    #   io = IO::Memory.new
+    #   builder = HTTP::FormData::Builder.new(io)
+    #   builder.field("target_lang", option.target_lang)
+    #   builder.field("source_lang", option.source_lang) unless option.source_lang == "AUTO"
+    #   file = File.open(option.input)
+    #   filename = File.basename(option.input)
+    #   metadata = HTTP::FormData::FileMetadata.new(filename: filename)
+    #   headers = HTTP::Headers{"Content-Type" => "text/plain"}
+    #   builder.file("file", file, metadata, headers)
+    #   builder.finish
 
-      response = execute_post_request(API_URL_DOCUMENT, io, http_headers_for_document(builder.content_type))
-      parsed_response = JSON.parse(response.body)
-      begin
-        parsed_response.dig("document_id")
-      rescue ex
-        raise RequestError.new("#{ex.class} #{ex.message}")
-      end
-    end
+    #   response = execute_post_request(API_URL_DOCUMENT, io, http_headers_for_document(builder.content_type))
+    #   parsed_response = JSON.parse(response.body)
+    #   begin
+    #     parsed_response.dig("document_id")
+    #   rescue ex
+    #     raise RequestError.new("#{ex.class} #{ex.message}")
+    #   end
+    # end
 
     private def execute_post_request(url = url, body = body, headers = headers)
       HTTP::Client.post(url, body: body, headers: headers)

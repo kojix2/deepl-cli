@@ -12,9 +12,9 @@ module Deepl
       @opt = Options.new
       @translator = translator
       self.banner = "Usage: deepl [arguments]"
-      on("doc", "Upload and translate a document") do
-        opt.sub_command = SubCmd::Document
-      end
+      # on("doc", "Upload and translate a document") do
+      #   opt.sub_command = SubCmd::Document
+      # end
       on("-i", "--input [TEXT]", "Input text") do |text|
         opt.input = text
       end
