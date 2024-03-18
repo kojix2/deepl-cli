@@ -83,7 +83,7 @@ module Deepl
       params = HTTP::Params.build do |form|
         form.add("text", text)
         form.add("target_lang", target_lang)
-        form.add("source_lang", source_lang) unless source_lang == "AUTO"
+        form.add("source_lang", source_lang) if source_lang
         form.add("glossary_id", glossary_id) if glossary_id
       end
       response = execute_post_request(API_URL_TRANSLATE, params, http_headers_for_text)
