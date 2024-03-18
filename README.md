@@ -14,14 +14,17 @@ export DEEPL_AUTH_KEY=your_api_key_here
 
 ## Installation
 
-Download the latest source code, then run the following commands:
+Precompiled binaries are available from [GitHub Releases](https://github.com/kojix2/deepl-cli/releases). (binaries for Linux are statically linked)
+
+### Compilation from source code
 
 ```bash
+git clone https://github.com/kojix2/deepl-cli
 cd deepl-cli
 shards build --release
 ```
 
-To use DeepL API Pro, compile with the environment variable DEEPL_API_PRO=1. 
+To use DeepL API Pro, compile with the environment variable DEEPL_API_PRO=1.
 
 ```
 DEEPL_API_PRO=1 shards build --release # for DeepL API Pro
@@ -29,7 +32,7 @@ DEEPL_API_PRO=1 shards build --release # for DeepL API Pro
 
 A compiled binary file will be created in the `bin` folder.
 
-#### Proxy settings (optional)
+### Proxy settings (optional)
 
 ```
 export HTTP_PROXY=http://[IP]:[port]
