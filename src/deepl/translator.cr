@@ -73,17 +73,23 @@ module Deepl
       # when SubCmd::Document
       #   translate_document(option)
       when SubCmd::Text
-        translate_text(option.input, option.target_lang, option.source_lang, option.glossary_id)
+        translate_text(
+          option.input, option.target_lang, option.source_lang,
+          option.formality, option.glossary_id
+        )
       else
         raise UnknownSubCommandError.new
       end
     end
 
-    def translate_text(text, target_lang, source_lang, glossary_id)
+    def translate_text(
+      text, target_lang, source_lang = nil, formality = nil, glossary_id = nil
+    )
       params = HTTP::Params.build do |form|
         form.add("text", text)
         form.add("target_lang", target_lang)
         form.add("source_lang", source_lang) if source_lang
+        form.add("formality", formality) if formality
         form.add("glossary_id", glossary_id) if glossary_id
       end
       response = execute_post_request(API_URL_TRANSLATE, params, http_headers_for_text)

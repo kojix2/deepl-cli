@@ -9,6 +9,7 @@ module Deepl
     property input : String = ""
     property target_lang : String = "EN"
     property source_lang : String? = nil
+    property formality : String? = nil
     property glossary_id : String? = nil
   end
 end

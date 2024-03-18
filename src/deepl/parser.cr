@@ -26,6 +26,9 @@ module Deepl
         show_target_languages if to.empty?
         opt.target_lang = to.upcase
       end
+      on("--formality [FORMALITY]", "Formality (default more less)") do |formality|
+        opt.formality = formality
+      end
       on("-g ID", "--glossary ID", "Glossary ID") do |id|
         opt.glossary_id = id
       end
