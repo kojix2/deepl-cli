@@ -142,17 +142,23 @@
     <use href="#octicon-link"/>
   </svg>
 </a>Installation</h2>
-<p>Download the latest source code, then run the following commands:</p>
-<pre><code class="language-bash">cd deepl-cli
+<p>Precompiled binaries are available from <a href="https://github.com/kojix2/deepl-cli/releases">GitHub Releases</a>. (binaries for Linux are statically linked)</p>
+<h3><a id="compilation-from-source-code" class="anchor" href="#compilation-from-source-code">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Compilation from source code</h3>
+<pre><code class="language-bash">git clone https://github.com/kojix2/deepl-cli
+cd deepl-cli
 shards build --release</code></pre>
 <p>To use DeepL API Pro, compile with the environment variable DEEPL_API_PRO=1.</p>
 <pre><code class="language-crystal">DEEPL_API_PRO=1 shards build --release # for DeepL API Pro</code></pre>
 <p>A compiled binary file will be created in the <code>bin</code> folder.</p>
-<h4><a id="proxy-settings-optional" class="anchor" href="#proxy-settings-optional">
+<h3><a id="proxy-settings-optional" class="anchor" href="#proxy-settings-optional">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
-</a>Proxy settings (optional)</h4>
+</a>Proxy settings (optional)</h3>
 <pre><code class="language-crystal">export HTTP_PROXY=http://[IP]:[port]
 export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 <h2><a id="usage" class="anchor" href="#usage">
