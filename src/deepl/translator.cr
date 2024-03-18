@@ -4,7 +4,7 @@ require "./utils/proxy"
 module Deepl
   class ApiKeyError < Exception
     def initialize
-      super("DEEPL_API_KEY is not set")
+      super("DEEPL_AUTH_KEY is not set")
     end
   end
 
@@ -27,6 +27,7 @@ module Deepl
                      "https://api-free.deepl.com/v2"
                    {% end %}
     API_URL_TRANSLATE = "#{API_URL_BASE}/translate"
+
     # API_URL_DOCUMENT  = "#{API_URL_BASE}/document"
 
     def initialize
@@ -51,7 +52,12 @@ module Deepl
     # end
 
     private def api_key
-      ENV.fetch("DEEPL_API_KEY") { raise ApiKeyError.new }
+      ENV.fetch("DEEPL_AUTH_KEY") do
+        # For compatibility with version 0.2.1 or earlier
+        ENV.fetch("DEEPL_API_KEY") do
+          raise ApiKeyError.new
+        end
+      end
     end
 
     private def user_agent

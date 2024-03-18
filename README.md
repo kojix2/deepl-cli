@@ -9,7 +9,7 @@ A simple command-line interface (CLI) tool for translating text using the [DeepL
 First, [obtain a valid API key from DeepL](https://www.deepl.com/pro-api), then set it as an environment variable:
 
 ```bash
-export DEEPL_API_KEY=your_api_key_here
+export DEEPL_AUTH_KEY=your_api_key_here
 ```
 
 ## Installation
