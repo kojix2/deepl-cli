@@ -93,6 +93,20 @@ module Deepl
         form.add("glossary_id", glossary_id) if glossary_id
       end
       response = execute_post_request(API_URL_TRANSLATE, params, http_headers_for_text)
+      case response.status_code
+      when 456
+        raise RequestError.new("Quota exceeded")
+      when HTTP::Status::FORBIDDEN
+        raise RequestError.new("Authorization failed")
+      when HTTP::Status::NOT_FOUND
+        raise RequestError.new("Not found")
+      when HTTP::Status::BAD_REQUEST
+        raise RequestError.new("Bad request")
+      when HTTP::Status::TOO_MANY_REQUESTS
+        raise RequestError.new("Too many requests")
+      when HTTP::Status::SERVICE_UNAVAILABLE
+        raise RequestError.new("Service unavailable")
+      end
       parsed_response = JSON.parse(response.body)
       begin
         parsed_response.dig("translations", 0, "text")
