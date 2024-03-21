@@ -30,7 +30,11 @@ module DeepL
 
     puts translated_text
   rescue ex
-    STDERR.puts "ERROR: #{ex.class} #{ex.message}"
+    if DeepLError.debug
+      STDERR.puts "[deepl-cli] ERROR: #{ex.class} #{ex.message}\n#{ex.backtrace.join("\n")}"
+    else
+      STDERR.puts "[deepl-cli] ERROR: #{ex.class} #{ex.message}"
+    end
     exit(1)
   end
 end

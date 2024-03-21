@@ -48,7 +48,7 @@ module DeepL
         show_help
       end
       invalid_option do |flag|
-        STDERR.puts "ERROR: #{flag} is not a valid option."
+        STDERR.puts "[deepl-cli] ERROR: #{flag} is not a valid option."
         STDERR.puts self
         exit(1)
       end
