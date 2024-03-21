@@ -21,18 +21,18 @@ module Deepl
   end
 
   class Translator
-    API_URL_BASE = {% if env("DEEPL_API_PRO") %}
-                     "https://api.deepl.com/v2"
-                   {% else %}
-                     "https://api-free.deepl.com/v2"
-                   {% end %}
-    API_URL_TRANSLATE = "#{API_URL_BASE}/translate"
+    API_URL_BASE_PRO  = "https://api.deepl.com/v2"
+    API_URL_BASE_FREE = "https://api-free.deepl.com/v2"
 
-    # API_URL_DOCUMENT  = "#{API_URL_BASE}/document"
+    getter :api_url_base, :api_url_translate
 
     def initialize
-      api_key # raise error if not set
-      super
+      if api_key.ends_with?(":fx")
+        @api_url_base = API_URL_BASE_FREE
+      else
+        @api_url_base = API_URL_BASE_PRO
+      end
+      @api_url_translate = "#{api_url_base}/translate"
     end
 
     private def http_headers_for_text
@@ -92,7 +92,7 @@ module Deepl
         form.add("formality", formality) if formality
         form.add("glossary_id", glossary_id) if glossary_id
       end
-      response = execute_post_request(API_URL_TRANSLATE, params, http_headers_for_text)
+      response = execute_post_request(api_url_translate, params, http_headers_for_text)
       case response.status_code
       when 456
         raise RequestError.new("Quota exceeded")
@@ -143,7 +143,7 @@ module Deepl
     end
 
     def request_languages(type)
-      HTTP::Client.get("#{API_URL_BASE}/languages?type=#{type}", headers: http_headers_for_text)
+      HTTP::Client.get("#{api_url_base}/languages?type=#{type}", headers: http_headers_for_text)
     rescue ex
       raise RequestError.new("#{ex.class} #{ex.message}")
     end
@@ -174,7 +174,7 @@ module Deepl
     end
 
     private def request_usage
-      HTTP::Client.get("#{API_URL_BASE}/usage", headers: http_headers_for_text)
+      HTTP::Client.get("#{api_url_base}/usage", headers: http_headers_for_text)
     rescue ex
       raise RequestError.new("#{ex.class} #{ex.message}")
     end

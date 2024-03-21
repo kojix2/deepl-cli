@@ -71,7 +71,7 @@ module Deepl
     end
 
     def show_usage
-      puts Translator::API_URL_BASE
+      puts translator.api_url_base
       puts translator.usage.map { |k, v| "#{k}: #{v}" }.join("\n")
       exit
     end
