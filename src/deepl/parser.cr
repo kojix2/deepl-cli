@@ -38,6 +38,9 @@ module Deepl
       on("-A", "--ansi", "Do not remove ANSI escape codes") do
         opt.no_ansi = false
       end
+      on("-d", "--debug", "Show debug information") do
+        DeepLError.debug = true
+      end
       on("-v", "--version", "Show version") do
         show_version
       end

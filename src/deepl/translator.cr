@@ -1,15 +1,26 @@
 require "json"
 require "./utils/proxy"
 
-module Deepl
-  class ApiKeyError < Exception
+  class DeepLError < Exception
+    class_property debug : Bool = false
+  end
+
+  class ApiKeyError < DeepLError
     def initialize
       super("DEEPL_AUTH_KEY is not set")
     end
   end
 
-  class RequestError < Exception
-    def initialize(message)
+  class RequestError < DeepLError
+    def initialize(exception : Exception)
+      if DeepLError.debug
+        super("#{exception.class} #{exception.message}\n#{exception.backtrace.join("\n")}")
+      else
+        super("#{exception.class} #{exception.message}")
+      end
+    end
+
+    def initialize(message : String)
       super(message)
     end
   end
