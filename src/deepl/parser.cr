@@ -35,6 +35,9 @@ module Deepl
       on("-u", "--usage", "Check Usage and Limits") do
         show_usage
       end
+      on("-A", "--ansi", "Do not remove ANSI escape codes") do
+        opt.no_ansi = false
+      end
       on("-v", "--version", "Show version") do
         show_version
       end

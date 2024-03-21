@@ -11,5 +11,6 @@ module Deepl
     property source_lang : String? = nil
     property formality : String? = nil
     property glossary_id : String? = nil
+    property no_ansi : Bool = true
   end
 end

@@ -15,6 +15,11 @@ module Deepl
       option.input = ARGF.gets_to_end
     end
 
+    # Remove ANSI escape codes from input
+    if option.no_ansi
+      option.input = option.input.gsub(/\e\[[0-9;]*[mGKHF]/, "")
+    end
+
     spinner = Term::Spinner.new
     translated_text = ""
 
