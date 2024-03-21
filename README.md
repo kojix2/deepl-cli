@@ -25,13 +25,7 @@ cd deepl-cli
 shards build --release
 ```
 
-To use DeepL API Pro, compile with the environment variable DEEPL_API_PRO=1.
-
-```
-DEEPL_API_PRO=1 shards build --release # for DeepL API Pro
-```
-
-A compiled binary file will be created in the `bin` folder.
+A compiled binary file will be created in the `bin` directory.
 
 ### Proxy settings (optional)
 
