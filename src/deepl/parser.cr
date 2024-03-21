@@ -64,7 +64,8 @@ module Deepl
     def show_target_languages
       translator.target_languages.each do |lang|
         language, name, supports_formality = lang.values.map(&.to_s)
-        puts "- #{language.ljust(7)}#{name.ljust(20)}\t#{supports_formality}"
+        formality = (supports_formality == "true") ? "YES" : "NO"
+        puts "- #{language.ljust(7)}#{name.ljust(20)}\tformality support [#{formality}]"
       end
       exit
     end
