@@ -180,7 +180,7 @@ module Deepl
     end
 
     private def parse_usage_response(response)
-      Hash(String, Int32).from_json(response.body)
+      Hash(String, UInt64).from_json(response.body)
     end
   end
 end
