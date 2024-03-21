@@ -5,10 +5,10 @@ require "./deepl/translator"
 require "./deepl/parser"
 require "./deepl/version"
 
-module Deepl
+module DeepL
   def self.run
-    translator = Deepl::Translator.new
-    parser = Deepl::Parser.new(translator)
+    translator = DeepL::Translator.new
+    parser = DeepL::Parser.new(translator)
     option = parser.parse(ARGV)
 
     if option.input.empty?

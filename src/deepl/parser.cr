@@ -2,7 +2,7 @@ require "option_parser"
 require "./options"
 require "./translator"
 
-module Deepl
+module DeepL
   class Parser < OptionParser
     getter opt : Options
     getter translator : Translator
@@ -83,7 +83,7 @@ module Deepl
     end
 
     def show_version
-      puts Deepl::VERSION
+      puts DeepL::VERSION
       exit
     end
 

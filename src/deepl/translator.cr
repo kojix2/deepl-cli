@@ -1,6 +1,7 @@
 require "json"
 require "./utils/proxy"
 
+module DeepL
   class DeepLError < Exception
     class_property debug : Bool = false
   end
@@ -25,7 +26,7 @@ require "./utils/proxy"
     end
   end
 
-  class UnknownSubCommandError < Exception
+  class UnknownSubCommandError < DeepLError
     def initialize
       super("Unknown sub command")
     end
@@ -122,7 +123,7 @@ require "./utils/proxy"
       begin
         parsed_response.dig("translations", 0, "text")
       rescue ex
-        raise RequestError.new("#{ex.class} #{ex.message}")
+        raise RequestError.new(exception: ex)
       end
     end
 
@@ -143,34 +144,34 @@ require "./utils/proxy"
     #   begin
     #     parsed_response.dig("document_id")
     #   rescue ex
-    #     raise RequestError.new("#{ex.class} #{ex.message}")
+    #     raise RequestError.new(exception: ex)
     #   end
     # end
 
     private def execute_post_request(url = url, body = body, headers = headers)
       HTTP::Client.post(url, body: body, headers: headers)
     rescue ex
-      raise RequestError.new("#{ex.class} #{ex.message}")
+      raise RequestError.new(exception: ex)
     end
 
     def request_languages(type)
       HTTP::Client.get("#{api_url_base}/languages?type=#{type}", headers: http_headers_for_text)
     rescue ex
-      raise RequestError.new("#{ex.class} #{ex.message}")
+      raise RequestError.new(exception: ex)
     end
 
     def target_languages
       response = request_languages("target")
       parse_languages_response(response)
     rescue ex
-      raise RequestError.new("#{ex.class} #{ex.message}")
+      raise RequestError.new(exception: ex)
     end
 
     def source_languages
       response = request_languages("source")
       parse_languages_response(response)
     rescue ex
-      raise RequestError.new("#{ex.class} #{ex.message}")
+      raise RequestError.new(exception: ex)
     end
 
     private def parse_languages_response(response)
@@ -181,13 +182,13 @@ require "./utils/proxy"
       response = request_usage
       parse_usage_response(response)
     rescue ex
-      raise RequestError.new("#{ex.class} #{ex.message}")
+      raise RequestError.new(exception: ex)
     end
 
     private def request_usage
       HTTP::Client.get("#{api_url_base}/usage", headers: http_headers_for_text)
     rescue ex
-      raise RequestError.new("#{ex.class} #{ex.message}")
+      raise RequestError.new(exception: ex)
     end
 
     private def parse_usage_response(response)

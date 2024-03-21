@@ -1,4 +1,4 @@
-module Deepl
+module DeepL
   enum SubCmd : UInt8
     Text
     Document
