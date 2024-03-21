@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../js/doc.js"></script>
 
   <meta name="repository-name" content="deepl-cli">
-  <title>Deepl::SubCmd - deepl-cli main</title>
+  <title>DeepL::DeepLError - deepl-cli main</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -57,43 +57,48 @@
   <div class="types-list">
     <ul>
   
-  <li class="parent open current" data-id="deepl-cli/Deepl" data-name="deepl">
-      <a href="../Deepl.html">Deepl</a>
+  <li class="parent open current" data-id="deepl-cli/DeepL" data-name="deepl">
+      <a href="../DeepL.html">DeepL</a>
       
         <ul>
   
-  <li class=" " data-id="deepl-cli/Deepl/ApiKeyError" data-name="deepl::apikeyerror">
-      <a href="../Deepl/ApiKeyError.html">ApiKeyError</a>
+  <li class=" " data-id="deepl-cli/DeepL/ApiKeyError" data-name="deepl::apikeyerror">
+      <a href="../DeepL/ApiKeyError.html">ApiKeyError</a>
       
     </li>
   
-  <li class=" " data-id="deepl-cli/Deepl/Options" data-name="deepl::options">
-      <a href="../Deepl/Options.html">Options</a>
+  <li class=" current" data-id="deepl-cli/DeepL/DeepLError" data-name="deepl::deeplerror">
+      <a href="../DeepL/DeepLError.html">DeepLError</a>
       
     </li>
   
-  <li class=" " data-id="deepl-cli/Deepl/Parser" data-name="deepl::parser">
-      <a href="../Deepl/Parser.html">Parser</a>
+  <li class=" " data-id="deepl-cli/DeepL/Options" data-name="deepl::options">
+      <a href="../DeepL/Options.html">Options</a>
       
     </li>
   
-  <li class=" " data-id="deepl-cli/Deepl/RequestError" data-name="deepl::requesterror">
-      <a href="../Deepl/RequestError.html">RequestError</a>
+  <li class=" " data-id="deepl-cli/DeepL/Parser" data-name="deepl::parser">
+      <a href="../DeepL/Parser.html">Parser</a>
       
     </li>
   
-  <li class=" current" data-id="deepl-cli/Deepl/SubCmd" data-name="deepl::subcmd">
-      <a href="../Deepl/SubCmd.html">SubCmd</a>
+  <li class=" " data-id="deepl-cli/DeepL/RequestError" data-name="deepl::requesterror">
+      <a href="../DeepL/RequestError.html">RequestError</a>
       
     </li>
   
-  <li class=" " data-id="deepl-cli/Deepl/Translator" data-name="deepl::translator">
-      <a href="../Deepl/Translator.html">Translator</a>
+  <li class=" " data-id="deepl-cli/DeepL/SubCmd" data-name="deepl::subcmd">
+      <a href="../DeepL/SubCmd.html">SubCmd</a>
       
     </li>
   
-  <li class=" " data-id="deepl-cli/Deepl/UnknownSubCommandError" data-name="deepl::unknownsubcommanderror">
-      <a href="../Deepl/UnknownSubCommandError.html">UnknownSubCommandError</a>
+  <li class=" " data-id="deepl-cli/DeepL/Translator" data-name="deepl::translator">
+      <a href="../DeepL/Translator.html">Translator</a>
+      
+    </li>
+  
+  <li class=" " data-id="deepl-cli/DeepL/UnknownSubCommandError" data-name="deepl::unknownsubcommanderror">
+      <a href="../DeepL/UnknownSubCommandError.html">UnknownSubCommandError</a>
       
     </li>
   
@@ -126,11 +131,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">enum</span> Deepl::<wbr>SubCmd
+  <span class="kind">class</span> DeepL::<wbr>DeepLError
 
 </h1>
 
 
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../DeepL/DeepLError.html">DeepL::DeepLError</a></li><li class="superclass">Exception</li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -141,6 +147,25 @@
 
 
 
+
+
+  <h2>
+    <a id="direct-known-subclasses" class="anchor" href="#direct-known-subclasses">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Direct Known Subclasses
+  </h2>
+  <ul class="other-types-list">
+    
+      <li class="other-type"><a href="../DeepL/ApiKeyError.html">DeepL::ApiKeyError</a></li>
+    
+      <li class="other-type"><a href="../DeepL/RequestError.html">DeepL::RequestError</a></li>
+    
+      <li class="other-type"><a href="../DeepL/UnknownSubCommandError.html">DeepL::UnknownSubCommandError</a></li>
+    
+  </ul>
 
 
 
@@ -157,40 +182,12 @@
   </h2>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/2bddc022b807450a285f5190fd9fc6b3904a8c6c/src/deepl/options.cr#L2" target="_blank">
-        deepl/options.cr
+      <a href="https://github.com/kojix2/deepl-cli/blob/c6f3e337046a4acfc901d69e1fd8fcb8a899293e/src/deepl/translator.cr#L5" target="_blank">
+        deepl/translator.cr
       </a>
     
     <br/>
   
-
-
-
-  
-    <h2>
-      <a id="enum-members" class="anchor" href="#enum-members">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-      Enum Members
-    </h2>
-  
-  <dl>
-    
-      <dt class="entry-const" id="Text">
-        <strong>Text</strong> = <code><span class="n">0_u8</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="Document">
-        <strong>Document</strong> = <code><span class="n">1_u8</span></code>
-      </dt>
-      
-    
-  </dl>
-
-
 
 
 
@@ -199,26 +196,30 @@
 
 
   <h2>
-    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+    <a id="class-method-summary" class="anchor" href="#class-method-summary">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Instance Method Summary
+    Class Method Summary
   </h2>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#document%3F-instance-method" class="signature"><strong>#document?</strong></a>
+        <a href="#debug%3ABool-class-method" class="signature"><strong>.debug</strong> : Bool</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#text%3F-instance-method" class="signature"><strong>#text?</strong></a>
+        <a href="#debug%3D%28debug%3ABool%29-class-method" class="signature"><strong>.debug=</strong>(debug : Bool)</a>
         
       </li>
     
   </ul>
+
+
+
+
 
 
 
@@ -263,69 +264,56 @@
 
 
   
-    
-
-
-    
-
-
-    
-
-
-    
-
-
-  
 </div>
 
 
 
 
-
-
-
-
   <h2>
-    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+    <a id="class-method-detail" class="anchor" href="#class-method-detail">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Instance Method Detail
+    Class Method Detail
   </h2>
   
-    <div class="entry-detail" id="document?-instance-method">
+    <div class="entry-detail" id="debug:Bool-class-method">
       <div class="signature">
         
-        def <strong>document?</strong>
+        def self.<strong>debug</strong> : Bool
 
-        <a class="method-permalink" href="#document%3F-instance-method">#</a>
+        <a class="method-permalink" href="#debug%3ABool-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/2bddc022b807450a285f5190fd9fc6b3904a8c6c/src/deepl/options.cr#L4" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/c6f3e337046a4acfc901d69e1fd8fcb8a899293e/src/deepl/translator.cr#L6" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="text?-instance-method">
+    <div class="entry-detail" id="debug=(debug:Bool)-class-method">
       <div class="signature">
         
-        def <strong>text?</strong>
+        def self.<strong>debug=</strong>(debug : Bool)
 
-        <a class="method-permalink" href="#text%3F-instance-method">#</a>
+        <a class="method-permalink" href="#debug%3D%28debug%3ABool%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/2bddc022b807450a285f5190fd9fc6b3904a8c6c/src/deepl/options.cr#L3" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/c6f3e337046a4acfc901d69e1fd8fcb8a899293e/src/deepl/translator.cr#L6" target="_blank">View source</a>]
         
       </div>
     </div>
   
+
+
+
+
 
 
 </div>
