@@ -5,12 +5,10 @@ require "./translator"
 module DeepL
   class Parser < OptionParser
     getter opt : Options
-    getter translator : Translator
 
-    def initialize(translator)
+    def initialize
       super()
       @opt = Options.new
-      @translator = translator
       self.banner = "Usage: deepl [options] <file>"
       # on("doc", "Upload and translate a document") do
       #   opt.sub_command = SubCmd::Document
@@ -19,11 +17,11 @@ module DeepL
         opt.input = text
       end
       on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
-        show_source_languages if from.empty?
+        DeepL.show_source_languages if from.empty?
         opt.source_lang = from.upcase
       end
       on("-t", "--to [LANG]", "Target language [EN]") do |to|
-        show_target_languages if to.empty?
+        DeepL.show_target_languages if to.empty?
         opt.target_lang = to.upcase
       end
       on("-g ID", "--glossary ID", "Glossary ID") do |id|
@@ -42,7 +40,7 @@ module DeepL
         opt.no_ansi = false
       end
       on("-u", "--usage", "Check Usage and Limits") do
-        show_usage
+        DeepL.show_usage
       end
       on("-d", "--debug", "Show backtrace on error") do
         DeepLError.debug = true
@@ -63,29 +61,6 @@ module DeepL
     def parse(args)
       super
       opt
-    end
-
-    def show_source_languages
-      translator.source_languages.each do |lang|
-        language, name = lang.values.map(&.to_s)
-        puts "- #{language.ljust(7)}#{name}"
-      end
-      exit
-    end
-
-    def show_target_languages
-      translator.target_languages.each do |lang|
-        language, name, supports_formality = lang.values.map(&.to_s)
-        formality = (supports_formality == "true") ? "YES" : "NO"
-        puts "- #{language.ljust(7)}#{name.ljust(20)}\tformality support [#{formality}]"
-      end
-      exit
-    end
-
-    def show_usage
-      puts translator.api_url_base
-      puts translator.usage.map { |k, v| "#{k}: #{v}" }.join("\n")
-      exit
     end
 
     def show_version

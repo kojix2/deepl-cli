@@ -7,8 +7,7 @@ require "./deepl/version"
 
 module DeepL
   def self.run
-    translator = DeepL::Translator.new
-    parser = DeepL::Parser.new(translator)
+    parser = DeepL::Parser.new
     option = parser.parse(ARGV)
 
     if option.input.empty?
@@ -25,6 +24,7 @@ module DeepL
 
     spinner = Term::Spinner.new(clear: true)
     spinner.run do
+      translator = DeepL::Translator.new
       translated_text = translator.translate(option)
     end
 
@@ -36,5 +36,31 @@ module DeepL
       STDERR.puts "[deepl-cli] ERROR: #{ex.class} #{ex.message}"
     end
     exit(1)
+  end
+
+  def self.show_source_languages
+    translator = DeepL::Translator.new
+    translator.source_languages.each do |lang|
+      language, name = lang.values.map(&.to_s)
+      puts "- #{language.ljust(7)}#{name}"
+    end
+    exit
+  end
+
+  def self.show_target_languages
+    translator = DeepL::Translator.new
+    translator.target_languages.each do |lang|
+      language, name, supports_formality = lang.values.map(&.to_s)
+      formality = (supports_formality == "true") ? "YES" : "NO"
+      puts "- #{language.ljust(7)}#{name.ljust(20)}\tformality support [#{formality}]"
+    end
+    exit
+  end
+
+  def self.show_usage
+    translator = DeepL::Translator.new
+    puts translator.api_url_base
+    puts translator.usage.map { |k, v| "#{k}: #{v}" }.join("\n")
+    exit
   end
 end
