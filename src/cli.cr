@@ -1,3 +1,3 @@
 require "./deepl"
 
-DeepL::App.run
+DeepL::App.new.run

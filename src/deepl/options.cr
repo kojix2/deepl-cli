@@ -1,11 +1,16 @@
 module DeepL
-  enum SubCmd : UInt8
+  enum Action : UInt8
     Text
     Document
+    FromLang
+    ToLang
+    Usage
+    Version
+    Help
   end
 
   struct Options
-    property sub_command : SubCmd = SubCmd::Text
+    property action : Action = Action::Text
     property input : String = ""
     property target_lang : String = "EN"
     property source_lang : String? = nil

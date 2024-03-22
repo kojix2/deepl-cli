@@ -1,8 +1,26 @@
 module DeepL
   class App
-    def self.run
-      parser = DeepL::Parser.new
+    getter :parser
+
+    def initialize
+      @parser = DeepL::Parser.new
+    end
+
+    def run
       option = parser.parse(ARGV)
+
+      case option.action
+      when Action::FromLang
+        show_source_languages
+      when Action::ToLang
+        show_target_languages
+      when Action::Usage
+        show_usage
+      when Action::Version
+        show_version
+      when Action::Help
+        show_help
+      end
 
       if option.input.empty?
         option.input = ARGF.gets_to_end
@@ -32,7 +50,7 @@ module DeepL
       exit(1)
     end
 
-    def self.show_source_languages
+    def show_source_languages
       translator = DeepL::Translator.new
       translator.source_languages.each do |lang|
         language, name = lang.values.map(&.to_s)
@@ -41,7 +59,7 @@ module DeepL
       exit
     end
 
-    def self.show_target_languages
+    def show_target_languages
       translator = DeepL::Translator.new
       translator.target_languages.each do |lang|
         language, name, supports_formality = lang.values.map(&.to_s)
@@ -51,10 +69,20 @@ module DeepL
       exit
     end
 
-    def self.show_usage
+    def show_usage
       translator = DeepL::Translator.new
       puts translator.api_url_base
       puts translator.usage.map { |k, v| "#{k}: #{v}" }.join("\n")
+      exit
+    end
+
+    def show_version
+      puts DeepL::VERSION
+      exit
+    end
+
+    def show_help
+      puts parser
       exit
     end
   end

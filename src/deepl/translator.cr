@@ -74,10 +74,10 @@ module DeepL
     end
 
     def translate(option)
-      case option.sub_command
-      # when SubCmd::Document
+      case option.action
+      # when Action::Document
       #   translate_document(option)
-      when SubCmd::Text
+      when Action::Text
         translate_text(
           option.input, option.target_lang, option.source_lang,
           option.formality, option.glossary_id, option.context

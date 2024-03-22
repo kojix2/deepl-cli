@@ -11,18 +11,16 @@ module DeepL
       @opt = Options.new
       self.banner = "Usage: deepl [options] <file>"
       # on("doc", "Upload and translate a document") do
-      #   opt.sub_command = SubCmd::Document
+      #   opt.action = Action::Document
       # end
       on("-i", "--input TEXT", "Input text") do |text|
         opt.input = text
       end
       on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
-        DeepL::App.show_source_languages if from.empty?
-        opt.source_lang = from.upcase
+        from.empty? ? opt.action = Action::FromLang : opt.source_lang = from.upcase
       end
       on("-t", "--to [LANG]", "Target language [EN]") do |to|
-        DeepL::App.show_target_languages if to.empty?
-        opt.target_lang = to.upcase
+        to.empty? ? opt.action = Action::ToLang : opt.target_lang = to.upcase
       end
       on("-g ID", "--glossary ID", "Glossary ID") do |id|
         opt.glossary_id = id
@@ -40,16 +38,16 @@ module DeepL
         opt.no_ansi = false
       end
       on("-u", "--usage", "Check Usage and Limits") do
-        DeepL::App.show_usage
+        opt.action = Action::Usage
       end
       on("-d", "--debug", "Show backtrace on error") do
         DeepLError.debug = true
       end
       on("-v", "--version", "Show version") do
-        show_version
+        opt.action = Action::Version
       end
       on("-h", "--help", "Show this help") do
-        show_help
+        opt.action = Action::Help
       end
       invalid_option do |flag|
         STDERR.puts "[deepl-cli] ERROR: #{flag} is not a valid option."
@@ -61,16 +59,6 @@ module DeepL
     def parse(args)
       super
       opt
-    end
-
-    def show_version
-      puts DeepL::VERSION
-      exit
-    end
-
-    def show_help
-      puts self
-      exit
     end
   end
 end
