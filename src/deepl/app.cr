@@ -11,9 +11,9 @@ module DeepL
     def run
       case option.action
       when Action::Text
-        tlanslate_text
+        translate_text
       when Action::Document
-        tlanslate_document
+        translate_document
       when Action::FromLang
         show_source_languages
       when Action::ToLang
@@ -37,7 +37,7 @@ module DeepL
       exit(1)
     end
 
-    def tlanslate_text
+    def translate_text
       if option.input.empty?
         option.input = ARGF.gets_to_end
       end
@@ -59,7 +59,7 @@ module DeepL
       puts translated_text
     end
 
-    def tlanslate_document
+    def translate_document
       raise NotImplementedError.new("Document translation is not supported yet.")
     end
 
