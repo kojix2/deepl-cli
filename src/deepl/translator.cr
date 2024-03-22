@@ -1,4 +1,5 @@
 require "json"
+require "crest"
 require "./utils/proxy"
 
 module DeepL
@@ -32,29 +33,29 @@ module DeepL
     API_URL_BASE_PRO  = "https://api.deepl.com/v2"
     API_URL_BASE_FREE = "https://api-free.deepl.com/v2"
 
-    getter :api_url_base, :api_url_translate
+    getter :api_url_base, :api_url_translate, :api_url_document
 
     def initialize
       @api_url_base = \
          auth_key_is_free_account? ? API_URL_BASE_FREE : API_URL_BASE_PRO
       @api_url_translate = "#{api_url_base}/translate"
+      @api_url_document = "#{api_url_base}/document"
     end
 
     private def http_headers_for_text
-      HTTP::Headers{
+      {
         "Authorization" => "DeepL-Auth-Key #{auth_key}",
         "User-Agent"    => user_agent,
-        "Content-Type"  => "application/x-www-form-urlencoded",
+        "Content-Type"  => "application/json",
       }
     end
 
-    # private def http_headers_for_document(content_type)
-    #   HTTP::Headers{
-    #     "Authorization" => "DeepL-Auth-Key #{auth_key}",
-    #     "User-Agent"    => user_agent,
-    #     "Content-Type"  => content_type,
-    #   }
-    # end
+    private def http_headers_for_document
+      {
+        "Authorization" => "DeepL-Auth-Key #{auth_key}",
+        "User-Agent"    => user_agent,
+      }
+    end
 
     private def auth_key
       ENV.fetch("DEEPL_AUTH_KEY") do
@@ -82,26 +83,31 @@ module DeepL
           option.input, option.target_lang, option.source_lang,
           option.formality, option.glossary_id, option.context
         )
+      when Action::Document
+        translate_document(
+          option.input, option.target_lang
+        )
       else
         raise UnknownSubCommandError.new
       end
     end
 
     def translate_text(
-      text, target_lang, source_lang = nil, context = nil, split_sentences = nil,
+      text, target_lang, source_lang = nil, context_ = nil, split_sentences = nil,
       formality = nil, glossary_id = nil
     )
-      params = HTTP::Params.build do |form|
-        form.add("text", text)
-        form.add("target_lang", target_lang)
-        form.add("source_lang", source_lang) if source_lang
-        form.add("formality", formality) if formality
-        form.add("glossary_id", glossary_id) if glossary_id
-        # experimental feature
-        form.add("context", context) if context
-        form.add("split_sentences", split_sentences) if split_sentences
-      end
-      response = execute_post_request(api_url_translate, params, http_headers_for_text)
+      params = Hash(String, String | Array(String)).new
+      params["text"] = [text] # Multiple Sentences
+      params["target_lang"] = target_lang
+      params["source_lang"] = source_lang if source_lang
+      params["formality"] = formality if formality
+      params["glossary_id"] = glossary_id if glossary_id
+      # experimental feature
+      params["context"] = context_ if context_
+      params["split_sentences"] = split_sentences if split_sentences
+
+      response = Crest.post(api_url_translate, form: params, headers: http_headers_for_text, json: true)
+
       case response.status_code
       when 456
         raise RequestError.new("Quota exceeded")
@@ -116,59 +122,39 @@ module DeepL
       when HTTP::Status::SERVICE_UNAVAILABLE
         raise RequestError.new("Service unavailable")
       end
+
       parsed_response = JSON.parse(response.body)
-      begin
-        parsed_response.dig("translations", 0, "text")
-      rescue ex
-        raise RequestError.new(exception: ex)
-      end
+      parsed_response.dig("translations", 0, "text")
     end
 
-    # def translate_document(option)
-    #   io = IO::Memory.new
-    #   builder = HTTP::FormData::Builder.new(io)
-    #   builder.field("target_lang", option.target_lang)
-    #   builder.field("source_lang", option.source_lang) unless option.source_lang == "AUTO"
-    #   file = File.open(option.input)
-    #   filename = File.basename(option.input)
-    #   metadata = HTTP::FormData::FileMetadata.new(filename: filename)
-    #   headers = HTTP::Headers{"Content-Type" => "text/plain"}
-    #   builder.file("file", file, metadata, headers)
-    #   builder.finish
+    def translate_document(path, target_lang)
+      upload_document(path, target_lang)
+    end
 
-    #   response = execute_post_request(API_URL_DOCUMENT, io, http_headers_for_document(builder.content_type))
-    #   parsed_response = JSON.parse(response.body)
-    #   begin
-    #     parsed_response.dig("document_id")
-    #   rescue ex
-    #     raise RequestError.new(exception: ex)
-    #   end
-    # end
-
-    private def execute_post_request(url = url, body = body, headers = headers)
-      HTTP::Client.post(url, body: body, headers: headers)
-    rescue ex
-      raise RequestError.new(exception: ex)
+    def upload_document(path, target_lang)
+      raise RequestError.new("File not found") unless File.exists?(path)
+      response = Crest.post(
+        api_url_document,
+        form: {"file" => File.open(path), "target_lang" => target_lang},
+        headers: http_headers_for_document,
+      )
+      document_id = JSON.parse(response.body).dig("document_id")
+      document_key = JSON.parse(response.body).dig("document_key")
+      p [document_id, document_key]
     end
 
     def request_languages(type)
-      HTTP::Client.get("#{api_url_base}/languages?type=#{type}", headers: http_headers_for_text)
-    rescue ex
-      raise RequestError.new(exception: ex)
+      Crest.get("#{api_url_base}/languages?type=#{type}", headers: http_headers_for_text)
     end
 
     def target_languages
       response = request_languages("target")
       parse_languages_response(response)
-    rescue ex
-      raise RequestError.new(exception: ex)
     end
 
     def source_languages
       response = request_languages("source")
       parse_languages_response(response)
-    rescue ex
-      raise RequestError.new(exception: ex)
     end
 
     private def parse_languages_response(response)
@@ -178,14 +164,10 @@ module DeepL
     def usage
       response = request_usage
       parse_usage_response(response)
-    rescue ex
-      raise RequestError.new(exception: ex)
     end
 
     private def request_usage
-      HTTP::Client.get("#{api_url_base}/usage", headers: http_headers_for_text)
-    rescue ex
-      raise RequestError.new(exception: ex)
+      Crest.get("#{api_url_base}/usage", headers: http_headers_for_text)
     end
 
     private def parse_usage_response(response)

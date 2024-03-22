@@ -13,6 +13,9 @@ module DeepL
       # on("doc", "Upload and translate a document") do
       #   opt.action = Action::Document
       # end
+      on("doc", "Translate document") do
+        opt.action = Action::Document
+      end
       on("-i", "--input TEXT", "Input text") do |text|
         opt.input = text
       end

@@ -60,7 +60,13 @@ module DeepL
     end
 
     def translate_document
-      raise NotImplementedError.new("Document translation is not supported yet.")
+      spinner = Term::Spinner.new
+
+      spinner = Term::Spinner.new(clear: true)
+      spinner.run do
+        translator = DeepL::Translator.new
+        translated_text = translator.translate(option)
+      end
     end
 
     def show_source_languages
