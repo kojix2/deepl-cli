@@ -11,11 +11,11 @@ module DeepL
       super()
       @opt = Options.new
       @translator = translator
-      self.banner = "Usage: deepl [arguments]"
+      self.banner = "Usage: deepl [options] <file>"
       # on("doc", "Upload and translate a document") do
       #   opt.sub_command = SubCmd::Document
       # end
-      on("-i", "--input [TEXT]", "Input text") do |text|
+      on("-i", "--input TEXT", "Input text") do |text|
         opt.input = text
       end
       on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
@@ -26,19 +26,19 @@ module DeepL
         show_target_languages if to.empty?
         opt.target_lang = to.upcase
       end
-      on("--formality [FORMALITY]", "Formality (default more less)") do |formality|
-        opt.formality = formality
-      end
       on("-g ID", "--glossary ID", "Glossary ID") do |id|
         opt.glossary_id = id
       end
-      on("-u", "--usage", "Check Usage and Limits") do
-        show_usage
+      on("-F", "--formality OPT", "Formality (default more less)") do |formality|
+        opt.formality = formality
       end
       on("-A", "--ansi", "Do not remove ANSI escape codes") do
         opt.no_ansi = false
       end
-      on("-d", "--debug", "Show debug information") do
+      on("-u", "--usage", "Check Usage and Limits") do
+        show_usage
+      end
+      on("-d", "--debug", "Show backtrace on error") do
         DeepLError.debug = true
       end
       on("-v", "--version", "Show version") do
