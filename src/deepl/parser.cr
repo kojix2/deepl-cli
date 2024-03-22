@@ -22,7 +22,7 @@ module DeepL
       on("-t", "--to [LANG]", "Target language [EN]") do |to|
         to.empty? ? opt.action = Action::ToLang : opt.target_lang = to.upcase
       end
-      on("-g ID", "--glossary ID", "Glossary ID") do |id|
+      on("-g", "--glossary ID", "Glossary ID") do |id|
         opt.glossary_id = id
       end
       on("-F", "--formality OPT", "Formality (default more less)") do |v|
