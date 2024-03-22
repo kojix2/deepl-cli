@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../js/doc.js"></script>
 
   <meta name="repository-name" content="deepl-cli">
-  <title>DeepL::SubCmd - deepl-cli main</title>
+  <title>DeepL::Action - deepl-cli main</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -62,6 +62,11 @@
       
         <ul>
   
+  <li class=" current" data-id="deepl-cli/DeepL/Action" data-name="deepl::action">
+      <a href="../DeepL/Action.html">Action</a>
+      
+    </li>
+  
   <li class=" " data-id="deepl-cli/DeepL/ApiKeyError" data-name="deepl::apikeyerror">
       <a href="../DeepL/ApiKeyError.html">ApiKeyError</a>
       
@@ -89,11 +94,6 @@
   
   <li class=" " data-id="deepl-cli/DeepL/RequestError" data-name="deepl::requesterror">
       <a href="../DeepL/RequestError.html">RequestError</a>
-      
-    </li>
-  
-  <li class=" current" data-id="deepl-cli/DeepL/SubCmd" data-name="deepl::subcmd">
-      <a href="../DeepL/SubCmd.html">SubCmd</a>
       
     </li>
   
@@ -136,7 +136,7 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">enum</span> DeepL::<wbr>SubCmd
+  <span class="kind">enum</span> DeepL::<wbr>Action
 
 </h1>
 
@@ -167,7 +167,7 @@
   </h2>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/09ed28d7c59a8d0385d7cfe7144433b25b485cb1/src/deepl/options.cr#L2" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/d5ee3e18742578a84a08e80f678a9d832e311ec6/src/deepl/options.cr#L2" target="_blank">
         deepl/options.cr
       </a>
     
@@ -198,6 +198,31 @@
       </dt>
       
     
+      <dt class="entry-const" id="FromLang">
+        <strong>FromLang</strong> = <code><span class="n">2_u8</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="ToLang">
+        <strong>ToLang</strong> = <code><span class="n">3_u8</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Usage">
+        <strong>Usage</strong> = <code><span class="n">4_u8</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Version">
+        <strong>Version</strong> = <code><span class="n">5_u8</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="Help">
+        <strong>Help</strong> = <code><span class="n">6_u8</span></code>
+      </dt>
+      
+    
   </dl>
 
 
@@ -224,7 +249,32 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#from_lang%3F-instance-method" class="signature"><strong>#from_lang?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#help%3F-instance-method" class="signature"><strong>#help?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#text%3F-instance-method" class="signature"><strong>#text?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#to_lang%3F-instance-method" class="signature"><strong>#to_lang?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#usage%3F-instance-method" class="signature"><strong>#usage?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#version%3F-instance-method" class="signature"><strong>#version?</strong></a>
         
       </li>
     
@@ -315,7 +365,39 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/09ed28d7c59a8d0385d7cfe7144433b25b485cb1/src/deepl/options.cr#L4" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/d5ee3e18742578a84a08e80f678a9d832e311ec6/src/deepl/options.cr#L4" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="from_lang?-instance-method">
+      <div class="signature">
+        
+        def <strong>from_lang?</strong>
+
+        <a class="method-permalink" href="#from_lang%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/d5ee3e18742578a84a08e80f678a9d832e311ec6/src/deepl/options.cr#L5" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="help?-instance-method">
+      <div class="signature">
+        
+        def <strong>help?</strong>
+
+        <a class="method-permalink" href="#help%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/d5ee3e18742578a84a08e80f678a9d832e311ec6/src/deepl/options.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -331,7 +413,55 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/09ed28d7c59a8d0385d7cfe7144433b25b485cb1/src/deepl/options.cr#L3" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/d5ee3e18742578a84a08e80f678a9d832e311ec6/src/deepl/options.cr#L3" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="to_lang?-instance-method">
+      <div class="signature">
+        
+        def <strong>to_lang?</strong>
+
+        <a class="method-permalink" href="#to_lang%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/d5ee3e18742578a84a08e80f678a9d832e311ec6/src/deepl/options.cr#L6" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="usage?-instance-method">
+      <div class="signature">
+        
+        def <strong>usage?</strong>
+
+        <a class="method-permalink" href="#usage%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/d5ee3e18742578a84a08e80f678a9d832e311ec6/src/deepl/options.cr#L7" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="version?-instance-method">
+      <div class="signature">
+        
+        def <strong>version?</strong>
+
+        <a class="method-permalink" href="#version%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/d5ee3e18742578a84a08e80f678a9d832e311ec6/src/deepl/options.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>

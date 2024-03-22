@@ -62,6 +62,11 @@
       
         <ul>
   
+  <li class=" " data-id="deepl-cli/DeepL/Action" data-name="deepl::action">
+      <a href="../DeepL/Action.html">Action</a>
+      
+    </li>
+  
   <li class=" " data-id="deepl-cli/DeepL/ApiKeyError" data-name="deepl::apikeyerror">
       <a href="../DeepL/ApiKeyError.html">ApiKeyError</a>
       
@@ -89,11 +94,6 @@
   
   <li class=" " data-id="deepl-cli/DeepL/RequestError" data-name="deepl::requesterror">
       <a href="../DeepL/RequestError.html">RequestError</a>
-      
-    </li>
-  
-  <li class=" " data-id="deepl-cli/DeepL/SubCmd" data-name="deepl::subcmd">
-      <a href="../DeepL/SubCmd.html">SubCmd</a>
       
     </li>
   
@@ -169,7 +169,7 @@
   </h2>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/09ed28d7c59a8d0385d7cfe7144433b25b485cb1/src/deepl/app.cr#L2" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/d5ee3e18742578a84a08e80f678a9d832e311ec6/src/deepl/app.cr#L2" target="_blank">
         deepl/app.cr
       </a>
     
@@ -180,35 +180,18 @@
 
 
 
-
-
   <h2>
-    <a id="class-method-summary" class="anchor" href="#class-method-summary">
+    <a id="constructors" class="anchor" href="#constructors">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Class Method Summary
+    Constructors
   </h2>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#run-class-method" class="signature"><strong>.run</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#show_source_languages-class-method" class="signature"><strong>.show_source_languages</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#show_target_languages-class-method" class="signature"><strong>.show_target_languages</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#show_usage-class-method" class="signature"><strong>.show_usage</strong></a>
+        <a href="#new-class-method" class="signature"><strong>.new</strong></a>
         
       </li>
     
@@ -217,6 +200,55 @@
 
 
 
+
+
+
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#parser%3ADeepL%3A%3AParser-instance-method" class="signature"><strong>#parser</strong> : DeepL::Parser</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#run-instance-method" class="signature"><strong>#run</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#show_help-instance-method" class="signature"><strong>#show_help</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#show_source_languages-instance-method" class="signature"><strong>#show_source_languages</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#show_target_languages-instance-method" class="signature"><strong>#show_target_languages</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#show_usage-instance-method" class="signature"><strong>#show_usage</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#show_version-instance-method" class="signature"><strong>#show_version</strong></a>
+        
+      </li>
+    
+  </ul>
 
 
 
@@ -251,77 +283,27 @@
 </div>
 
 
-
-
   <h2>
-    <a id="class-method-detail" class="anchor" href="#class-method-detail">
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Class Method Detail
+    Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="run-class-method">
+    <div class="entry-detail" id="new-class-method">
       <div class="signature">
         
-        def self.<strong>run</strong>
+        def self.<strong>new</strong>
 
-        <a class="method-permalink" href="#run-class-method">#</a>
+        <a class="method-permalink" href="#new-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/09ed28d7c59a8d0385d7cfe7144433b25b485cb1/src/deepl/app.cr#L3" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="show_source_languages-class-method">
-      <div class="signature">
-        
-        def self.<strong>show_source_languages</strong>
-
-        <a class="method-permalink" href="#show_source_languages-class-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/kojix2/deepl-cli/blob/09ed28d7c59a8d0385d7cfe7144433b25b485cb1/src/deepl/app.cr#L35" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="show_target_languages-class-method">
-      <div class="signature">
-        
-        def self.<strong>show_target_languages</strong>
-
-        <a class="method-permalink" href="#show_target_languages-class-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/kojix2/deepl-cli/blob/09ed28d7c59a8d0385d7cfe7144433b25b485cb1/src/deepl/app.cr#L44" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="show_usage-class-method">
-      <div class="signature">
-        
-        def self.<strong>show_usage</strong>
-
-        <a class="method-permalink" href="#show_usage-class-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/kojix2/deepl-cli/blob/09ed28d7c59a8d0385d7cfe7144433b25b485cb1/src/deepl/app.cr#L54" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/d5ee3e18742578a84a08e80f678a9d832e311ec6/src/deepl/app.cr#L5" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -330,6 +312,130 @@
 
 
 
+
+
+
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="parser:DeepL::Parser-instance-method">
+      <div class="signature">
+        
+        def <strong>parser</strong> : <a href="../DeepL/Parser.html">DeepL::Parser</a>
+
+        <a class="method-permalink" href="#parser%3ADeepL%3A%3AParser-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/d5ee3e18742578a84a08e80f678a9d832e311ec6/src/deepl/app.cr#L3" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="run-instance-method">
+      <div class="signature">
+        
+        def <strong>run</strong>
+
+        <a class="method-permalink" href="#run-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/d5ee3e18742578a84a08e80f678a9d832e311ec6/src/deepl/app.cr#L9" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="show_help-instance-method">
+      <div class="signature">
+        
+        def <strong>show_help</strong>
+
+        <a class="method-permalink" href="#show_help-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/d5ee3e18742578a84a08e80f678a9d832e311ec6/src/deepl/app.cr#L84" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="show_source_languages-instance-method">
+      <div class="signature">
+        
+        def <strong>show_source_languages</strong>
+
+        <a class="method-permalink" href="#show_source_languages-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/d5ee3e18742578a84a08e80f678a9d832e311ec6/src/deepl/app.cr#L53" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="show_target_languages-instance-method">
+      <div class="signature">
+        
+        def <strong>show_target_languages</strong>
+
+        <a class="method-permalink" href="#show_target_languages-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/d5ee3e18742578a84a08e80f678a9d832e311ec6/src/deepl/app.cr#L62" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="show_usage-instance-method">
+      <div class="signature">
+        
+        def <strong>show_usage</strong>
+
+        <a class="method-permalink" href="#show_usage-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/d5ee3e18742578a84a08e80f678a9d832e311ec6/src/deepl/app.cr#L72" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="show_version-instance-method">
+      <div class="signature">
+        
+        def <strong>show_version</strong>
+
+        <a class="method-permalink" href="#show_version-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/d5ee3e18742578a84a08e80f678a9d832e311ec6/src/deepl/app.cr#L79" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
 
 
 </div>
