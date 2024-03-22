@@ -128,19 +128,53 @@ module DeepL
     end
 
     def translate_document(path, target_lang)
-      upload_document(path, target_lang)
+      did, dkey = upload_document(path, target_lang)
+
+      check_status_of_document(did, dkey)
+
+      download_document(path, target_lang, did, dkey)
+    end
+
+    def check_status_of_document(did, dkey)
+      loop do
+        sleep 10
+        response = Crest.post(
+          "#{api_url_document}/#{did}",
+          form: {"document_key" => dkey},
+          headers: http_headers_for_text,
+        )
+        parsed_response = JSON.parse(response.body)
+        STDERR.puts parsed_response
+        break if parsed_response.dig("status") == "done"
+      end
+    end
+
+    def download_document(path, target_lang, did, dkey)
+      response = Crest.post(
+        "#{api_url_document}/#{did}/result",
+        form: {"document_key" => dkey},
+        headers: http_headers_for_text,
+      )
+
+      new_path = "#{path}.#{target_lang}"
+      File.write(new_path, response.body)
     end
 
     def upload_document(path, target_lang)
       raise RequestError.new("File not found") unless File.exists?(path)
+
       response = Crest.post(
         api_url_document,
         form: {"file" => File.open(path), "target_lang" => target_lang},
         headers: http_headers_for_document,
       )
-      document_id = JSON.parse(response.body).dig("document_id")
-      document_key = JSON.parse(response.body).dig("document_key")
-      p [document_id, document_key]
+
+      parsed_response = JSON.parse(response.body)
+      STDERR.puts parsed_response
+      document_id = parsed_response.dig("document_id")
+      document_key = parsed_response.dig("document_key")
+
+      [document_id, document_key]
     end
 
     def request_languages(type)

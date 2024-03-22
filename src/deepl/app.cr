@@ -80,9 +80,9 @@ module DeepL
     def show_target_languages
       translator = DeepL::Translator.new
       translator.target_languages.each do |lang|
-        language, name, supports_formality = lang.values.map(&.to_s)
-        formality = (supports_formality == "true") ? "YES" : "NO"
-        puts "- #{language.ljust(7)}#{name.ljust(20)}\tformality support [#{formality}]"
+        language, name = lang.values.map(&.to_s)
+        # FIXME: Support formality
+        puts "- #{language.ljust(7)}#{name.ljust(20)}"
       end
     end
 
