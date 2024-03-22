@@ -23,6 +23,7 @@ export DEEPL_AUTH_KEY=your_api_key_here
 git clone https://github.com/kojix2/deepl-cli
 cd deepl-cli
 shards build --release
+# sudo cp bin/deepl /usr/local/bin
 ```
 
 A compiled binary file will be created in the `bin` directory.
@@ -39,19 +40,25 @@ export HTTPS_PROXY=https://[IP]:[port]
 To use the DeepL Translator CLI, simply run the `deepl` command followed by the arguments you wish to pass.
 
 ```bash
-$ ./bin/deepl [arguments]
+deepl [options] <file>
 ```
 
 ### Arguments
 
 Options available for the CLI tool:
 
-- `-i, --input=TEXT`: Input text to translate.
-- `-f, --from=LANG`: Set the source language (default: AUTO). Example: `-f EN`.
-- `-t, --to=LANG`: Set the target language (default: EN). Example: `-t ES`.
-- `-u, --usage`: Check Usage and Limits
-- `-v, --version`: Show the current version.
-- `-h, --help`: Show the help message.
+    -i, --input TEXT                 Input text
+    -f, --from [LANG]                Source language [AUTO]
+    -t, --to [LANG]                  Target language [EN]
+    -g ID, --glossary ID             Glossary ID
+    -F, --formality OPT              Formality (default more less)
+    -A, --ansi                       Do not remove ANSI escape codes
+    -u, --usage                      Check Usage and Limits
+    -d, --debug                      Show backtrace on error
+    -v, --version                    Show version
+    -h, --help                       Show this help
+
+Note that since this tool is used on a terminal, ANSI escape sequences are removed by default.
 
 ### Examples
 
