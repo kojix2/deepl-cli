@@ -158,7 +158,8 @@
 </a>Compilation from source code</h3>
 <pre><code class="language-bash">git clone https://github.com/kojix2/deepl-cli
 cd deepl-cli
-shards build --release</code></pre>
+shards build --release
+# sudo cp bin/deepl /usr/local/bin</code></pre>
 <p>A compiled binary file will be created in the <code>bin</code> directory.</p>
 <h3><a id="proxy-settings-optional" class="anchor" href="#proxy-settings-optional">
   <svg class="octicon-link" aria-hidden="true">
@@ -173,21 +174,24 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
   </svg>
 </a>Usage</h2>
 <p>To use the DeepL Translator CLI, simply run the <code>deepl</code> command followed by the arguments you wish to pass.</p>
-<pre><code class="language-bash">$ ./bin/deepl [arguments]</code></pre>
+<pre><code class="language-bash">deepl [options] &lt;file&gt;</code></pre>
 <h3><a id="arguments" class="anchor" href="#arguments">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Arguments</h3>
 <p>Options available for the CLI tool:</p>
-<ul>
-<li><code>-i, --input=TEXT</code>: Input text to translate.</li>
-<li><code>-f, --from=LANG</code>: Set the source language (default: AUTO). Example: <code>-f EN</code>.</li>
-<li><code>-t, --to=LANG</code>: Set the target language (default: EN). Example: <code>-t ES</code>.</li>
-<li><code>-u, --usage</code>: Check Usage and Limits</li>
-<li><code>-v, --version</code>: Show the current version.</li>
-<li><code>-h, --help</code>: Show the help message.</li>
-</ul>
+<pre><code class="language-crystal">-i, --input TEXT                 Input text
+-f, --from [LANG]                Source language [AUTO]
+-t, --to [LANG]                  Target language [EN]
+-g ID, --glossary ID             Glossary ID
+-F, --formality OPT              Formality (default more less)
+-A, --ansi                       Do not remove ANSI escape codes
+-u, --usage                      Check Usage and Limits
+-d, --debug                      Show backtrace on error
+-v, --version                    Show version
+-h, --help                       Show this help</code></pre>
+<p>Note that since this tool is used on a terminal, ANSI escape sequences are removed by default.</p>
 <h3><a id="examples" class="anchor" href="#examples">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
