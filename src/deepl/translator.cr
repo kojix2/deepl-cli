@@ -39,17 +39,14 @@ module DeepL
     getter :api_url_base, :api_url_translate
 
     def initialize
-      if api_key.ends_with?(":fx")
-        @api_url_base = API_URL_BASE_FREE
-      else
-        @api_url_base = API_URL_BASE_PRO
-      end
+      @api_url_base = \
+         auth_key_is_free_account? ? API_URL_BASE_FREE : API_URL_BASE_PRO
       @api_url_translate = "#{api_url_base}/translate"
     end
 
     private def http_headers_for_text
       HTTP::Headers{
-        "Authorization" => "DeepL-Auth-Key #{api_key}",
+        "Authorization" => "DeepL-Auth-Key #{auth_key}",
         "User-Agent"    => user_agent,
         "Content-Type"  => "application/x-www-form-urlencoded",
       }
@@ -57,13 +54,13 @@ module DeepL
 
     # private def http_headers_for_document(content_type)
     #   HTTP::Headers{
-    #     "Authorization" => "DeepL-Auth-Key #{api_key}",
+    #     "Authorization" => "DeepL-Auth-Key #{auth_key}",
     #     "User-Agent"    => user_agent,
     #     "Content-Type"  => content_type,
     #   }
     # end
 
-    private def api_key
+    private def auth_key
       ENV.fetch("DEEPL_AUTH_KEY") do
         # For compatibility with version 0.2.1 or earlier
         ENV.fetch("DEEPL_API_KEY") do
@@ -197,6 +194,10 @@ module DeepL
 
     private def parse_usage_response(response)
       Hash(String, UInt64).from_json(response.body)
+    end
+
+    private def auth_key_is_free_account?
+      auth_key.ends_with?(":fx")
     end
   end
 end
