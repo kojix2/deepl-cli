@@ -29,8 +29,14 @@ module DeepL
       on("-g ID", "--glossary ID", "Glossary ID") do |id|
         opt.glossary_id = id
       end
-      on("-F", "--formality OPT", "Formality (default more less)") do |formality|
-        opt.formality = formality
+      on("-F", "--formality OPT", "Formality (default more less)") do |v|
+        opt.formality = v
+      end
+      on("-C", "--context TEXT", "Context (experimental)") do |text|
+        opt.context = text
+      end
+      on("-S", "--split-sentences OPT", "Split sentences") do |v|
+        opt.split_sentences = v
       end
       on("-A", "--ansi", "Do not remove ANSI escape codes") do
         opt.no_ansi = false
