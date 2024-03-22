@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../js/doc.js"></script>
 
   <meta name="repository-name" content="deepl-cli">
-  <title>DeepL::RequestError - deepl-cli main</title>
+  <title>DeepL::App - deepl-cli main</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -67,7 +67,7 @@
       
     </li>
   
-  <li class=" " data-id="deepl-cli/DeepL/App" data-name="deepl::app">
+  <li class=" current" data-id="deepl-cli/DeepL/App" data-name="deepl::app">
       <a href="../DeepL/App.html">App</a>
       
     </li>
@@ -87,7 +87,7 @@
       
     </li>
   
-  <li class=" current" data-id="deepl-cli/DeepL/RequestError" data-name="deepl::requesterror">
+  <li class=" " data-id="deepl-cli/DeepL/RequestError" data-name="deepl::requesterror">
       <a href="../DeepL/RequestError.html">RequestError</a>
       
     </li>
@@ -136,12 +136,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> DeepL::<wbr>RequestError
+  <span class="kind">class</span> DeepL::<wbr>App
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../DeepL/RequestError.html">DeepL::RequestError</a></li><li class="superclass"><a href="../DeepL/DeepLError.html">DeepL::DeepLError</a></li><li class="superclass">Exception</li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../DeepL/App.html">DeepL::App</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -169,8 +169,8 @@
   </h2>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/09ed28d7c59a8d0385d7cfe7144433b25b485cb1/src/deepl/translator.cr#L15" target="_blank">
-        deepl/translator.cr
+      <a href="https://github.com/kojix2/deepl-cli/blob/09ed28d7c59a8d0385d7cfe7144433b25b485cb1/src/deepl/app.cr#L2" target="_blank">
+        deepl/app.cr
       </a>
     
     <br/>
@@ -180,23 +180,35 @@
 
 
 
+
+
   <h2>
-    <a id="constructors" class="anchor" href="#constructors">
+    <a id="class-method-summary" class="anchor" href="#class-method-summary">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Constructors
+    Class Method Summary
   </h2>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#new%28exception%3AException%29-class-method" class="signature"><strong>.new</strong>(exception : Exception)</a>
+        <a href="#run-class-method" class="signature"><strong>.run</strong></a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#new%28message%3AString%29-class-method" class="signature"><strong>.new</strong>(message : String)</a>
+        <a href="#show_source_languages-class-method" class="signature"><strong>.show_source_languages</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#show_target_languages-class-method" class="signature"><strong>.show_target_languages</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#show_usage-class-method" class="signature"><strong>.show_usage</strong></a>
         
       </li>
     
@@ -208,49 +220,7 @@
 
 
 
-
-
 <div class="methods-inherited">
-  
-    
-
-
-    
-
-
-    
-
-  <h3>Class methods inherited from class <code><a href="../DeepL/DeepLError.html">DeepL::DeepLError</a></code></h3>
-  
-  
-    <a href="../DeepL/DeepLError.html#debug%3ABool-class-method" class="tooltip">
-      <span>debug : Bool</span>
-    debug</a>, 
-    
-  
-    <a href="../DeepL/DeepLError.html#debug%3D%28debug%3ABool%29-class-method" class="tooltip">
-      <span>debug=(debug : Bool)</span>
-    debug=</a>
-    
-  
-
-
-    
-
-
-  
-    
-
-
-    
-
-
-    
-
-
-    
-
-
   
     
 
@@ -281,49 +251,81 @@
 </div>
 
 
+
+
   <h2>
-    <a id="constructor-detail" class="anchor" href="#constructor-detail">
+    <a id="class-method-detail" class="anchor" href="#class-method-detail">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Constructor Detail
+    Class Method Detail
   </h2>
   
-    <div class="entry-detail" id="new(exception:Exception)-class-method">
+    <div class="entry-detail" id="run-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(exception : Exception)
+        def self.<strong>run</strong>
 
-        <a class="method-permalink" href="#new%28exception%3AException%29-class-method">#</a>
+        <a class="method-permalink" href="#run-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/09ed28d7c59a8d0385d7cfe7144433b25b485cb1/src/deepl/translator.cr#L16" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/09ed28d7c59a8d0385d7cfe7144433b25b485cb1/src/deepl/app.cr#L3" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="new(message:String)-class-method">
+    <div class="entry-detail" id="show_source_languages-class-method">
       <div class="signature">
         
-        def self.<strong>new</strong>(message : String)
+        def self.<strong>show_source_languages</strong>
 
-        <a class="method-permalink" href="#new%28message%3AString%29-class-method">#</a>
+        <a class="method-permalink" href="#show_source_languages-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/09ed28d7c59a8d0385d7cfe7144433b25b485cb1/src/deepl/translator.cr#L20" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/09ed28d7c59a8d0385d7cfe7144433b25b485cb1/src/deepl/app.cr#L35" target="_blank">View source</a>]
         
       </div>
     </div>
   
+    <div class="entry-detail" id="show_target_languages-class-method">
+      <div class="signature">
+        
+        def self.<strong>show_target_languages</strong>
 
+        <a class="method-permalink" href="#show_target_languages-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/09ed28d7c59a8d0385d7cfe7144433b25b485cb1/src/deepl/app.cr#L44" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="show_usage-class-method">
+      <div class="signature">
+        
+        def self.<strong>show_usage</strong>
 
+        <a class="method-permalink" href="#show_usage-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/09ed28d7c59a8d0385d7cfe7144433b25b485cb1/src/deepl/app.cr#L54" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
 
 
 
