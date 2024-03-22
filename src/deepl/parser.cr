@@ -17,11 +17,11 @@ module DeepL
         opt.input = text
       end
       on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
-        DeepL.show_source_languages if from.empty?
+        DeepL::App.show_source_languages if from.empty?
         opt.source_lang = from.upcase
       end
       on("-t", "--to [LANG]", "Target language [EN]") do |to|
-        DeepL.show_target_languages if to.empty?
+        DeepL::App.show_target_languages if to.empty?
         opt.target_lang = to.upcase
       end
       on("-g ID", "--glossary ID", "Glossary ID") do |id|
@@ -40,7 +40,7 @@ module DeepL
         opt.no_ansi = false
       end
       on("-u", "--usage", "Check Usage and Limits") do
-        DeepL.show_usage
+        DeepL::App.show_usage
       end
       on("-d", "--debug", "Show backtrace on error") do
         DeepLError.debug = true
