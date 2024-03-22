@@ -14,11 +14,7 @@ module DeepL
 
   class RequestError < DeepLError
     def initialize(exception : Exception)
-      if DeepLError.debug
-        super("#{exception.class} #{exception.message}\n#{exception.backtrace.join("\n")}")
-      else
-        super("#{exception.class} #{exception.message}")
-      end
+      super("#{exception.class} #{exception.message}")
     end
 
     def initialize(message : String)
