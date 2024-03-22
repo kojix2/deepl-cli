@@ -14,8 +14,13 @@ export DEEPL_AUTH_KEY=your_api_key_here
 
 ## Installation
 
-- Precompiled binaries are available from [GitHub Releases](https://github.com/kojix2/deepl-cli/releases). (binaries for Linux are statically linked)
-- Compiling from source code is recommended for environments other than Linux.
+Linux: Precompiled binaries are available from [GitHub Releases](https://github.com/kojix2/deepl-cli/releases).
+
+Mac: Homebrew
+
+```sh
+brew install kojix2/brew/deepl-cli
+```
 
 ### Compilation from source code
 
