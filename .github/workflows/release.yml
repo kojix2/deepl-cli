@@ -58,3 +58,5 @@ jobs:
             bin/deepl-macos.tar.gz
             bin/deepl-windows.zip
             LICENSE.txt
+      - name: Checksums
+        uses: wangzuo/action-release-checksums@v1
