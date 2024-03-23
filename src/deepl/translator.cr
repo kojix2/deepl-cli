@@ -1,6 +1,6 @@
 require "json"
 require "crest"
-require "./utils/proxy"
+require "../ext/crest"
 require "./exceptions"
 
 module DeepL
