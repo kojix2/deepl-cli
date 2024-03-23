@@ -1,34 +1,9 @@
 require "json"
 require "crest"
 require "./utils/proxy"
+require "./exceptions"
 
 module DeepL
-  class DeepLError < Exception
-    class_property debug : Bool = false
-  end
-
-  class ApiKeyError < DeepLError
-    def initialize
-      super("DEEPL_AUTH_KEY is not set")
-    end
-  end
-
-  class RequestError < DeepLError
-    def initialize(exception : Exception)
-      super("#{exception.class} #{exception.message}")
-    end
-
-    def initialize(message : String)
-      super(message)
-    end
-  end
-
-  class UnknownSubCommandError < DeepLError
-    def initialize
-      super("Unknown sub command")
-    end
-  end
-
   class Translator
     API_URL_BASE_PRO  = "https://api.deepl.com/v2"
     API_URL_BASE_FREE = "https://api-free.deepl.com/v2"
@@ -110,15 +85,15 @@ module DeepL
 
       case response.status_code
       when 456
-        raise RequestError.new("Quota exceeded")
+        QuotaExceededError.new
       when HTTP::Status::FORBIDDEN
-        raise RequestError.new("Authorization failed")
+        raise AuthorizationError.new
       when HTTP::Status::NOT_FOUND
         raise RequestError.new("Not found")
       when HTTP::Status::BAD_REQUEST
         raise RequestError.new("Bad request")
       when HTTP::Status::TOO_MANY_REQUESTS
-        raise RequestError.new("Too many requests")
+        raise TooManyRequestsError.new
       when HTTP::Status::SERVICE_UNAVAILABLE
         raise RequestError.new("Service unavailable")
       end
@@ -133,6 +108,8 @@ module DeepL
       check_status_of_document(did, dkey)
 
       download_document(path, target_lang, did, dkey)
+    rescue ex
+      raise DocumentTranslationError.new
     end
 
     def check_status_of_document(did, dkey)
@@ -161,7 +138,8 @@ module DeepL
     end
 
     def upload_document(path, target_lang)
-      raise RequestError.new("File not found") unless File.exists?(path)
+      raise File::NotFoundError.new("File not found: #{path}",
+        file: path) unless File.exists?(path)
 
       response = Crest.post(
         api_url_document,
