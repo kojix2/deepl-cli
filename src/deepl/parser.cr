@@ -9,10 +9,14 @@ module DeepL
     def initialize
       super()
       @opt = Options.new
-      self.banner = "Usage: deepl [options] <file>"
-      # on("doc", "Upload and translate a document") do
-      #   opt.action = Action::Document
-      # end
+      self.banner = <<-BANNER
+
+        Program: DeepL CLI (Simple command line tool for DeepL)
+        Version: #{DeepL::VERSION}
+        Source:  https://github.com/kojix2/deepl-cli
+
+        Usage: deepl [options] <file>
+        BANNER
       on("doc", "Translate document") do
         opt.action = Action::Document
       end
