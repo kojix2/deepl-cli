@@ -99,13 +99,14 @@ module DeepL
     end
 
     def translate_document(path, target_lang)
+      path = Path[path]
       did, dkey = upload_document(path, target_lang)
 
       check_status_of_document(did, dkey)
 
       download_document(path, target_lang, did, dkey)
-    rescue ex
-      raise DocumentTranslationError.new
+      # rescue ex
+      #   raise DocumentTranslationError.new
     end
 
     def check_status_of_document(did, dkey)
@@ -129,17 +130,15 @@ module DeepL
         headers: http_headers_for_text,
       )
 
-      new_path = "#{path}.#{target_lang}"
+      new_path = path.parent / "#{path.stem}_#{target_lang}.txt"
       File.write(new_path, response.body)
     end
 
     def upload_document(path, target_lang)
-      raise File::NotFoundError.new("File not found: #{path}",
-        file: path) unless File.exists?(path)
-
+      file = File.open(path)
       response = Crest.post(
         api_url_document,
-        form: {"file" => File.open(path), "target_lang" => target_lang},
+        form: {"file" => file, "target_lang" => target_lang},
         headers: http_headers_for_document,
       )
 
