@@ -42,7 +42,7 @@ module DeepL
     end
 
     private def user_agent
-      ENV["DEEPL_USER_AGENT"] || "deepl-cli/#{VERSION}"
+      ENV["DEEPL_USER_AGENT"]? || "deepl-cli/#{VERSION}"
     end
 
     def translate(option)
