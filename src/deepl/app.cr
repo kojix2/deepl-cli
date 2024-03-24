@@ -38,13 +38,13 @@ module DeepL
     end
 
     def translate_text
-      if option.input.empty?
-        option.input = ARGF.gets_to_end
+      if option.input_text.empty?
+        option.input_text = ARGF.gets_to_end
       end
 
-      # Remove ANSI escape codes from input
+      # Remove ANSI escape codes from input_text
       if option.no_ansi
-        option.input = option.input.gsub(/\e\[[0-9;]*[mGKHF]/, "")
+        option.input_text = option.input_text.gsub(/\e\[[0-9;]*[mGKHF]/, "")
       end
 
       translated_text = ""
@@ -59,6 +59,18 @@ module DeepL
     end
 
     def translate_document
+      raise "Invalid option: -i --input" unless option.input_text.empty?
+      raise "Input file is not specified" if ARGV.empty?
+      option.input_path = Path[ARGV.shift]
+      STDERR.puts(
+        if ARGV.size == 1
+          "[deepl-cli] File #{ARGV[0]} is ignored"
+        else
+          "[deepl-cli] Files #{ARGV.join(", ")} are ignored"
+        end
+      )
+      STDERR.puts "[deepl-cli] Start translating #{option.input_path}"
+
       spinner = Term::Spinner.new(clear: true)
       spinner.run do
         translator = DeepL::Translator.new

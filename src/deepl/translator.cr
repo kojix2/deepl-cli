@@ -51,12 +51,12 @@ module DeepL
       #   translate_document(option)
       when Action::Text
         translate_text(
-          option.input, option.target_lang, option.source_lang,
+          option.input_text, option.target_lang, option.source_lang,
           option.formality, option.glossary_id, option.context
         )
       when Action::Document
         translate_document(
-          option.input, option.target_lang
+          option.input_path, option.target_lang
         )
       else
         raise UnknownSubCommandError.new
@@ -99,7 +99,6 @@ module DeepL
     end
 
     def translate_document(path, target_lang)
-      path = Path[path]
       did, dkey = upload_document(path, target_lang)
 
       check_status_of_document(did, dkey)

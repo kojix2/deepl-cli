@@ -21,7 +21,7 @@ module DeepL
         opt.action = Action::Document
       end
       on("-i", "--input TEXT", "Input text") do |text|
-        opt.input = text
+        opt.input_text = text
       end
       on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
         from.empty? ? opt.action = Action::FromLang : opt.source_lang = from.upcase

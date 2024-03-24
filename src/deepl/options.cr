@@ -11,7 +11,8 @@ module DeepL
 
   struct Options
     property action : Action = Action::Text
-    property input : String = ""
+    property input_text : String = ""
+    property input_path : Path = Path.new
     property target_lang : String = "EN"
     property source_lang : String? = nil
     property formality : String? = nil
