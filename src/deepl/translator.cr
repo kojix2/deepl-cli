@@ -109,6 +109,25 @@ module DeepL
       #   raise DocumentTranslationError.new
     end
 
+    def upload_document(path, target_lang)
+      file = File.open(path)
+      response = Crest.post(
+        api_url_document,
+        form: {"file" => file, "target_lang" => target_lang},
+        headers: http_headers_for_document,
+      )
+
+      parsed_response = JSON.parse(response.body)
+      document_id = parsed_response.dig("document_id")
+      document_key = parsed_response.dig("document_key")
+
+      STDERR.puts(
+        "#{"\e[2K\r" if STDERR.tty?}" \
+        "[deepl-cli] Uploaded #{path} : #{parsed_response}"
+      )
+      [document_id, document_key]
+    end
+
     def check_status_of_document(did, dkey)
       loop do
         sleep 10
@@ -118,7 +137,10 @@ module DeepL
           headers: http_headers_for_text,
         )
         parsed_response = JSON.parse(response.body)
-        STDERR.puts parsed_response
+        STDERR.puts(
+          "#{"\e[2K\r" if STDERR.tty?}" \
+          "[deepl-cli] Status of document : #{parsed_response}"
+        )
         break if parsed_response.dig("status") == "done"
       end
     end
@@ -132,22 +154,10 @@ module DeepL
 
       new_path = path.parent / "#{path.stem}_#{target_lang}.txt"
       File.write(new_path, response.body)
-    end
-
-    def upload_document(path, target_lang)
-      file = File.open(path)
-      response = Crest.post(
-        api_url_document,
-        form: {"file" => file, "target_lang" => target_lang},
-        headers: http_headers_for_document,
+      STDERR.puts(
+        "#{"\e[2K\r" if STDERR.tty?}" \
+        "[deepl-cli] Download #{new_path}"
       )
-
-      parsed_response = JSON.parse(response.body)
-      STDERR.puts parsed_response
-      document_id = parsed_response.dig("document_id")
-      document_key = parsed_response.dig("document_key")
-
-      [document_id, document_key]
     end
 
     def request_languages(type)
