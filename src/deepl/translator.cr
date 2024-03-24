@@ -42,11 +42,7 @@ module DeepL
     end
 
     private def user_agent
-      {% if env("DEEPL_USER_AGENT") %}
-        "{{ env("DEEPL_USER_AGENT") }}"
-      {% else %}
-        "deepl-cli/#{VERSION}"
-      {% end %}
+      ENV["DEEPL_USER_AGENT"] || "deepl-cli/#{VERSION}"
     end
 
     def translate(option)
