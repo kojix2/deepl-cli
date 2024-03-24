@@ -197,7 +197,7 @@
   </h2>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/6fb36cbe185b57686185b180c35101ed13dd6314/src/deepl/options.cr#L2" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/0c1f5e1d563b2572363b1bcad0345965c3014d46/src/deepl/options.cr#L2" target="_blank">
         deepl/options.cr
       </a>
     
@@ -218,58 +218,53 @@
   
   <dl>
     
-      <dt class="entry-const" id="Text">
-        <strong>Text</strong> = <code><span class="n">0_u8</span></code>
+      <dt class="entry-const" id="TranslateText">
+        <strong>TranslateText</strong> = <code><span class="n">0_u8</span></code>
       </dt>
       
     
-      <dt class="entry-const" id="Document">
-        <strong>Document</strong> = <code><span class="n">1_u8</span></code>
+      <dt class="entry-const" id="TranslateDocument">
+        <strong>TranslateDocument</strong> = <code><span class="n">1_u8</span></code>
       </dt>
       
     
-      <dt class="entry-const" id="Glossary">
-        <strong>Glossary</strong> = <code><span class="n">2_u8</span></code>
-      </dt>
-      
-    
-      <dt class="entry-const" id="GlossaryLanguagePairs">
-        <strong>GlossaryLanguagePairs</strong> = <code><span class="n">3_u8</span></code>
+      <dt class="entry-const" id="ListGlossaryLanguagePairs">
+        <strong>ListGlossaryLanguagePairs</strong> = <code><span class="n">2_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="CreateGlossary">
-        <strong>CreateGlossary</strong> = <code><span class="n">4_u8</span></code>
+        <strong>CreateGlossary</strong> = <code><span class="n">3_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="ListGlossary">
-        <strong>ListGlossary</strong> = <code><span class="n">5_u8</span></code>
+        <strong>ListGlossary</strong> = <code><span class="n">4_u8</span></code>
       </dt>
       
     
-      <dt class="entry-const" id="FromLang">
-        <strong>FromLang</strong> = <code><span class="n">6_u8</span></code>
+      <dt class="entry-const" id="ListFromLang">
+        <strong>ListFromLang</strong> = <code><span class="n">5_u8</span></code>
       </dt>
       
     
-      <dt class="entry-const" id="ToLang">
-        <strong>ToLang</strong> = <code><span class="n">7_u8</span></code>
+      <dt class="entry-const" id="ListToLang">
+        <strong>ListToLang</strong> = <code><span class="n">6_u8</span></code>
       </dt>
       
     
-      <dt class="entry-const" id="Usage">
-        <strong>Usage</strong> = <code><span class="n">8_u8</span></code>
+      <dt class="entry-const" id="RetrieveUsage">
+        <strong>RetrieveUsage</strong> = <code><span class="n">7_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="Version">
-        <strong>Version</strong> = <code><span class="n">9_u8</span></code>
+        <strong>Version</strong> = <code><span class="n">8_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="Help">
-        <strong>Help</strong> = <code><span class="n">10_u8</span></code>
+        <strong>Help</strong> = <code><span class="n">9_u8</span></code>
       </dt>
       
     
@@ -299,27 +294,12 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#document%3F-instance-method" class="signature"><strong>#document?</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#from_lang%3F-instance-method" class="signature"><strong>#from_lang?</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#glossary%3F-instance-method" class="signature"><strong>#glossary?</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#glossary_language_pairs%3F-instance-method" class="signature"><strong>#glossary_language_pairs?</strong></a>
-        
-      </li>
-    
-      <li class="entry-summary">
         <a href="#help%3F-instance-method" class="signature"><strong>#help?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#list_from_lang%3F-instance-method" class="signature"><strong>#list_from_lang?</strong></a>
         
       </li>
     
@@ -329,17 +309,27 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#text%3F-instance-method" class="signature"><strong>#text?</strong></a>
+        <a href="#list_glossary_language_pairs%3F-instance-method" class="signature"><strong>#list_glossary_language_pairs?</strong></a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#to_lang%3F-instance-method" class="signature"><strong>#to_lang?</strong></a>
+        <a href="#list_to_lang%3F-instance-method" class="signature"><strong>#list_to_lang?</strong></a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#usage%3F-instance-method" class="signature"><strong>#usage?</strong></a>
+        <a href="#retrieve_usage%3F-instance-method" class="signature"><strong>#retrieve_usage?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#translate_document%3F-instance-method" class="signature"><strong>#translate_document?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#translate_text%3F-instance-method" class="signature"><strong>#translate_text?</strong></a>
         
       </li>
     
@@ -435,71 +425,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/6fb36cbe185b57686185b180c35101ed13dd6314/src/deepl/options.cr#L7" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="document?-instance-method">
-      <div class="signature">
-        
-        def <strong>document?</strong>
-
-        <a class="method-permalink" href="#document%3F-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/kojix2/deepl-cli/blob/6fb36cbe185b57686185b180c35101ed13dd6314/src/deepl/options.cr#L4" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="from_lang?-instance-method">
-      <div class="signature">
-        
-        def <strong>from_lang?</strong>
-
-        <a class="method-permalink" href="#from_lang%3F-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/kojix2/deepl-cli/blob/6fb36cbe185b57686185b180c35101ed13dd6314/src/deepl/options.cr#L9" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="glossary?-instance-method">
-      <div class="signature">
-        
-        def <strong>glossary?</strong>
-
-        <a class="method-permalink" href="#glossary%3F-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/kojix2/deepl-cli/blob/6fb36cbe185b57686185b180c35101ed13dd6314/src/deepl/options.cr#L5" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="glossary_language_pairs?-instance-method">
-      <div class="signature">
-        
-        def <strong>glossary_language_pairs?</strong>
-
-        <a class="method-permalink" href="#glossary_language_pairs%3F-instance-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/kojix2/deepl-cli/blob/6fb36cbe185b57686185b180c35101ed13dd6314/src/deepl/options.cr#L6" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0c1f5e1d563b2572363b1bcad0345965c3014d46/src/deepl/options.cr#L6" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -515,7 +441,23 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/6fb36cbe185b57686185b180c35101ed13dd6314/src/deepl/options.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0c1f5e1d563b2572363b1bcad0345965c3014d46/src/deepl/options.cr#L12" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="list_from_lang?-instance-method">
+      <div class="signature">
+        
+        def <strong>list_from_lang?</strong>
+
+        <a class="method-permalink" href="#list_from_lang%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0c1f5e1d563b2572363b1bcad0345965c3014d46/src/deepl/options.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -531,55 +473,87 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/6fb36cbe185b57686185b180c35101ed13dd6314/src/deepl/options.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0c1f5e1d563b2572363b1bcad0345965c3014d46/src/deepl/options.cr#L7" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="text?-instance-method">
+    <div class="entry-detail" id="list_glossary_language_pairs?-instance-method">
       <div class="signature">
         
-        def <strong>text?</strong>
+        def <strong>list_glossary_language_pairs?</strong>
 
-        <a class="method-permalink" href="#text%3F-instance-method">#</a>
+        <a class="method-permalink" href="#list_glossary_language_pairs%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/6fb36cbe185b57686185b180c35101ed13dd6314/src/deepl/options.cr#L3" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0c1f5e1d563b2572363b1bcad0345965c3014d46/src/deepl/options.cr#L5" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="to_lang?-instance-method">
+    <div class="entry-detail" id="list_to_lang?-instance-method">
       <div class="signature">
         
-        def <strong>to_lang?</strong>
+        def <strong>list_to_lang?</strong>
 
-        <a class="method-permalink" href="#to_lang%3F-instance-method">#</a>
+        <a class="method-permalink" href="#list_to_lang%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/6fb36cbe185b57686185b180c35101ed13dd6314/src/deepl/options.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0c1f5e1d563b2572363b1bcad0345965c3014d46/src/deepl/options.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="usage?-instance-method">
+    <div class="entry-detail" id="retrieve_usage?-instance-method">
       <div class="signature">
         
-        def <strong>usage?</strong>
+        def <strong>retrieve_usage?</strong>
 
-        <a class="method-permalink" href="#usage%3F-instance-method">#</a>
+        <a class="method-permalink" href="#retrieve_usage%3F-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/6fb36cbe185b57686185b180c35101ed13dd6314/src/deepl/options.cr#L11" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0c1f5e1d563b2572363b1bcad0345965c3014d46/src/deepl/options.cr#L10" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="translate_document?-instance-method">
+      <div class="signature">
+        
+        def <strong>translate_document?</strong>
+
+        <a class="method-permalink" href="#translate_document%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0c1f5e1d563b2572363b1bcad0345965c3014d46/src/deepl/options.cr#L4" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="translate_text?-instance-method">
+      <div class="signature">
+        
+        def <strong>translate_text?</strong>
+
+        <a class="method-permalink" href="#translate_text%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0c1f5e1d563b2572363b1bcad0345965c3014d46/src/deepl/options.cr#L3" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -595,7 +569,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/6fb36cbe185b57686185b180c35101ed13dd6314/src/deepl/options.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0c1f5e1d563b2572363b1bcad0345965c3014d46/src/deepl/options.cr#L11" target="_blank">View source</a>]
         
       </div>
     </div>
