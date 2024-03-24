@@ -1,3 +1,8 @@
+require "term-spinner"
+require "./parser"
+require "./translator"
+require "./exceptions"
+
 module DeepL
   class App
     getter parser : Parser
@@ -27,7 +32,7 @@ module DeepL
       else
         raise ArgumentError.new("Invalid action: #{option.action}")
       end
-      exit(0)
+      # exit(0)
     rescue ex
       if DeepLError.debug
         STDERR.puts "[deepl-cli] ERROR: #{ex.class} #{ex.message}\n#{ex.backtrace.join("\n")}"
@@ -88,9 +93,9 @@ module DeepL
     def show_target_languages
       translator = DeepL::Translator.new
       translator.target_languages.each do |lang|
-        language, name = lang.values.map(&.to_s)
-        # FIXME: Support formality
-        puts "- #{language.ljust(7)}#{name.ljust(20)}"
+        language, name, supports_formality = lang.values.map(&.to_s)
+        formality = (supports_formality == "true") ? "yes" : "no"
+        puts "- #{language.ljust(7)}#{name.ljust(20)}\tformality support [#{formality}]"
       end
     end
 

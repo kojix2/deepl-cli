@@ -1,6 +1,7 @@
 require "json"
 require "crest"
 require "../ext/crest"
+require "./options"
 require "./exceptions"
 
 module DeepL
@@ -17,7 +18,7 @@ module DeepL
       @api_url_document = "#{api_url_base}/document"
     end
 
-    private def http_headers_for_text
+    private def http_headers_json
       {
         "Authorization" => "DeepL-Auth-Key #{auth_key}",
         "User-Agent"    => user_agent,
@@ -25,7 +26,7 @@ module DeepL
       }
     end
 
-    private def http_headers_for_document
+    private def http_headers_simple
       {
         "Authorization" => "DeepL-Auth-Key #{auth_key}",
         "User-Agent"    => user_agent,
@@ -79,7 +80,7 @@ module DeepL
       params["context"] = context_ if context_
       params["split_sentences"] = split_sentences if split_sentences
 
-      response = Crest.post(api_url_translate, form: params, headers: http_headers_for_text, json: true)
+      response = Crest.post(api_url_translate, form: params, headers: http_headers_json, json: true)
 
       case response.status_code
       when 456
@@ -130,7 +131,7 @@ module DeepL
       response = Crest.post(
         api_url_document,
         form: params,
-        headers: http_headers_for_document,
+        headers: http_headers_simple,
       )
 
       parsed_response = JSON.parse(response.body)
@@ -150,7 +151,7 @@ module DeepL
         response = Crest.post(
           "#{api_url_document}/#{did}",
           form: {"document_key" => dkey},
-          headers: http_headers_for_text,
+          headers: http_headers_json,
         )
         parsed_response = JSON.parse(response.body)
         STDERR.puts(
@@ -165,7 +166,7 @@ module DeepL
       response = Crest.post(
         "#{api_url_document}/#{did}/result",
         form: {"document_key" => dkey},
-        headers: http_headers_for_text,
+        headers: http_headers_json,
       )
 
       File.write(output_path, response.body)
@@ -177,7 +178,7 @@ module DeepL
     end
 
     def request_languages(type)
-      Crest.get("#{api_url_base}/languages?type=#{type}", headers: http_headers_for_text)
+      Crest.get("#{api_url_base}/languages", params: {"type" => type}, headers: http_headers_simple)
     end
 
     def target_languages
@@ -200,7 +201,7 @@ module DeepL
     end
 
     private def request_usage
-      Crest.get("#{api_url_base}/usage", headers: http_headers_for_text)
+      Crest.get("#{api_url_base}/usage", headers: http_headers_simple)
     end
 
     private def parse_usage_response(response)
