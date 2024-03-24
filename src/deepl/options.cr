@@ -1,20 +1,19 @@
 module DeepL
   enum Action : UInt8
-    Text
-    Document
-    Glossary
-    GlossaryLanguagePairs
+    TranslateText
+    TranslateDocument
+    ListGlossaryLanguagePairs
     CreateGlossary
     ListGlossary
-    FromLang
-    ToLang
-    Usage
+    ListFromLang
+    ListToLang
+    RetrieveUsage
     Version
     Help
   end
 
   struct Options
-    property action : Action = Action::Text
+    property action : Action = Action::TranslateText
     property input_text : String = ""
     property input_path : Path = Path.new
     property output_path : Path? = nil

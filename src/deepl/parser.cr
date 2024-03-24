@@ -18,7 +18,7 @@ module DeepL
         Usage: deepl [options] <file>
         BANNER
       on("doc", "Translate document") do
-        opt.action = Action::Document
+        opt.action = Action::TranslateDocument
         disabled_options = [
           "-i", "--input",
           "-C", "--context",
@@ -47,7 +47,6 @@ module DeepL
         end
       end
       on("glossary", "Manage glossaries") do
-        opt.action = Action::Glossary
         disabled_options = [
           "-i", "--input",
           "-f", "--from",
@@ -84,10 +83,10 @@ module DeepL
             opt.glossary_name = name
           end
           on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
-            from.empty? ? opt.action = Action::FromLang : opt.source_lang = from.upcase
+            from.empty? ? opt.action = Action::ListFromLang : opt.source_lang = from.upcase
           end
           on("-t", "--to [LANG]", "Target language [EN]") do |to|
-            to.empty? ? opt.action = Action::ToLang : opt.target_lang = to.upcase
+            to.empty? ? opt.action = Action::ListToLang : opt.target_lang = to.upcase
           end
           on("-h", "--help", "Show this help") do
             # FIXME
@@ -96,7 +95,7 @@ module DeepL
         end
 
         on("-p", "--language-pairs", "List language pairs") do
-          opt.action = Action::GlossaryLanguagePairs
+          opt.action = Action::ListGlossaryLanguagePairs
         end
 
         on("-h", "--help", "Show this help") do
@@ -108,10 +107,10 @@ module DeepL
         opt.input_text = text
       end
       on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
-        from.empty? ? opt.action = Action::FromLang : opt.source_lang = from.upcase
+        from.empty? ? opt.action = Action::ListFromLang : opt.source_lang = from.upcase
       end
       on("-t", "--to [LANG]", "Target language [EN]") do |to|
-        to.empty? ? opt.action = Action::ToLang : opt.target_lang = to.upcase
+        to.empty? ? opt.action = Action::ListToLang : opt.target_lang = to.upcase
       end
       on("-g", "--glossary ID", "Glossary ID") do |id|
         opt.glossary_id = id
@@ -129,7 +128,7 @@ module DeepL
         opt.no_ansi = false
       end
       on("-u", "--usage", "Check Usage and Limits") do
-        opt.action = Action::Usage
+        opt.action = Action::RetrieveUsage
       end
       on("-d", "--debug", "Show backtrace on error") do
         DeepLError.debug = true

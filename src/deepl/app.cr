@@ -15,23 +15,21 @@ module DeepL
 
     def run
       case option.action
-      when Action::Text
+      when Action::TranslateText
         translate_text
-      when Action::Document
+      when Action::TranslateDocument
         translate_document
-      when Action::Glossary
-        glossary
       when Action::CreateGlossary
         create_glossary
-      when Action::GlossaryLanguagePairs
+      when Action::ListGlossaryLanguagePairs
         show_glossary_language_pairs
       when Action::ListGlossary
         show_glossary_list
-      when Action::FromLang
+      when Action::ListFromLang
         show_source_languages
-      when Action::ToLang
+      when Action::ListToLang
         show_target_languages
-      when Action::Usage
+      when Action::RetrieveUsage
         show_usage
       when Action::Version
         show_version
@@ -88,10 +86,6 @@ module DeepL
         translator = DeepL::Translator.new
         translator.translate(option)
       end
-    end
-
-    def glossary
-      p "glossaries"
     end
 
     def show_glossary_language_pairs
