@@ -85,7 +85,7 @@ module DeepL
 
       case response.status_code
       when 456
-        QuotaExceededError.new
+        raise QuotaExceededError.new
       when HTTP::Status::FORBIDDEN
         raise AuthorizationError.new
       when HTTP::Status::NOT_FOUND
