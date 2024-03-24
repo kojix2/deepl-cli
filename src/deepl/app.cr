@@ -47,7 +47,6 @@ module DeepL
         option.input = option.input.gsub(/\e\[[0-9;]*[mGKHF]/, "")
       end
 
-      spinner = Term::Spinner.new
       translated_text = ""
 
       spinner = Term::Spinner.new(clear: true)
@@ -60,12 +59,10 @@ module DeepL
     end
 
     def translate_document
-      spinner = Term::Spinner.new
-
       spinner = Term::Spinner.new(clear: true)
       spinner.run do
         translator = DeepL::Translator.new
-        translated_text = translator.translate(option)
+        translator.translate(option)
       end
     end
 
