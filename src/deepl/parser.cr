@@ -19,9 +19,26 @@ module DeepL
         BANNER
       on("doc", "Translate document") do
         opt.action = Action::Document
-        banner = "Usage: deepl doc [options] <file>"
+        disabled_options = [
+          "-i", "--input",
+          "-C", "--context",
+          "-S", "--split-sentences",
+          "-A", "--ansi",
+          "-u", "--usage",
+          "-v", "--version",
+          "-h", "--help",
+        ]
+        disabled_options.each { |o| @handlers.delete(o) }
+        @flags.reject! { |f| disabled_options.any? { |o| f.includes?(o) } }
+
+        self.banner = "Usage: deepl doc [options] <file>"
         on("--format FORMAT", "Output file format") do |format|
           opt.output_format = format
+        end
+
+        on("-h", "--help", "Show this help") do
+          # FIXME
+          puts self
         end
       end
       on("-i", "--input TEXT", "Input text") do |text|
