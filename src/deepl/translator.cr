@@ -195,6 +195,55 @@ module DeepL
       (Array(Hash(String, (String | Bool)))).from_json(response.body)
     end
 
+    def glossary_language_pairs
+      response = Crest.get("#{api_url_base}/glossary-language-pairs", headers: http_headers_simple)
+      parse_glossary_language_pairs_response(response)
+    end
+
+    private def parse_glossary_language_pairs_response(response)
+      Hash(String, Array(Hash(String, String)))
+        .from_json(response.body)["supported_languages"]
+    end
+
+    def create_glossary(option)
+      create_glossary(
+        option.glossary_name, option.source_lang, option.target_lang,
+        option.input_text
+      )
+    end
+
+    def create_glossary(name, source_lang, target_lang, entries, entry_format = "tsv")
+      response = Crest.post(
+        "#{api_url_base}/glossaries",
+        form: p({
+          "name"           => name,
+          "source_lang"    => source_lang,
+          "target_lang"    => target_lang,
+          "entries"        => entries,
+          "entries_format" => entry_format,
+        }),
+        headers: http_headers_json,
+      )
+      parse_create_glossary_response(response)
+    end
+
+    private def parse_create_glossary_response(response)
+      JSON.parse(response.body)
+    end
+
+    def glossary_list
+      response = Crest.get("#{api_url_base}/glossaries", headers: http_headers_simple)
+      parse_glossary_list_response(response)
+    end
+
+    private def parse_glossary_list_response(response)
+      # Hash(String, Array(Hash(String, (String | Bool | Int32))))
+      #   .from_json(response.body)["glossaries"]
+      #
+      # Above code is better, but the following code is more robust?
+      JSON.parse(response.body)["glossaries"]
+    end
+
     def usage
       response = request_usage
       parse_usage_response(response)

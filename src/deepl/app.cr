@@ -19,6 +19,14 @@ module DeepL
         translate_text
       when Action::Document
         translate_document
+      when Action::Glossary
+        glossary
+      when Action::CreateGlossary
+        create_glossary
+      when Action::GlossaryLanguagePairs
+        show_glossary_language_pairs
+      when Action::ListGlossary
+        show_glossary_list
       when Action::FromLang
         show_source_languages
       when Action::ToLang
@@ -80,6 +88,38 @@ module DeepL
         translator = DeepL::Translator.new
         translator.translate(option)
       end
+    end
+
+    def glossary
+      p "glossaries"
+    end
+
+    def show_glossary_language_pairs
+      translator = DeepL::Translator.new
+      previous_source_lang = ""
+      translator.glossary_language_pairs.each do |kv|
+        source_lang, target_lang = kv.values.map(&.to_s)
+        if source_lang != previous_source_lang
+          puts if previous_source_lang != ""
+          print "- #{source_lang} :\t"
+          previous_source_lang = source_lang
+        end
+        print " #{target_lang}"
+      end
+      puts
+    end
+
+    def create_glossary
+      # FIXME check TSV file format
+      option.input_text = ARGF.gets_to_end
+
+      translator = DeepL::Translator.new
+      translator.create_glossary(option)
+    end
+
+    def show_glossary_list
+      translator = DeepL::Translator.new
+      pp translator.glossary_list
     end
 
     def show_source_languages

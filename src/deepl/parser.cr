@@ -46,6 +46,64 @@ module DeepL
           puts self
         end
       end
+      on("glossary", "Manage glossaries") do
+        opt.action = Action::Glossary
+        disabled_options = [
+          "-i", "--input",
+          "-f", "--from",
+          "-t", "--to",
+          "-F", "--formality",
+          "-C", "--context",
+          "-S", "--split-sentences",
+          "-A", "--ansi",
+          "-u", "--usage",
+          "-v", "--version",
+          "-h", "--help",
+        ]
+        disabled_options.each { |o| @handlers.delete(o) }
+        @flags.reject! { |f| disabled_options.any? { |o| f.includes?(o) } }
+
+        self.banner = "Usage: deepl glossary [options] <file>"
+
+        on("-l", "--list", "List glossaries") do
+          opt.action = Action::ListGlossary
+        end
+
+        on("create", "Create glossary") do |name|
+          opt.action = Action::CreateGlossary
+          disabled_options = [
+            "-g", "--glossary",
+            "-d", "--debug",
+            "-l", "--list",
+            "-p", "--language-pairs",
+            "-h", "--help",
+          ]
+          disabled_options.each { |o| @handlers.delete(o) }
+          @flags.reject! { |f| disabled_options.any? { |o| f.includes?(o) } }
+          on("-n", "--name NAME", "Glossary name") do |name|
+            opt.glossary_name = name
+          end
+          on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
+            from.empty? ? opt.action = Action::FromLang : opt.source_lang = from.upcase
+          end
+          on("-t", "--to [LANG]", "Target language [EN]") do |to|
+            to.empty? ? opt.action = Action::ToLang : opt.target_lang = to.upcase
+          end
+          on("-h", "--help", "Show this help") do
+            # FIXME
+            puts self
+          end
+        end
+
+        on("-p", "--language-pairs", "List language pairs") do
+          opt.action = Action::GlossaryLanguagePairs
+        end
+
+        on("-h", "--help", "Show this help") do
+          # FIXME
+          puts self
+        end
+      end
       on("-i", "--input TEXT", "Input text") do |text|
         opt.input_text = text
       end

@@ -2,6 +2,10 @@ module DeepL
   enum Action : UInt8
     Text
     Document
+    Glossary
+    GlossaryLanguagePairs
+    CreateGlossary
+    ListGlossary
     FromLang
     ToLang
     Usage
@@ -18,6 +22,7 @@ module DeepL
     property source_lang : String? = nil
     property formality : String? = nil
     property glossary_id : String? = nil
+    property glossary_name : String? = nil
     property context : String? = nil
     property split_sentences : String? = nil
     property output_format : String? = nil
