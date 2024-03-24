@@ -62,13 +62,12 @@ module DeepL
       raise "Invalid option: -i --input" unless option.input_text.empty?
       raise "Input file is not specified" if ARGV.empty?
       option.input_path = Path[ARGV.shift]
-      STDERR.puts(
-        if ARGV.size == 1
-          "[deepl-cli] File #{ARGV[0]} is ignored"
-        else
-          "[deepl-cli] Files #{ARGV.join(", ")} are ignored"
-        end
-      )
+      case ARGV.size
+      when 1
+        STDERR.puts "[deepl-cli] File #{ARGV[0]} is ignored"
+      when 2..
+        STDERR.puts "[deepl-cli] Files #{ARGV.join(", ")} are ignored"
+      end
       STDERR.puts "[deepl-cli] Start translating #{option.input_path}"
 
       spinner = Term::Spinner.new(clear: true)

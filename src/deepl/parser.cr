@@ -32,7 +32,12 @@ module DeepL
         @flags.reject! { |f| disabled_options.any? { |o| f.includes?(o) } }
 
         self.banner = "Usage: deepl doc [options] <file>"
-        on("--format FORMAT", "Output file format") do |format|
+
+        on("-o", "--output FILE", "Output file") do |file|
+          opt.output_path = Path[file]
+        end
+
+        on("-F", "--format FORMAT", "Output file format") do |format|
           opt.output_format = format
         end
 

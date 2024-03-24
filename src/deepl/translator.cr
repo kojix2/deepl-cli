@@ -57,7 +57,8 @@ module DeepL
       when Action::Document
         translate_document(
           option.input_path, option.target_lang, option.source_lang,
-          option.formality, option.glossary_id, option.output_format
+          option.formality, option.glossary_id, option.output_format,
+          option.output_path
         )
       else
         raise UnknownSubCommandError.new
@@ -101,12 +102,13 @@ module DeepL
 
     def translate_document(
       path, target_lang, source_lang = nil,
-      formality = nil, glossary_id = nil, output_format = nil
+      formality = nil, glossary_id = nil, output_format = nil,
+      output_path = nil
     )
       params = Hash(String, (String | File)).new
       params["source_lang"] = source_lang if source_lang
       params["formality"] = formality if formality
-      params["target_lang"] = target_lang
+      params["target_lang"] = target_lang if target_lang
       params["glossary_id"] = glossary_id if glossary_id
       params["output_format"] = output_format if output_format
 
@@ -114,7 +116,9 @@ module DeepL
 
       check_status_of_document(did, dkey)
 
-      download_document(path, target_lang, did, dkey)
+      output_path ||= path.parent / "#{path.basename}.#{target_lang}.#{output_format.try &.downcase || path.extension}"
+
+      download_document(output_path, did, dkey)
       # rescue ex
       #   raise DocumentTranslationError.new
     end
@@ -157,18 +161,18 @@ module DeepL
       end
     end
 
-    def download_document(path, target_lang, did, dkey)
+    def download_document(output_path, did, dkey)
       response = Crest.post(
         "#{api_url_document}/#{did}/result",
         form: {"document_key" => dkey},
         headers: http_headers_for_text,
       )
 
-      new_path = path.parent / "#{path.stem}_#{target_lang}.txt"
-      File.write(new_path, response.body)
+      File.write(output_path, response.body)
+
       STDERR.puts(
         "#{"\e[2K\r" if STDERR.tty?}" \
-        "[deepl-cli] Download #{new_path}"
+        "[deepl-cli] Saved #{output_path}"
       )
     end
 

@@ -13,6 +13,7 @@ module DeepL
     property action : Action = Action::Text
     property input_text : String = ""
     property input_path : Path = Path.new
+    property output_path : Path? = nil
     property target_lang : String = "EN"
     property source_lang : String? = nil
     property formality : String? = nil
