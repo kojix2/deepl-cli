@@ -21,13 +21,17 @@ module DeepL
         translate_document
       when Action::CreateGlossary
         create_glossary
+      when Action::DeleteGlossary
+        delete_glossary
       when Action::ListGlossaryLanguagePairs
         show_glossary_language_pairs
-      when Action::ListGlossary
+      when Action::ListGlossaries
         show_glossary_list
-      when Action::ListFromLang
+      when Action::OutputGlossaryEntries
+        output_glossary_entries
+      when Action::ListFromLanguages
         show_source_languages
-      when Action::ListToLang
+      when Action::ListTargetLanguages
         show_target_languages
       when Action::RetrieveUsage
         show_usage
@@ -109,6 +113,16 @@ module DeepL
 
       translator = DeepL::Translator.new
       translator.create_glossary(option)
+    end
+
+    def delete_glossary
+      translator = DeepL::Translator.new
+      translator.delete_glossary(option)
+    end
+
+    def output_glossary_entries
+      translator = DeepL::Translator.new
+      puts translator.glossary_entries(ARGV[0])
     end
 
     def show_glossary_list

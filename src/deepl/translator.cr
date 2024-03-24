@@ -229,6 +229,18 @@ module DeepL
       JSON.parse(response.body)
     end
 
+    def delete_glossary(option)
+      delete_glossary(option.glossary_id.not_nil!)
+    end
+
+    def delete_glossary(glossary_id : String)
+      response = Crest.delete(
+        "#{api_url_base}/glossaries/#{glossary_id}",
+        headers: http_headers_simple,
+      )
+      # Fixme : Check response status
+    end
+
     def glossary_list
       response = Crest.get("#{api_url_base}/glossaries", headers: http_headers_simple)
       parse_glossary_list_response(response)
@@ -240,6 +252,20 @@ module DeepL
       #
       # Above code is better, but the following code is more robust?
       JSON.parse(response.body)["glossaries"]
+    end
+
+    def glossary_entries(glossary_id : String)
+      header = http_headers_simple
+      header["Accept"] = "text/tab-separated-values"
+      response = Crest.get(
+        "#{api_url_base}/glossaries/#{glossary_id}/entries",
+        headers: header
+      )
+      response.body
+    end
+
+    private def parse_output_glossary_entries_response(response)
+      JSON.parse(response.body)["entries"]
     end
 
     def usage

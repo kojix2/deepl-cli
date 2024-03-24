@@ -47,6 +47,7 @@ module DeepL
         end
       end
       on("glossary", "Manage glossaries") do
+        @opt.action = Action::OutputGlossaryEntries
         disabled_options = [
           "-i", "--input",
           "-f", "--from",
@@ -64,10 +65,6 @@ module DeepL
 
         self.banner = "Usage: deepl glossary [options] <file>"
 
-        on("-l", "--list", "List glossaries") do
-          opt.action = Action::ListGlossary
-        end
-
         on("create", "Create glossary") do |name|
           opt.action = Action::CreateGlossary
           disabled_options = [
@@ -83,15 +80,24 @@ module DeepL
             opt.glossary_name = name
           end
           on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
-            from.empty? ? opt.action = Action::ListFromLang : opt.source_lang = from.upcase
+            from.empty? ? opt.action = Action::ListFromLanguages : opt.source_lang = from.upcase
           end
           on("-t", "--to [LANG]", "Target language [EN]") do |to|
-            to.empty? ? opt.action = Action::ListToLang : opt.target_lang = to.upcase
+            to.empty? ? opt.action = Action::ListTargetLanguages : opt.target_lang = to.upcase
           end
           on("-h", "--help", "Show this help") do
             # FIXME
             puts self
           end
+        end
+
+        on("-l", "--list", "List glossaries") do
+          opt.action = Action::ListGlossaries
+        end
+
+        on("-D", "--delete ID", "Delete glossary") do |id|
+          opt.action = Action::DeleteGlossary
+          opt.glossary_id = id
         end
 
         on("-p", "--language-pairs", "List language pairs") do
@@ -107,10 +113,10 @@ module DeepL
         opt.input_text = text
       end
       on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
-        from.empty? ? opt.action = Action::ListFromLang : opt.source_lang = from.upcase
+        from.empty? ? opt.action = Action::ListFromLanguages : opt.source_lang = from.upcase
       end
       on("-t", "--to [LANG]", "Target language [EN]") do |to|
-        to.empty? ? opt.action = Action::ListToLang : opt.target_lang = to.upcase
+        to.empty? ? opt.action = Action::ListTargetLanguages : opt.target_lang = to.upcase
       end
       on("-g", "--glossary ID", "Glossary ID") do |id|
         opt.glossary_id = id
