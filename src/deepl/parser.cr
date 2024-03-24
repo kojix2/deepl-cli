@@ -19,6 +19,10 @@ module DeepL
         BANNER
       on("doc", "Translate document") do
         opt.action = Action::Document
+        banner = "Usage: deepl doc [options] <file>"
+        on("--format FORMAT", "Output file format") do |format|
+          opt.output_format = format
+        end
       end
       on("-i", "--input TEXT", "Input text") do |text|
         opt.input_text = text

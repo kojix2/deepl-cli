@@ -56,7 +56,8 @@ module DeepL
         )
       when Action::Document
         translate_document(
-          option.input_path, option.target_lang
+          option.input_path, option.target_lang, option.source_lang,
+          option.formality, option.glossary_id, option.output_format
         )
       else
         raise UnknownSubCommandError.new
@@ -98,8 +99,18 @@ module DeepL
       parsed_response.dig("translations", 0, "text")
     end
 
-    def translate_document(path, target_lang)
-      did, dkey = upload_document(path, target_lang)
+    def translate_document(
+      path, target_lang, source_lang = nil,
+      formality = nil, glossary_id = nil, output_format = nil
+    )
+      params = Hash(String, (String | File)).new
+      params["source_lang"] = source_lang if source_lang
+      params["formality"] = formality if formality
+      params["target_lang"] = target_lang
+      params["glossary_id"] = glossary_id if glossary_id
+      params["output_format"] = output_format if output_format
+
+      did, dkey = upload_document(path, params)
 
       check_status_of_document(did, dkey)
 
@@ -108,11 +119,13 @@ module DeepL
       #   raise DocumentTranslationError.new
     end
 
-    def upload_document(path, target_lang)
+    def upload_document(path, params)
       file = File.open(path)
+      params["file"] = file
+
       response = Crest.post(
         api_url_document,
-        form: {"file" => file, "target_lang" => target_lang},
+        form: params,
         headers: http_headers_for_document,
       )
 

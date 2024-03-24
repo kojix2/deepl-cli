@@ -19,6 +19,7 @@ module DeepL
     property glossary_id : String? = nil
     property context : String? = nil
     property split_sentences : String? = nil
+    property output_format : String? = nil
     property no_ansi : Bool = true
   end
 end
