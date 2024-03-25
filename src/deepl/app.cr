@@ -122,7 +122,7 @@ module DeepL
 
     def output_glossary_entries
       translator = DeepL::Translator.new
-      puts translator.glossary_entries(ARGV[0])
+      puts translator.glossary_entries(option.glossary_id.not_nil!)
     end
 
     def show_glossary_list
