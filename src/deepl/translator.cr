@@ -2,6 +2,7 @@ require "json"
 require "crest"
 require "../ext/crest"
 require "./exceptions"
+require "./config"
 
 module DeepL
   class Translator
@@ -29,16 +30,11 @@ module DeepL
     end
 
     private def auth_key
-      ENV.fetch("DEEPL_AUTH_KEY") do
-        # For compatibility with version 0.2.1 or earlier
-        ENV.fetch("DEEPL_API_KEY") do
-          raise ApiKeyError.new
-        end
-      end
+      Config.auth_key
     end
 
     private def user_agent
-      ENV["DEEPL_USER_AGENT"]? || "deepl-cli/#{VERSION}"
+      Config.user_agent
     end
 
     def translate_text(
