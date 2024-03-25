@@ -51,22 +51,52 @@ export HTTPS_PROXY=https://[IP]:[port]
 deepl [options] <file>
 ```
 
-### Arguments
+### Translate Text
 
-Options available for the CLI tool:
+```sh
+deepl [options] <file>
+```
 
     -i, --input TEXT                 Input text
     -f, --from [LANG]                Source language [AUTO]
     -t, --to [LANG]                  Target language [EN]
-    -g, --glossary ID             Glossary ID
+    -g, --glossary ID                Glossary ID
     -F, --formality OPT              Formality (default more less)
+    -C, --context TEXT               Context (experimental)
+    -S, --split-sentences OPT        Split sentences
     -A, --ansi                       Do not remove ANSI escape codes
-    -u, --usage                      Check Usage and Limits
-    -d, --debug                      Show backtrace on error
-    -v, --version                    Show version
-    -h, --help                       Show this help
 
 Note that since this tool is used on a terminal, ANSI escape sequences are removed by default.
+
+### Translate Document
+
+To translate a document, use the `doc` subcommand:
+
+```sh
+deepl doc [options] <file>
+```
+
+    -f, --from [LANG]                Source language [AUTO]
+    -t, --to [LANG]                  Target language [EN]
+    -g, --glossary ID                Glossary ID
+    -F, --formality OPT              Formality (default more less)
+    -o, --output FILE                Output file
+    -O, --output-format FORMAT       Output file format
+
+### Manage Glossaries
+
+For glossary management, use the `glossary` subcommand:
+
+```sh
+deepl glossary [options]
+```
+
+    list                             List glossaries
+    create                           Create glossary
+    delete                           Delete glossary
+    view                             View glossary
+    -l, --list                       List glossaries (short form)
+    -p, --language-pairs             List language pairs
 
 ### Examples
 
