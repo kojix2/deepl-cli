@@ -79,6 +79,17 @@ module DeepL
         @handlers.clear
         @flags.clear
 
+        on("list", "List glossaries") do
+          opt.action = Action::ListGlossaries
+          self.banner = "Usage: deepl glossary list [options]"
+          @handlers.clear
+          @flags.clear
+
+          _on_debug_
+
+          _on_help_
+        end
+
         on("create", "Create glossary") do |name|
           opt.action = Action::CreateGlossary
           self.banner = "Usage: deepl glossary create [options]"
@@ -102,17 +113,6 @@ module DeepL
           _on_help_
         end
 
-        on("list", "List glossaries") do
-          opt.action = Action::ListGlossaries
-          self.banner = "Usage: deepl glossary list [options]"
-          @handlers.clear
-          @flags.clear
-
-          _on_debug_
-
-          _on_help_
-        end
-
         on("delete", "Delete glossary") do
           opt.action = Action::DeleteGlossary
           self.banner = "Usage: deepl glossary delete [options]"
@@ -123,16 +123,28 @@ module DeepL
             opt.glossary_id = id
           end
 
-          on("-d", "--debug", "Show backtrace on error") do
-            DeepLError.debug = true
-          end
+          # on("-n", "--name
 
-          on("-h", "--help", "Show this help") do
-            opt.action = Action::Help
-            self.help_message = self.to_s
+          _on_debug_
+
+          _on_help_
+        end
+
+        on("view", "View glossary") do
+          opt.action = Action::OutputGlossaryEntries
+          self.banner = "Usage: deepl glossary view [options]"
+          @handlers.clear
+          @flags.clear
+
+          on("-g", "--glossary ID", "Delete glossary by ID") do |id|
+            opt.glossary_id = id
           end
 
           # on("-n", "--name
+
+          _on_debug_
+
+          _on_help_
         end
 
         on("-l", "--list", "List glossaries (short form)") do
