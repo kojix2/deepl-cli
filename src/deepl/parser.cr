@@ -4,7 +4,6 @@ require "./translator"
 
 module DeepL
   class Parser < OptionParser
-
     getter opt : Options
 
     # Crystal's OptionParser returns to its initial state after parsing
@@ -16,7 +15,7 @@ module DeepL
       super()
       @opt = Options.new
       @help_message = ""
-      
+
       self.banner = <<-BANNER
 
         Program: DeepL CLI (Simple command line tool for DeepL)
@@ -65,7 +64,7 @@ module DeepL
           self.help_message = self.to_s
         end
       end
-      
+
       on("glossary", "Manage glossaries") do
         @opt.action = Action::OutputGlossaryEntries
         self.banner = "Usage: deepl glossary [options] <file>"
@@ -81,7 +80,7 @@ module DeepL
           on("-n", "--name NAME", "Glossary name") do |name|
             opt.glossary_name = name
           end
-          
+
           on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
             from.empty? ? opt.action = Action::ListFromLanguages : opt.source_lang = from.upcase
           end
@@ -100,13 +99,47 @@ module DeepL
           end
         end
 
-        on("-l", "--list", "List glossaries") do
+        on("list", "List glossaries") do
           opt.action = Action::ListGlossaries
+          self.banner = "Usage: deepl glossary list [options]"
+          @handlers.clear
+          @flags.clear
+
+          on("-d", "--debug", "Show backtrace on error") do
+            DeepLError.debug = true
+          end
+
+          on("-h", "--help", "Show this help") do
+            opt.action = Action::Help
+            self.help_message = self.to_s
+          end
         end
 
-        on("-D", "--delete ID", "Delete glossary") do |id|
+        on("delete", "Delete glossary") do
           opt.action = Action::DeleteGlossary
-          opt.glossary_id = id
+          self.banner = "Usage: deepl glossary delete [options]"
+          @handlers.clear
+          @flags.clear
+
+          on("-g", "--glossary ID", "Delete glossary by ID") do |id|
+            opt.glossary_id = id
+          end
+
+          on("-d", "--debug", "Show backtrace on error") do
+            DeepLError.debug = true
+          end
+
+          on("-h", "--help", "Show this help") do
+            opt.action = Action::Help
+            self.help_message = self.to_s
+          end
+
+          # on("-n", "--name
+        end
+
+        on("-l", "--list", "List glossaries (short form)") do
+          opt.action = Action::ListGlossaries
+          # FIXME: short form
         end
 
         on("-p", "--language-pairs", "List language pairs") do
@@ -128,7 +161,7 @@ module DeepL
       end
 
       on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
-        if from.empty? 
+        if from.empty?
           opt.action = Action::ListFromLanguages
         else
           opt.source_lang = from.upcase
@@ -150,7 +183,7 @@ module DeepL
       on("-F", "--formality OPT", "Formality (default more less)") do |v|
         opt.formality = v
       end
-      
+
       on("-C", "--context TEXT", "Context (experimental)") do |text|
         opt.context = text
       end
