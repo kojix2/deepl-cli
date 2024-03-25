@@ -67,7 +67,10 @@ module DeepL
       spinner = Term::Spinner.new(clear: true)
       spinner.run do
         translator = DeepL::Translator.new
-        translated_text = translator.translate(option)
+        translated_text = translator.translate_text(
+          option.input_text, option.target_lang, option.source_lang,
+          option.formality, option.glossary_id, option.context
+        )
       end
 
       puts translated_text
@@ -88,7 +91,11 @@ module DeepL
       spinner = Term::Spinner.new(clear: true)
       spinner.run do
         translator = DeepL::Translator.new
-        translator.translate(option)
+        translator.translate_document(
+          option.input_path, option.target_lang, option.source_lang,
+          option.formality, option.glossary_id, option.output_format,
+          option.output_path
+        )
       end
     end
 
@@ -112,12 +119,15 @@ module DeepL
       option.input_text = ARGF.gets_to_end
 
       translator = DeepL::Translator.new
-      translator.create_glossary(option)
+      translator.create_glossary(
+        option.glossary_name, option.source_lang, option.target_lang,
+        option.input_text
+      )
     end
 
     def delete_glossary
       translator = DeepL::Translator.new
-      translator.delete_glossary(option)
+      translator.delete_glossary(option.glossary_id.not_nil!)
     end
 
     def output_glossary_entries

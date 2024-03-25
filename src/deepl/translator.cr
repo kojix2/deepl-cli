@@ -1,7 +1,6 @@
 require "json"
 require "crest"
 require "../ext/crest"
-require "./options"
 require "./exceptions"
 
 module DeepL
@@ -46,24 +45,6 @@ module DeepL
       ENV["DEEPL_USER_AGENT"]? || "deepl-cli/#{VERSION}"
     end
 
-    def translate(option)
-      case option.action
-      when Action::TranslateText
-        translate_text(
-          option.input_text, option.target_lang, option.source_lang,
-          option.formality, option.glossary_id, option.context
-        )
-      when Action::TranslateDocument
-        translate_document(
-          option.input_path, option.target_lang, option.source_lang,
-          option.formality, option.glossary_id, option.output_format,
-          option.output_path
-        )
-      else
-        raise UnknownSubCommandError.new
-      end
-    end
-
     def translate_text(
       text, target_lang, source_lang = nil, context_ = nil, split_sentences = nil,
       formality = nil, glossary_id = nil
@@ -78,7 +59,10 @@ module DeepL
       params["context"] = context_ if context_
       params["split_sentences"] = split_sentences if split_sentences
 
-      response = Crest.post(api_url_translate, form: params, headers: http_headers_json, json: true)
+      response = Crest.post(
+        api_url_translate, form: params, headers: http_headers_json,
+        json: true
+      )
 
       case response.status_code
       when 456
@@ -203,13 +187,6 @@ module DeepL
         .from_json(response.body)["supported_languages"]
     end
 
-    def create_glossary(option)
-      create_glossary(
-        option.glossary_name, option.source_lang, option.target_lang,
-        option.input_text
-      )
-    end
-
     def create_glossary(name, source_lang, target_lang, entries, entry_format = "tsv")
       response = Crest.post(
         "#{api_url_base}/glossaries",
@@ -227,10 +204,6 @@ module DeepL
 
     private def parse_create_glossary_response(response)
       JSON.parse(response.body)
-    end
-
-    def delete_glossary(option)
-      delete_glossary(option.glossary_id.not_nil!)
     end
 
     def delete_glossary(glossary_id : String)
