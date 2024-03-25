@@ -227,23 +227,47 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
   </svg>
 </a>Usage</h2>
 <pre><code class="language-sh">deepl [options] &lt;file&gt;</code></pre>
-<h3><a id="arguments" class="anchor" href="#arguments">
+<h3><a id="translate-text" class="anchor" href="#translate-text">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
-</a>Arguments</h3>
-<p>Options available for the CLI tool:</p>
+</a>Translate Text</h3>
+<pre><code class="language-sh">deepl [options] &lt;file&gt;</code></pre>
 <pre><code class="language-crystal">-i, --input TEXT                 Input text
 -f, --from [LANG]                Source language [AUTO]
 -t, --to [LANG]                  Target language [EN]
--g, --glossary ID             Glossary ID
+-g, --glossary ID                Glossary ID
 -F, --formality OPT              Formality (default more less)
--A, --ansi                       Do not remove ANSI escape codes
--u, --usage                      Check Usage and Limits
--d, --debug                      Show backtrace on error
--v, --version                    Show version
--h, --help                       Show this help</code></pre>
+-C, --context TEXT               Context (experimental)
+-S, --split-sentences OPT        Split sentences
+-A, --ansi                       Do not remove ANSI escape codes</code></pre>
 <p>Note that since this tool is used on a terminal, ANSI escape sequences are removed by default.</p>
+<h3><a id="translate-document" class="anchor" href="#translate-document">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Translate Document</h3>
+<p>To translate a document, use the <code>doc</code> subcommand:</p>
+<pre><code class="language-sh">deepl doc [options] &lt;file&gt;</code></pre>
+<pre><code class="language-crystal">-f, --from [LANG]                Source language [AUTO]
+-t, --to [LANG]                  Target language [EN]
+-g, --glossary ID                Glossary ID
+-F, --formality OPT              Formality (default more less)
+-o, --output FILE                Output file
+-O, --output-format FORMAT       Output file format</code></pre>
+<h3><a id="manage-glossaries" class="anchor" href="#manage-glossaries">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Manage Glossaries</h3>
+<p>For glossary management, use the <code>glossary</code> subcommand:</p>
+<pre><code class="language-sh">deepl glossary [options]</code></pre>
+<pre><code class="language-crystal">list                             List glossaries
+create                           Create glossary
+delete                           Delete glossary
+view                             View glossary
+-l, --list                       List glossaries (short form)
+-p, --language-pairs             List language pairs</code></pre>
 <h3><a id="examples" class="anchor" href="#examples">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
