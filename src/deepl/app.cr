@@ -158,7 +158,7 @@ module DeepL
     end
 
     def show_help
-      puts parser
+      puts parser.help_message
     end
   end
 end

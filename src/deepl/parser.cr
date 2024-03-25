@@ -5,10 +5,15 @@ require "./translator"
 module DeepL
   class Parser < OptionParser
     getter opt : Options
+    # Crystal's OptionParser returns to its initial state after parsing
+    # by `with_preserved_state`. This also initialises @flags.
+    # @help_message is needed to store subcommand messages.
+    property help_message : String
 
     def initialize
       super()
       @opt = Options.new
+      @help_message = ""
       self.banner = <<-BANNER
 
         Program: DeepL CLI (Simple command line tool for DeepL)
@@ -19,63 +24,48 @@ module DeepL
         BANNER
       on("doc", "Translate document") do
         opt.action = Action::TranslateDocument
-        disabled_options = [
-          "-i", "--input",
-          "-C", "--context",
-          "-S", "--split-sentences",
-          "-A", "--ansi",
-          "-u", "--usage",
-          "-v", "--version",
-          "-h", "--help",
-        ]
-        disabled_options.each { |o| @handlers.delete(o) }
-        @flags.reject! { |f| disabled_options.any? { |o| f.includes?(o) } }
-
+        @handlers.clear
+        @flags.clear
         self.banner = "Usage: deepl doc [options] <file>"
 
+        on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
+          from.empty? ? opt.action = Action::ListFromLanguages : opt.source_lang = from.upcase
+        end
+        on("-t", "--to [LANG]", "Target language [EN]") do |to|
+          to.empty? ? opt.action = Action::ListTargetLanguages : opt.target_lang = to.upcase
+        end
+        on("-g", "--glossary ID", "Glossary ID") do |id|
+          opt.glossary_id = id
+        end
+        on("-F", "--formality OPT", "Formality (default more less)") do |v|
+          opt.formality = v
+        end
         on("-o", "--output FILE", "Output file") do |file|
           opt.output_path = Path[file]
         end
-
-        on("-F", "--format FORMAT", "Output file format") do |format|
+        on("-O", "--output-format FORMAT", "Output file format") do |format|
           opt.output_format = format
         end
-
+        on("-d", "--debug", "Show backtrace on error") do
+          DeepLError.debug = true
+        end
         on("-h", "--help", "Show this help") do
-          # FIXME
-          puts self
+          opt.action = Action::Help
+          self.help_message = self.to_s
         end
       end
       on("glossary", "Manage glossaries") do
         @opt.action = Action::OutputGlossaryEntries
-        disabled_options = [
-          "-i", "--input",
-          "-f", "--from",
-          "-t", "--to",
-          "-F", "--formality",
-          "-C", "--context",
-          "-S", "--split-sentences",
-          "-A", "--ansi",
-          "-u", "--usage",
-          "-v", "--version",
-          "-h", "--help",
-        ]
-        disabled_options.each { |o| @handlers.delete(o) }
-        @flags.reject! { |f| disabled_options.any? { |o| f.includes?(o) } }
-
         self.banner = "Usage: deepl glossary [options] <file>"
+        @handlers.clear
+        @flags.clear
 
         on("create", "Create glossary") do |name|
           opt.action = Action::CreateGlossary
-          disabled_options = [
-            "-g", "--glossary",
-            "-d", "--debug",
-            "-l", "--list",
-            "-p", "--language-pairs",
-            "-h", "--help",
-          ]
-          disabled_options.each { |o| @handlers.delete(o) }
-          @flags.reject! { |f| disabled_options.any? { |o| f.includes?(o) } }
+          self.banner = "Usage: deepl glossary create [options]"
+          @handlers.clear
+          @flags.clear
+
           on("-n", "--name NAME", "Glossary name") do |name|
             opt.glossary_name = name
           end
@@ -85,9 +75,12 @@ module DeepL
           on("-t", "--to [LANG]", "Target language [EN]") do |to|
             to.empty? ? opt.action = Action::ListTargetLanguages : opt.target_lang = to.upcase
           end
+          on("-d", "--debug", "Show backtrace on error") do
+            DeepLError.debug = true
+          end
           on("-h", "--help", "Show this help") do
-            # FIXME
-            puts self
+            opt.action = Action::Help
+            self.help_message = self.to_s
           end
         end
 
@@ -104,9 +97,13 @@ module DeepL
           opt.action = Action::ListGlossaryLanguagePairs
         end
 
+        on("-d", "--debug", "Show backtrace on error") do
+          DeepLError.debug = true
+        end
+
         on("-h", "--help", "Show this help") do
-          # FIXME
-          puts self
+          opt.action = Action::Help
+          self.help_message = self.to_s
         end
       end
       on("-i", "--input TEXT", "Input text") do |text|
@@ -144,6 +141,7 @@ module DeepL
       end
       on("-h", "--help", "Show this help") do
         opt.action = Action::Help
+        self.help_message = self.to_s
       end
       invalid_option do |flag|
         STDERR.puts "[deepl-cli] ERROR: #{flag} is not a valid option."
