@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../js/doc.js"></script>
 
   <meta name="repository-name" content="deepl-cli">
-  <title>DeepL::DeepLError - deepl-cli main</title>
+  <title>DeepL::Config - deepl-cli main</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -97,12 +97,12 @@
       
     </li>
   
-  <li class=" " data-id="deepl-cli/DeepL/Config" data-name="deepl::config">
+  <li class=" current" data-id="deepl-cli/DeepL/Config" data-name="deepl::config">
       <a href="../DeepL/Config.html">Config</a>
       
     </li>
   
-  <li class=" current" data-id="deepl-cli/DeepL/DeepLError" data-name="deepl::deeplerror">
+  <li class=" " data-id="deepl-cli/DeepL/DeepLError" data-name="deepl::deeplerror">
       <a href="../DeepL/DeepLError.html">DeepLError</a>
       
     </li>
@@ -171,12 +171,12 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">class</span> DeepL::<wbr>DeepLError
+  <span class="kind">class</span> DeepL::<wbr>Config
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../DeepL/DeepLError.html">DeepL::DeepLError</a></li><li class="superclass">Exception</li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../DeepL/Config.html">DeepL::Config</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -188,36 +188,6 @@
 
 
 
-
-  <h2>
-    <a id="direct-known-subclasses" class="anchor" href="#direct-known-subclasses">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>
-    Direct Known Subclasses
-  </h2>
-  <ul class="other-types-list">
-    
-      <li class="other-type"><a href="../DeepL/ApiKeyError.html">DeepL::ApiKeyError</a></li>
-    
-      <li class="other-type"><a href="../DeepL/AuthorizationError.html">DeepL::AuthorizationError</a></li>
-    
-      <li class="other-type"><a href="../DeepL/DocumentNotReadyError.html">DeepL::DocumentNotReadyError</a></li>
-    
-      <li class="other-type"><a href="../DeepL/DocumentTranslationError.html">DeepL::DocumentTranslationError</a></li>
-    
-      <li class="other-type"><a href="../DeepL/GlossaryNotFoundError.html">DeepL::GlossaryNotFoundError</a></li>
-    
-      <li class="other-type"><a href="../DeepL/QuotaExceededError.html">DeepL::QuotaExceededError</a></li>
-    
-      <li class="other-type"><a href="../DeepL/RequestError.html">DeepL::RequestError</a></li>
-    
-      <li class="other-type"><a href="../DeepL/TooManyRequestsError.html">DeepL::TooManyRequestsError</a></li>
-    
-      <li class="other-type"><a href="../DeepL/UnknownSubCommandError.html">DeepL::UnknownSubCommandError</a></li>
-    
-  </ul>
 
 
 
@@ -234,8 +204,8 @@
   </h2>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/80644b5fc7758113a77a613b5d5ba2b278277323/src/deepl/exceptions.cr#L2" target="_blank">
-        deepl/exceptions.cr
+      <a href="https://github.com/kojix2/deepl-cli/blob/80644b5fc7758113a77a613b5d5ba2b278277323/src/deepl/config.cr#L2" target="_blank">
+        deepl/config.cr
       </a>
     
     <br/>
@@ -258,12 +228,12 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#debug%3ABool-class-method" class="signature"><strong>.debug</strong> : Bool</a>
+        <a href="#auth_key%3AString-class-method" class="signature"><strong>.auth_key</strong> : String</a>
         
       </li>
     
       <li class="entry-summary">
-        <a href="#debug%3D%28debug%3ABool%29-class-method" class="signature"><strong>.debug=</strong>(debug : Bool)</a>
+        <a href="#user_agent%3AString-class-method" class="signature"><strong>.user_agent</strong> : String</a>
         
       </li>
     
@@ -276,19 +246,6 @@
 
 
 <div class="methods-inherited">
-  
-    
-
-
-    
-
-
-    
-
-
-    
-
-
   
     
 
@@ -330,34 +287,34 @@
     Class Method Detail
   </h2>
   
-    <div class="entry-detail" id="debug:Bool-class-method">
+    <div class="entry-detail" id="auth_key:String-class-method">
       <div class="signature">
         
-        def self.<strong>debug</strong> : Bool
+        def self.<strong>auth_key</strong> : String
 
-        <a class="method-permalink" href="#debug%3ABool-class-method">#</a>
+        <a class="method-permalink" href="#auth_key%3AString-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/80644b5fc7758113a77a613b5d5ba2b278277323/src/deepl/exceptions.cr#L3" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/80644b5fc7758113a77a613b5d5ba2b278277323/src/deepl/config.cr#L3" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="debug=(debug:Bool)-class-method">
+    <div class="entry-detail" id="user_agent:String-class-method">
       <div class="signature">
         
-        def self.<strong>debug=</strong>(debug : Bool)
+        def self.<strong>user_agent</strong> : String
 
-        <a class="method-permalink" href="#debug%3D%28debug%3ABool%29-class-method">#</a>
+        <a class="method-permalink" href="#user_agent%3AString-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/80644b5fc7758113a77a613b5d5ba2b278277323/src/deepl/exceptions.cr#L3" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/80644b5fc7758113a77a613b5d5ba2b278277323/src/deepl/config.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
