@@ -42,7 +42,6 @@ module DeepL
       else
         raise ArgumentError.new("Invalid action: #{option.action}")
       end
-      # exit(0)
     rescue ex
       if DeepLError.debug
         STDERR.puts "[deepl-cli] ERROR: #{ex.class} #{ex.message}\n#{ex.backtrace.join("\n")}"
@@ -50,6 +49,13 @@ module DeepL
         STDERR.puts "[deepl-cli] ERROR: #{ex.class} #{ex.message}"
       end
       exit(1)
+    end
+
+    private def with_spinner(&block)
+      spinner = Term::Spinner.new(clear: true)
+      spinner.run do
+        block.call
+      end
     end
 
     def translate_text
@@ -64,8 +70,7 @@ module DeepL
 
       translated_text = ""
 
-      spinner = Term::Spinner.new(clear: true)
-      spinner.run do
+      with_spinner do
         translator = DeepL::Translator.new
         translated_text = translator.translate_text(
           option.input_text, option.target_lang, option.source_lang,
@@ -88,8 +93,7 @@ module DeepL
       end
       STDERR.puts "[deepl-cli] Start translating #{option.input_path}"
 
-      spinner = Term::Spinner.new(clear: true)
-      spinner.run do
+      with_spinner do
         translator = DeepL::Translator.new
         translator.translate_document(
           option.input_path, option.target_lang, option.source_lang,
