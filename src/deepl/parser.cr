@@ -11,6 +11,19 @@ module DeepL
     # @help_message is needed to store subcommand messages.
     property help_message : String
 
+    macro _on_debug_
+      on("-d", "--debug", "Show backtrace on error") do
+        DeepLError.debug = true
+      end
+    end
+
+    macro _on_help_
+      on("-h", "--help", "Show this help") do
+        opt.action = Action::Help
+        self.help_message = self.to_s
+      end
+    end
+
     def initialize
       super()
       @opt = Options.new
@@ -55,14 +68,9 @@ module DeepL
           opt.output_format = format
         end
 
-        on("-d", "--debug", "Show backtrace on error") do
-          DeepLError.debug = true
-        end
+        _on_debug_
 
-        on("-h", "--help", "Show this help") do
-          opt.action = Action::Help
-          self.help_message = self.to_s
-        end
+        _on_help_
       end
 
       on("glossary", "Manage glossaries") do
@@ -89,14 +97,9 @@ module DeepL
             to.empty? ? opt.action = Action::ListTargetLanguages : opt.target_lang = to.upcase
           end
 
-          on("-d", "--debug", "Show backtrace on error") do
-            DeepLError.debug = true
-          end
+          _on_debug_
 
-          on("-h", "--help", "Show this help") do
-            opt.action = Action::Help
-            self.help_message = self.to_s
-          end
+          _on_help_
         end
 
         on("list", "List glossaries") do
@@ -105,14 +108,9 @@ module DeepL
           @handlers.clear
           @flags.clear
 
-          on("-d", "--debug", "Show backtrace on error") do
-            DeepLError.debug = true
-          end
+          _on_debug_
 
-          on("-h", "--help", "Show this help") do
-            opt.action = Action::Help
-            self.help_message = self.to_s
-          end
+          _on_help_
         end
 
         on("delete", "Delete glossary") do
@@ -146,14 +144,9 @@ module DeepL
           opt.action = Action::ListGlossaryLanguagePairs
         end
 
-        on("-d", "--debug", "Show backtrace on error") do
-          DeepLError.debug = true
-        end
+        _on_debug_
 
-        on("-h", "--help", "Show this help") do
-          opt.action = Action::Help
-          self.help_message = self.to_s
-        end
+        _on_help_
       end
 
       on("-i", "--input TEXT", "Input text") do |text|
@@ -200,18 +193,13 @@ module DeepL
         opt.action = Action::RetrieveUsage
       end
 
-      on("-d", "--debug", "Show backtrace on error") do
-        DeepLError.debug = true
-      end
+      _on_debug_
 
       on("-v", "--version", "Show version") do
         opt.action = Action::Version
       end
 
-      on("-h", "--help", "Show this help") do
-        opt.action = Action::Help
-        self.help_message = self.to_s
-      end
+      _on_help_
 
       invalid_option do |flag|
         STDERR.puts "[deepl-cli] ERROR: #{flag} is not a valid option."
