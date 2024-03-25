@@ -17,19 +17,15 @@ module DeepL
       @api_url_document = "#{api_url_base}/document"
     end
 
-    private def http_headers_json
+    private def http_headers_base
       {
         "Authorization" => "DeepL-Auth-Key #{auth_key}",
         "User-Agent"    => user_agent,
-        "Content-Type"  => "application/json",
       }
     end
 
-    private def http_headers_simple
-      {
-        "Authorization" => "DeepL-Auth-Key #{auth_key}",
-        "User-Agent"    => user_agent,
-      }
+    private def http_headers_json
+      http_headers_base.merge({"Content-Type" => "application/json"})
     end
 
     private def auth_key
@@ -113,7 +109,7 @@ module DeepL
       response = Crest.post(
         api_url_document,
         form: params,
-        headers: http_headers_simple,
+        headers: http_headers_base,
       )
 
       parsed_response = JSON.parse(response.body)
@@ -160,7 +156,7 @@ module DeepL
     end
 
     def request_languages(type)
-      Crest.get("#{api_url_base}/languages", params: {"type" => type}, headers: http_headers_simple)
+      Crest.get("#{api_url_base}/languages", params: {"type" => type}, headers: http_headers_base)
     end
 
     def target_languages
@@ -178,7 +174,7 @@ module DeepL
     end
 
     def glossary_language_pairs
-      response = Crest.get("#{api_url_base}/glossary-language-pairs", headers: http_headers_simple)
+      response = Crest.get("#{api_url_base}/glossary-language-pairs", headers: http_headers_base)
       parse_glossary_language_pairs_response(response)
     end
 
@@ -209,13 +205,13 @@ module DeepL
     def delete_glossary(glossary_id : String)
       response = Crest.delete(
         "#{api_url_base}/glossaries/#{glossary_id}",
-        headers: http_headers_simple,
+        headers: http_headers_base,
       )
       # Fixme : Check response status
     end
 
     def glossary_list
-      response = Crest.get("#{api_url_base}/glossaries", headers: http_headers_simple)
+      response = Crest.get("#{api_url_base}/glossaries", headers: http_headers_base)
       parse_glossary_list_response(response)
     end
 
@@ -228,7 +224,7 @@ module DeepL
     end
 
     def glossary_entries(glossary_id : String)
-      header = http_headers_simple
+      header = http_headers_base
       header["Accept"] = "text/tab-separated-values"
       response = Crest.get(
         "#{api_url_base}/glossaries/#{glossary_id}/entries",
@@ -247,7 +243,7 @@ module DeepL
     end
 
     private def request_usage
-      Crest.get("#{api_url_base}/usage", headers: http_headers_simple)
+      Crest.get("#{api_url_base}/usage", headers: http_headers_base)
     end
 
     private def parse_usage_response(response)
