@@ -45,11 +45,11 @@ module DeepL
         self.banner = "Usage: deepl doc [options] <file>"
 
         on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
-          from.empty? ? opt.action = Action::ListFromLanguages : opt.source_lang = from.upcase
+          opt.source_lang = from.upcase
         end
 
         on("-t", "--to [LANG]", "Target language [EN]") do |to|
-          to.empty? ? opt.action = Action::ListTargetLanguages : opt.target_lang = to.upcase
+          opt.target_lang = to.upcase
         end
 
         on("-g", "--glossary ID", "Glossary ID") do |id|
@@ -90,11 +90,11 @@ module DeepL
           end
 
           on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
-            from.empty? ? opt.action = Action::ListFromLanguages : opt.source_lang = from.upcase
+            opt.source_lang = from.upcase
           end
 
           on("-t", "--to [LANG]", "Target language [EN]") do |to|
-            to.empty? ? opt.action = Action::ListTargetLanguages : opt.target_lang = to.upcase
+            opt.target_lang = to.upcase
           end
 
           _on_debug_
