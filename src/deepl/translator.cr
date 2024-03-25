@@ -132,7 +132,9 @@ module DeepL
           "#{"\e[2K\r" if STDERR.tty?}" \
           "[deepl-cli] Status of document : #{parsed_response}"
         )
-        break if parsed_response.dig("status") == "done"
+        status = parsed_response.dig("status")
+        break if status == "done"
+        raise DocumentTranslationError.new if status == "error"
       end
     end
 
