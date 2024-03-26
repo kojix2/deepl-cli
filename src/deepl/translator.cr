@@ -91,7 +91,7 @@ module DeepL
 
       check_status_of_document(did, dkey)
 
-      output_path ||= path.parent / "#{path.basename}.#{target_lang}.#{output_format.try &.downcase || path.extension}"
+      output_path ||= path.parent / "#{path.stem}_#{target_lang}#{output_format.try &.downcase || path.extension}"
 
       download_document(output_path, did, dkey)
       # rescue ex
