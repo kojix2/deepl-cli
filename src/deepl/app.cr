@@ -19,26 +19,26 @@ module DeepL
         translate_text
       when Action::TranslateDocument
         translate_document
+      when Action::ListGlossaryLanguagePairs
+        print_glossary_language_pairs
       when Action::CreateGlossary
         create_glossary
       when Action::DeleteGlossary
         delete_glossary
-      when Action::ListGlossaryLanguagePairs
-        show_glossary_language_pairs
       when Action::ListGlossaries
-        show_glossary_list
+        print_glossary_list
       when Action::OutputGlossaryEntries
         output_glossary_entries
       when Action::ListFromLanguages
-        show_source_languages
+        print_source_languages
       when Action::ListTargetLanguages
-        show_target_languages
+        print_target_languages
       when Action::RetrieveUsage
-        show_usage
+        print_usage
       when Action::Version
-        show_version
+        print_version
       when Action::Help
-        show_help
+        print_help
       else
         raise ArgumentError.new("Invalid action: #{option.action}")
       end
@@ -114,7 +114,7 @@ module DeepL
       end
     end
 
-    def show_glossary_language_pairs
+    def print_glossary_language_pairs
       translator = DeepL::Translator.new
       previous_source_lang = ""
       translator.glossary_language_pairs.each do |kv|
@@ -150,12 +150,12 @@ module DeepL
       puts translator.glossary_entries(option.glossary_id.not_nil!)
     end
 
-    def show_glossary_list
+    def print_glossary_list
       translator = DeepL::Translator.new
       pp translator.glossary_list
     end
 
-    def show_source_languages
+    def print_source_languages
       translator = DeepL::Translator.new
       translator.source_languages.each do |lang|
         language, name = lang.values.map(&.to_s)
@@ -163,7 +163,7 @@ module DeepL
       end
     end
 
-    def show_target_languages
+    def print_target_languages
       translator = DeepL::Translator.new
       translator.target_languages.each do |lang|
         language, name, supports_formality = lang.values.map(&.to_s)
@@ -172,17 +172,17 @@ module DeepL
       end
     end
 
-    def show_usage
+    def print_usage
       translator = DeepL::Translator.new
       puts translator.api_url_base
       puts translator.usage.map { |k, v| "#{k}: #{v}" }.join("\n")
     end
 
-    def show_version
+    def print_version
       puts DeepL::VERSION
     end
 
-    def show_help
+    def print_help
       puts parser.help_message
     end
   end
