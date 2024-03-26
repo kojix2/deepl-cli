@@ -58,15 +58,26 @@ module DeepL
       end
     end
 
+    private def remove_ansi_escape_codes(text)
+      # gsub(/\e\[[0-9;]*[mGKHF]/, "")
+      # The above regular expression used to be used. 
+      # However, it is insufficient because it cannot remove bold and other characters.
+      # 
+      # How can I remove the ANSI escape sequences from a string in python
+      # https://stackoverflow.com/questions/14693701
+      # Python regular expressions were converted for PCRE2 using ChatGPT.
+      ansi_escape_8bit = Regex.new(
+        "(?:\x1B[@-Z\\-_]|[\\x80-\\x9A\\x9C-\\x9F]|(?:\x1B\\[|\\x9B)[0-?]*[ -/]*[@-~])"
+      )
+      text.gsub(ansi_escape_8bit, "")
+    end
+
     def translate_text
       if option.input_text.empty?
         option.input_text = ARGF.gets_to_end
       end
 
-      # Remove ANSI escape codes from input_text
-      if option.no_ansi
-        option.input_text = option.input_text.gsub(/\e\[[0-9;]*[mGKHF]/, "")
-      end
+      option.input_text = remove_ansi_escape_codes(option.input_text)
 
       translated_text = ""
 
