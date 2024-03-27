@@ -39,6 +39,24 @@ module DeepL
       Config.user_agent
     end
 
+    private def handle_response(response)
+      case response.status_code
+      when 456
+        raise QuotaExceededError.new
+      when HTTP::Status::FORBIDDEN
+        raise AuthorizationError.new
+      when HTTP::Status::NOT_FOUND
+        raise RequestError.new("Not found")
+      when HTTP::Status::BAD_REQUEST
+        raise RequestError.new("Bad request")
+      when HTTP::Status::TOO_MANY_REQUESTS
+        raise TooManyRequestsError.new
+      when HTTP::Status::SERVICE_UNAVAILABLE
+        raise RequestError.new("Service unavailable")
+      end
+      response
+    end
+
     def translate_text(
       text, target_lang, source_lang = nil, context_ = nil, split_sentences = nil,
       formality = nil, glossary_id = nil
@@ -54,22 +72,6 @@ module DeepL
       params["split_sentences"] = split_sentences if split_sentences
 
       response = Crest.post(api_url_translate, form: params, headers: http_headers_json, json: true)
-      # TODO: Error handling
-
-      case response.status_code
-      when 456
-        raise QuotaExceededError.new
-      when HTTP::Status::FORBIDDEN
-        raise AuthorizationError.new
-      when HTTP::Status::NOT_FOUND
-        raise RequestError.new("Not found")
-      when HTTP::Status::BAD_REQUEST
-        raise RequestError.new("Bad request")
-      when HTTP::Status::TOO_MANY_REQUESTS
-        raise TooManyRequestsError.new
-      when HTTP::Status::SERVICE_UNAVAILABLE
-        raise RequestError.new("Service unavailable")
-      end
 
       parsed_response = JSON.parse(response.body)
       parsed_response.dig("translations", 0, "text")
@@ -105,7 +107,7 @@ module DeepL
       params["file"] = file
 
       response = Crest.post(api_url_document, form: params, headers: http_headers_base)
-      # TODO: Error handling
+      handle_response(response)
 
       parsed_response = JSON.parse(response.body)
       document_handle = DocumentHandle.new(
@@ -131,7 +133,7 @@ module DeepL
       loop do
         sleep 10
         response = Crest.post(url, form: data, headers: http_headers_json)
-        # TODO: Error handling
+        handle_response(response)
         parsed_response = JSON.parse(response.body)
         STDERR.puts(
           "#{"\e[2K\r" if STDERR.tty?}" \
@@ -165,7 +167,7 @@ module DeepL
       data = {"type" => type}
       url = "#{api_url_base}/languages"
       response = Crest.get(url, params: data, headers: http_headers_base)
-      # TODO: Error handling
+      handle_response(response)
     end
 
     def target_languages
@@ -185,7 +187,7 @@ module DeepL
     def glossary_language_pairs
       url = "#{api_url_base}/glossary-language-pairs"
       response = Crest.get(url, headers: http_headers_base)
-      # TODO: Error handling
+      handle_response(response)
       parse_glossary_language_pairs_response(response)
     end
 
@@ -204,7 +206,7 @@ module DeepL
       }
       url = "#{api_url_base}/glossaries"
       response = Crest.post(url, form: data, headers: http_headers_json)
-      # TODO: Error handling
+      handle_response(response)
       parse_create_glossary_response(response)
     end
 
@@ -215,13 +217,13 @@ module DeepL
     def delete_glossary(glossary_id : String)
       url = "#{api_url_base}/glossaries/#{glossary_id}"
       response = Crest.delete(url, headers: http_headers_base)
-      # TODO: Error handling
+      handle_response(response)
     end
 
     def glossary_list
       url = "#{api_url_base}/glossaries)"
       response = Crest.get(url, headers: http_headers_base)
-      # TODO: Error handling
+      handle_response(response)
       parse_glossary_list_response(response)
     end
 
@@ -238,7 +240,7 @@ module DeepL
       header["Accept"] = "text/tab-separated-values"
       url = "#{api_url_base}/glossaries/#{glossary_id}/entries"
       response = Crest.get(url, headers: header)
-      # TODO: Error handling
+      handle_response(response)
       response.body
     end
 
@@ -254,7 +256,7 @@ module DeepL
     private def request_usage
       url = "#{api_url_base}/usage"
       response = Crest.get(url, headers: http_headers_base)
-      # TODO: Error handling
+      handle_response(response)
     end
 
     private def parse_usage_response(response)
