@@ -48,7 +48,7 @@ module DeepL
           opt.source_lang = from.upcase
         end
 
-        on("-t", "--to [LANG]", "Target language [EN]") do |to|
+        on("-t", "--to [LANG]", "Target language [#{opt.target_lang}]") do |to|
           opt.target_lang = to.upcase
         end
 
@@ -103,7 +103,7 @@ module DeepL
             opt.source_lang = from.upcase
           end
 
-          on("-t", "--to [LANG]", "Target language [EN]") do |to|
+          on("-t", "--to [LANG]", "Target language [#{opt.target_lang}]") do |to|
             opt.target_lang = to.upcase
           end
 
@@ -181,7 +181,7 @@ module DeepL
         end
       end
 
-      on("-t", "--to [LANG]", "Target language [EN]") do |to|
+      on("-t", "--to [LANG]", "Target language [#{opt.target_lang}]") do |to|
         if to.empty?
           opt.action = Action::ListTargetLanguages
         else

@@ -10,5 +10,13 @@ module DeepL
     def self.user_agent : String
       ENV["DEEPL_USER_AGENT"]? || "deepl-cli/#{VERSION}"
     end
+
+    def self.target_lang : String
+      ENV.fetch("DEEPL_TARGET_LANGUAGE") do
+        # The language of the current locale
+        # If the locale is de_DE.UTF-8, then the target language is DE
+        ENV["LANG"].try &.split("_").try &.first.upcase || "EN"
+      end
+    end
   end
 end
