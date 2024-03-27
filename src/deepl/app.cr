@@ -60,9 +60,9 @@ module DeepL
 
     private def remove_ansi_escape_codes(text)
       # gsub(/\e\[[0-9;]*[mGKHF]/, "")
-      # The above regular expression used to be used. 
+      # The above regular expression used to be used.
       # However, it is insufficient because it cannot remove bold and other characters.
-      # 
+      #
       # How can I remove the ANSI escape sequences from a string in python
       # https://stackoverflow.com/questions/14693701
       # Python regular expressions were converted for PCRE2 using ChatGPT.

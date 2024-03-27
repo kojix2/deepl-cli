@@ -9,6 +9,8 @@ module DeepL
     API_URL_BASE_PRO  = "https://api.deepl.com/v2"
     API_URL_BASE_FREE = "https://api-free.deepl.com/v2"
 
+    record DocumentHandle, key : String, id : String
+
     getter :api_url_base, :api_url_translate, :api_url_document
 
     def initialize
@@ -51,10 +53,8 @@ module DeepL
       params["context"] = context_ if context_
       params["split_sentences"] = split_sentences if split_sentences
 
-      response = Crest.post(
-        api_url_translate, form: params, headers: http_headers_json,
-        json: true
-      )
+      response = Crest.post(api_url_translate, form: params, headers: http_headers_json, json: true)
+      # TODO: Error handling
 
       case response.status_code
       when 456
@@ -87,13 +87,15 @@ module DeepL
       params["glossary_id"] = glossary_id if glossary_id
       params["output_format"] = output_format if output_format
 
-      did, dkey = upload_document(path, params)
+      document_handle = upload_document(path, params)
 
-      check_status_of_document(did, dkey)
+      check_status_of_document(document_handle)
 
-      output_path ||= path.parent / "#{path.stem}_#{target_lang}#{output_format.try &.downcase || path.extension}"
+      output_base_name = "#{path.stem}_#{target_lang}"
+      output_extension = output_format ? ".#{output_format.downcase}" : path.extension
 
-      download_document(output_path, did, dkey)
+      output_path ||= path.parent / (output_base_name + output_extension)
+      download_document(output_path, document_handle)
       # rescue ex
       #   raise DocumentTranslationError.new
     end
@@ -102,31 +104,34 @@ module DeepL
       file = File.open(path)
       params["file"] = file
 
-      response = Crest.post(
-        api_url_document,
-        form: params,
-        headers: http_headers_base,
-      )
+      response = Crest.post(api_url_document, form: params, headers: http_headers_base)
+      # TODO: Error handling
 
       parsed_response = JSON.parse(response.body)
-      document_id = parsed_response.dig("document_id")
-      document_key = parsed_response.dig("document_key")
+      document_handle = DocumentHandle.new(
+        key: parsed_response.dig("document_key").to_s,
+        id: parsed_response.dig("document_id").to_s
+      )
 
       STDERR.puts(
         "#{"\e[2K\r" if STDERR.tty?}" \
         "[deepl-cli] Uploaded #{path} : #{parsed_response}"
       )
-      [document_id, document_key]
+
+      document_handle
     end
 
-    def check_status_of_document(did, dkey)
+    def check_status_of_document(document_handle)
+      check_status_of_document(document_handle.id, document_handle.key)
+    end
+
+    def check_status_of_document(document_id, document_key)
+      url = "#{api_url_document}/#{document_id}"
+      data = {"document_key" => document_key}
       loop do
         sleep 10
-        response = Crest.post(
-          "#{api_url_document}/#{did}",
-          form: {"document_key" => dkey},
-          headers: http_headers_json,
-        )
+        response = Crest.post(url, form: data, headers: http_headers_json)
+        # TODO: Error handling
         parsed_response = JSON.parse(response.body)
         STDERR.puts(
           "#{"\e[2K\r" if STDERR.tty?}" \
@@ -138,12 +143,15 @@ module DeepL
       end
     end
 
-    def download_document(output_path, did, dkey)
-      response = Crest.post(
-        "#{api_url_document}/#{did}/result",
-        form: {"document_key" => dkey},
-        headers: http_headers_json,
-      )
+    def download_document(output_path, document_handle)
+      download_document(output_path, document_handle.id, document_handle.key)
+    end
+
+    def download_document(output_path, document_id, document_key)
+      data = {"document_key" => document_key}
+      url = "#{api_url_document}/#{document_id}/result"
+      response = Crest.post(url, form: data, headers: http_headers_json)
+      raise DocumentTranslationError.new unless response.success?
 
       File.write(output_path, response.body)
 
@@ -154,7 +162,10 @@ module DeepL
     end
 
     def request_languages(type)
-      Crest.get("#{api_url_base}/languages", params: {"type" => type}, headers: http_headers_base)
+      data = {"type" => type}
+      url = "#{api_url_base}/languages"
+      response = Crest.get(url, params: data, headers: http_headers_base)
+      # TODO: Error handling
     end
 
     def target_languages
@@ -172,7 +183,9 @@ module DeepL
     end
 
     def glossary_language_pairs
-      response = Crest.get("#{api_url_base}/glossary-language-pairs", headers: http_headers_base)
+      url = "#{api_url_base}/glossary-language-pairs"
+      response = Crest.get(url, headers: http_headers_base)
+      # TODO: Error handling
       parse_glossary_language_pairs_response(response)
     end
 
@@ -182,17 +195,16 @@ module DeepL
     end
 
     def create_glossary(name, source_lang, target_lang, entries, entry_format = "tsv")
-      response = Crest.post(
-        "#{api_url_base}/glossaries",
-        form: p({
-          "name"           => name,
-          "source_lang"    => source_lang,
-          "target_lang"    => target_lang,
-          "entries"        => entries,
-          "entries_format" => entry_format,
-        }),
-        headers: http_headers_json,
-      )
+      data = {
+        "name"           => name,
+        "source_lang"    => source_lang,
+        "target_lang"    => target_lang,
+        "entries"        => entries,
+        "entries_format" => entry_format,
+      }
+      url = "#{api_url_base}/glossaries"
+      response = Crest.post(url, form: data, headers: http_headers_json)
+      # TODO: Error handling
       parse_create_glossary_response(response)
     end
 
@@ -201,15 +213,15 @@ module DeepL
     end
 
     def delete_glossary(glossary_id : String)
-      response = Crest.delete(
-        "#{api_url_base}/glossaries/#{glossary_id}",
-        headers: http_headers_base,
-      )
-      # Fixme : Check response status
+      url = "#{api_url_base}/glossaries/#{glossary_id}"
+      response = Crest.delete(url, headers: http_headers_base)
+      # TODO: Error handling
     end
 
     def glossary_list
-      response = Crest.get("#{api_url_base}/glossaries", headers: http_headers_base)
+      url = "#{api_url_base}/glossaries)"
+      response = Crest.get(url, headers: http_headers_base)
+      # TODO: Error handling
       parse_glossary_list_response(response)
     end
 
@@ -224,10 +236,9 @@ module DeepL
     def glossary_entries(glossary_id : String)
       header = http_headers_base
       header["Accept"] = "text/tab-separated-values"
-      response = Crest.get(
-        "#{api_url_base}/glossaries/#{glossary_id}/entries",
-        headers: header
-      )
+      url = "#{api_url_base}/glossaries/#{glossary_id}/entries"
+      response = Crest.get(url, headers: header)
+      # TODO: Error handling
       response.body
     end
 
@@ -241,7 +252,9 @@ module DeepL
     end
 
     private def request_usage
-      Crest.get("#{api_url_base}/usage", headers: http_headers_base)
+      url = "#{api_url_base}/usage"
+      response = Crest.get(url, headers: http_headers_base)
+      # TODO: Error handling
     end
 
     private def parse_usage_response(response)
