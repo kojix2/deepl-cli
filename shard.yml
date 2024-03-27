@@ -1,5 +1,8 @@
 name: deepl-cli
-version: 0.3.0.alpha2
+version: 0.3.0.beta1
+
+authors:
+  - kojix2 <2xijok@gmail.com>
 
 targets:
   deepl:
@@ -11,3 +14,5 @@ dependencies:
     branch: master
   crest:
     github: mamantoha/crest
+
+license: MIT
