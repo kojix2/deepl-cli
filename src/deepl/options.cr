@@ -20,7 +20,12 @@ module DeepL
     property input_text : String = ""
     property input_path : Path = Path.new
     property output_path : Path? = nil
-    property target_lang : String = "EN"
+    property target_lang : String \
+       = ENV.fetch("DEEPL_TARGET_LANGUAGE") do
+      # The language of the current locale
+      # If the locale is de_DE.UTF-8, then the target language is DE
+      ENV["LANG"].try &.split("_").try &.first.upcase || "EN"
+    end
     property source_lang : String? = nil
     property formality : String? = nil
     property glossary_id : String? = nil
