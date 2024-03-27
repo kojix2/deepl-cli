@@ -221,7 +221,7 @@ module DeepL
     end
 
     def glossary_list
-      url = "#{api_url_base}/glossaries)"
+      url = "#{api_url_base}/glossaries"
       response = Crest.get(url, headers: http_headers_base)
       handle_response(response)
       parse_glossary_list_response(response)
