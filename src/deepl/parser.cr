@@ -119,11 +119,11 @@ module DeepL
           @handlers.clear
           @flags.clear
 
-          on("-g", "--glossary ID", "Delete glossary by ID") do |id|
+          on("-g", "--glossary ID", "View glossary by ID") do |id|
             opt.glossary_id = id
           end
 
-          # on("-n", "--name
+          # TODO: on("-n", "--name
 
           _on_debug_
 
@@ -140,7 +140,7 @@ module DeepL
             opt.glossary_id = id
           end
 
-          # on("-n", "--name
+          # TODO: on("-n", "--name
 
           _on_debug_
 
