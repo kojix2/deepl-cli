@@ -241,11 +241,7 @@ module DeepL
       url = "#{api_url_base}/glossaries/#{glossary_id}/entries"
       response = Crest.get(url, headers: header)
       handle_response(response)
-      response.body
-    end
-
-    private def parse_output_glossary_entries_response(response)
-      JSON.parse(response.body)["entries"]
+      response.body # Do not parse
     end
 
     def usage
