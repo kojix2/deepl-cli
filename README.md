@@ -2,15 +2,11 @@
 
 [![build](https://github.com/kojix2/deepl-cli/actions/workflows/build.yml/badge.svg)](https://github.com/kojix2/deepl-cli/actions/workflows/build.yml)
 
-A simple command-line interface (CLI) tool for translating text using the [DeepL API](https://www.deepl.com/pro-api/), written in Crystal programming language.
+A simple command-line tool for the [DeepL API](https://www.deepl.com/pro-api/), written in [Crystal](https://github.com/crystal-lang/crystal).
 
-## Prerequisites
-
-[Create a API key for DeepL](https://www.deepl.com/pro-api), then set it as an environment variable:
-
-```sh
-export DEEPL_AUTH_KEY=your_api_key_here
-```
+- Supports document translation
+- Supports glossaries
+- Precompiled binaries available
 
 ## Installation
 
@@ -27,22 +23,19 @@ export DEEPL_AUTH_KEY=your_api_key_here
 brew install kojix2/brew/deepl-cli
 ```
 
-### Compilation from source code
-
-```sh
-git clone https://github.com/kojix2/deepl-cli
-cd deepl-cli
-shards build --release
-# sudo cp bin/deepl /usr/local/bin
-```
-
-A compiled binary file will be created in the `bin` directory.
-
 ### Proxy settings (optional)
 
 ```sh
 export HTTP_PROXY=http://[IP]:[port]
 export HTTPS_PROXY=https://[IP]:[port]
+```
+
+## Prerequisites
+
+[Create a API key for DeepL](https://www.deepl.com/pro-api), then set it as an environment variable:
+
+```sh
+export DEEPL_AUTH_KEY=your_api_key_here
 ```
 
 ## Usage
@@ -154,13 +147,22 @@ deepl -u
 
 ## Contributing
 
-If you would like to contribute to the development of this CLI tool, please follow the steps below:
-
 1. Fork this repository
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+### Compilation from source code
+
+```sh
+git clone https://github.com/kojix2/deepl-cli
+cd deepl-cli
+shards build --release
+# sudo cp bin/deepl /usr/local/bin
+```
+
+A compiled binary file will be created in the `bin` directory.
 
 ## License
 
