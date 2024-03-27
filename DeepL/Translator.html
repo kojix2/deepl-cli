@@ -147,8 +147,18 @@
       
     </li>
   
-  <li class=" current" data-id="deepl-cli/DeepL/Translator" data-name="deepl::translator">
+  <li class="parent open current" data-id="deepl-cli/DeepL/Translator" data-name="deepl::translator">
       <a href="../DeepL/Translator.html">Translator</a>
+      
+        <ul>
+  
+  <li class=" " data-id="deepl-cli/DeepL/Translator/DocumentHandle" data-name="deepl::translator::documenthandle">
+      <a href="../DeepL/Translator/DocumentHandle.html">DocumentHandle</a>
+      
+    </li>
+  
+</ul>
+
       
     </li>
   
@@ -204,7 +214,7 @@
   </h2>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L8" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L8" target="_blank">
         deepl/translator.cr
       </a>
     
@@ -288,7 +298,12 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#check_status_of_document%28did%2Cdkey%29-instance-method" class="signature"><strong>#check_status_of_document</strong>(did, dkey)</a>
+        <a href="#check_status_of_document%28document_id%2Cdocument_key%29-instance-method" class="signature"><strong>#check_status_of_document</strong>(document_id, document_key)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#check_status_of_document%28document_handle%29-instance-method" class="signature"><strong>#check_status_of_document</strong>(document_handle)</a>
         
       </li>
     
@@ -303,7 +318,12 @@
       </li>
     
       <li class="entry-summary">
-        <a href="#download_document%28output_path%2Cdid%2Cdkey%29-instance-method" class="signature"><strong>#download_document</strong>(output_path, did, dkey)</a>
+        <a href="#download_document%28output_path%2Cdocument_id%2Cdocument_key%29-instance-method" class="signature"><strong>#download_document</strong>(output_path, document_id, document_key)</a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#download_document%28output_path%2Cdocument_handle%29-instance-method" class="signature"><strong>#download_document</strong>(output_path, document_handle)</a>
         
       </li>
     
@@ -412,7 +432,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L14" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L16" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -444,7 +464,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L14" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -460,7 +480,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L14" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -476,23 +496,39 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L14" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="check_status_of_document(did,dkey)-instance-method">
+    <div class="entry-detail" id="check_status_of_document(document_id,document_key)-instance-method">
       <div class="signature">
         
-        def <strong>check_status_of_document</strong>(did, dkey)
+        def <strong>check_status_of_document</strong>(document_id, document_key)
 
-        <a class="method-permalink" href="#check_status_of_document%28did%2Cdkey%29-instance-method">#</a>
+        <a class="method-permalink" href="#check_status_of_document%28document_id%2Cdocument_key%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L122" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L128" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="check_status_of_document(document_handle)-instance-method">
+      <div class="signature">
+        
+        def <strong>check_status_of_document</strong>(document_handle)
+
+        <a class="method-permalink" href="#check_status_of_document%28document_handle%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L124" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -508,7 +544,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L184" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L197" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -524,23 +560,39 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L203" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L215" target="_blank">View source</a>]
         
       </div>
     </div>
   
-    <div class="entry-detail" id="download_document(output_path,did,dkey)-instance-method">
+    <div class="entry-detail" id="download_document(output_path,document_id,document_key)-instance-method">
       <div class="signature">
         
-        def <strong>download_document</strong>(output_path, did, dkey)
+        def <strong>download_document</strong>(output_path, document_id, document_key)
 
-        <a class="method-permalink" href="#download_document%28output_path%2Cdid%2Cdkey%29-instance-method">#</a>
+        <a class="method-permalink" href="#download_document%28output_path%2Cdocument_id%2Cdocument_key%29-instance-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L141" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L150" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="download_document(output_path,document_handle)-instance-method">
+      <div class="signature">
+        
+        def <strong>download_document</strong>(output_path, document_handle)
+
+        <a class="method-permalink" href="#download_document%28output_path%2Cdocument_handle%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L146" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -556,7 +608,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L224" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L236" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -572,7 +624,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L174" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L185" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -588,7 +640,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L211" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L221" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -604,7 +656,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L156" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L164" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -620,7 +672,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L165" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L176" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -636,7 +688,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L160" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L171" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -652,7 +704,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L78" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L78" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -668,7 +720,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L40" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L42" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -684,7 +736,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L101" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L103" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -700,7 +752,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/d4b955adc404603f6db71645748c91faa70db820/src/deepl/translator.cr#L238" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/04bcfbd42a547304ce29b73f8d7613b0e799ee6c/src/deepl/translator.cr#L249" target="_blank">View source</a>]
         
       </div>
     </div>
