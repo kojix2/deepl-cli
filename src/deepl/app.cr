@@ -147,7 +147,18 @@ module DeepL
 
     def output_glossary_entries
       translator = DeepL::Translator.new
-      puts translator.glossary_entries(option.glossary_id.not_nil!)
+      glossary_id = option.glossary_id
+      glossary_name = option.glossary_name
+
+      if glossary_id && glossary_name
+        raise DeepLError.new("Glossary ID and Glossary Name are specified at the same time")
+      elsif glossary_id.nil? && glossary_name.nil?
+        raise DeepLError.new("Glossary ID or Glossary Name is not specified")
+      elsif glossary_id
+        puts translator.glossary_entries_from_id(glossary_id)
+      elsif glossary_name
+        puts translator.glossary_entries_from_name(glossary_name)
+      end
     end
 
     def print_glossary_list

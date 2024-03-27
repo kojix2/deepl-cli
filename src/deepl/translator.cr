@@ -228,20 +228,25 @@ module DeepL
     end
 
     private def parse_glossary_list_response(response)
-      # Hash(String, Array(Hash(String, (String | Bool | Int32))))
-      #   .from_json(response.body)["glossaries"]
-      #
-      # Above code is better, but the following code is more robust?
-      JSON.parse(response.body)["glossaries"]
+      # JSON.parse(response.body)["glossaries"]
+      Hash(String, Array(Hash(String, (String | Bool | Int32))))
+        .from_json(response.body)["glossaries"]
     end
 
-    def glossary_entries(glossary_id : String)
+    def glossary_entries_from_id(glossary_id : String)
       header = http_headers_base
       header["Accept"] = "text/tab-separated-values"
       url = "#{api_url_base}/glossaries/#{glossary_id}/entries"
       response = Crest.get(url, headers: header)
       handle_response(response)
       response.body # Do not parse
+    end
+
+    def glossary_entries_from_name(glossary_name : String)
+      glossaries = glossary_list
+      glossary = glossaries.find { |g| g["name"] == glossary_name }
+      raise DeepLError.new("Glossary not found") unless glossary
+      glossary_entries_from_id(glossary["glossary_id"].to_s)
     end
 
     def usage

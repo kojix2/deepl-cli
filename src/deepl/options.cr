@@ -12,6 +12,7 @@ module DeepL
     RetrieveUsage
     Version
     Help
+    None
   end
 
   struct Options

@@ -74,7 +74,6 @@ module DeepL
       end
 
       on("glossary", "Manage glossaries") do
-        @opt.action = Action::OutputGlossaryEntries
         self.banner = "Usage: deepl glossary [options] <file>"
         @handlers.clear
         @flags.clear
@@ -119,7 +118,7 @@ module DeepL
           @handlers.clear
           @flags.clear
 
-          on("-g", "--glossary ID", "View glossary by ID") do |id|
+          on("-i", "--id ID", "View glossary by Glossary ID") do |id|
             opt.glossary_id = id
           end
 
@@ -136,8 +135,12 @@ module DeepL
           @handlers.clear
           @flags.clear
 
-          on("-g", "--glossary ID", "Delete glossary by ID") do |id|
+          on("-i", "--id ID", "Delete glossary by Glossary ID") do |id|
             opt.glossary_id = id
+          end
+
+          on("-n", "--name NAME", "Delete glossary by Glossary Name") do |name|
+            opt.glossary_name = name
           end
 
           # TODO: on("-n", "--name
@@ -159,6 +162,11 @@ module DeepL
         _on_debug_
 
         _on_help_
+
+        # FIXME:
+        # Currently, the deepl glossary subcommand prints help and exits if no arguments are passed.
+        opt.action = Action::Help
+        self.help_message = self.to_s
       end
 
       on("-i", "--input TEXT", "Input text") do |text|
