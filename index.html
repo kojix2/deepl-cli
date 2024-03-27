@@ -184,14 +184,12 @@
   </svg>
 </a>DeepL CLI</h1>
 <p><a href="https://github.com/kojix2/deepl-cli/actions/workflows/build.yml"><img src="https://github.com/kojix2/deepl-cli/actions/workflows/build.yml/badge.svg" alt="build" /></a></p>
-<p>A simple command-line interface (CLI) tool for translating text using the <a href="https://www.deepl.com/pro-api/">DeepL API</a>, written in Crystal programming language.</p>
-<h2><a id="prerequisites" class="anchor" href="#prerequisites">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>Prerequisites</h2>
-<p><a href="https://www.deepl.com/pro-api">Create a API key for DeepL</a>, then set it as an environment variable:</p>
-<pre><code class="language-sh">export DEEPL_AUTH_KEY=your_api_key_here</code></pre>
+<p>A simple command-line tool for the <a href="https://www.deepl.com/pro-api/">DeepL API</a>, written in <a href="https://github.com/crystal-lang/crystal">Crystal</a>.</p>
+<ul>
+<li>Supports document translation</li>
+<li>Supports glossaries</li>
+<li>Precompiled binaries available</li>
+</ul>
 <h2><a id="installation" class="anchor" href="#installation">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -214,16 +212,6 @@
   </svg>
 </a>Homebrew (macOS)</h3>
 <pre><code class="language-sh">brew install kojix2/brew/deepl-cli</code></pre>
-<h3><a id="compilation-from-source-code" class="anchor" href="#compilation-from-source-code">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>Compilation from source code</h3>
-<pre><code class="language-sh">git clone https://github.com/kojix2/deepl-cli
-cd deepl-cli
-shards build --release
-# sudo cp bin/deepl /usr/local/bin</code></pre>
-<p>A compiled binary file will be created in the <code>bin</code> directory.</p>
 <h3><a id="proxy-settings-optional" class="anchor" href="#proxy-settings-optional">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -231,6 +219,13 @@ shards build --release
 </a>Proxy settings (optional)</h3>
 <pre><code class="language-sh">export HTTP_PROXY=http://[IP]:[port]
 export HTTPS_PROXY=https://[IP]:[port]</code></pre>
+<h2><a id="prerequisites" class="anchor" href="#prerequisites">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Prerequisites</h2>
+<p><a href="https://www.deepl.com/pro-api">Create a API key for DeepL</a>, then set it as an environment variable:</p>
+<pre><code class="language-sh">export DEEPL_AUTH_KEY=your_api_key_here</code></pre>
 <h2><a id="usage" class="anchor" href="#usage">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -313,7 +308,6 @@ This is especially useful when copy-pasting from the clipboard.</p>
     <use href="#octicon-link"/>
   </svg>
 </a>Contributing</h2>
-<p>If you would like to contribute to the development of this CLI tool, please follow the steps below:</p>
 <ol>
 <li>Fork this repository</li>
 <li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
@@ -321,6 +315,16 @@ This is especially useful when copy-pasting from the clipboard.</p>
 <li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
 <li>Create a new Pull Request</li>
 </ol>
+<h3><a id="compilation-from-source-code" class="anchor" href="#compilation-from-source-code">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Compilation from source code</h3>
+<pre><code class="language-sh">git clone https://github.com/kojix2/deepl-cli
+cd deepl-cli
+shards build --release
+# sudo cp bin/deepl /usr/local/bin</code></pre>
+<p>A compiled binary file will be created in the <code>bin</code> directory.</p>
 <h2><a id="license" class="anchor" href="#license">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
