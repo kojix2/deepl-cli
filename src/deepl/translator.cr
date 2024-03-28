@@ -152,10 +152,12 @@ module DeepL
     def download_document(output_path, document_id, document_key)
       data = {"document_key" => document_key}
       url = "#{api_url_document}/#{document_id}/result"
-      response = Crest.post(url, form: data, headers: http_headers_json)
-      raise DocumentTranslationError.new unless response.success?
-
-      File.write(output_path, response.body)
+      Crest.post(url, form: data, headers: http_headers_json) do |response|
+        raise DocumentTranslationError.new unless response.success?
+        File.open(output_path, "wb") do |file|
+          IO.copy(response.body_io, file)
+        end
+      end
 
       STDERR.puts(
         "#{"\e[2K\r" if STDERR.tty?}" \
