@@ -122,6 +122,10 @@ module DeepL
             opt.glossary_id = id
           end
 
+          on("-n", "--name NAME", "Delete glossary by Glossary Name") do |name|
+            opt.glossary_name = name
+          end
+
           # TODO: on("-n", "--name
 
           _on_debug_
@@ -139,7 +143,7 @@ module DeepL
             opt.glossary_id = id
           end
 
-          on("-n", "--name NAME", "Delete glossary by Glossary Name") do |name|
+          on("-n", "--name NAME", "View glossary by Glossary Name") do |name|
             opt.glossary_name = name
           end
 
