@@ -72,6 +72,9 @@ module DeepL
     end
 
     def set_glossary_id_from_name
+      return unless option.glossary_id.nil?
+      return if option.glossary_name.nil?
+
       glossary_name = option.glossary_name
       translator = DeepL::Translator.new
       glossary_list = translator.glossary_list
@@ -162,12 +165,27 @@ module DeepL
 
     def create_glossary
       # FIXME check TSV file format
+      
+      entry_format = "tsv"
+
+      # A corner case still not handled:
+      # Standard input is CSV file format
+
+      if option.glossary_name.nil? && ARGV.size == 1
+        name = ARGV[0]
+        entry_format = File.extname(name).sub(".", "").downcase
+        name = File.basename(name, File.extname(name))
+        option.glossary_name = name
+      end
       option.input_text = ARGF.gets_to_end
 
       translator = DeepL::Translator.new
       translator.create_glossary(
-        option.glossary_name, option.source_lang, option.target_lang,
-        option.input_text
+        name: option.glossary_name,
+        source_lang: option.source_lang,
+        target_lang: option.target_lang,
+        entries: option.input_text,
+        entry_format: entry_format
       )
     end
 
