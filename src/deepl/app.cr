@@ -43,11 +43,10 @@ module DeepL
         raise ArgumentError.new("Invalid action: #{option.action}")
       end
     rescue ex
-      if DeepLError.debug
-        STDERR.puts "[deepl-cli] ERROR: #{ex.class} #{ex.message}\n#{ex.backtrace.join("\n")}"
-      else
-        STDERR.puts "[deepl-cli] ERROR: #{ex.class} #{ex.message}"
-      end
+      error_message = "[deepl-cli] ERROR: #{ex.class} #{ex.message}"
+      error_message += "\n#{ex.response.body}" if ex.is_a?(Crest::RequestFailed)
+      error_message += "\n#{ex.backtrace.join("\n")}" if DeepLError.debug
+      STDERR.puts error_message
       exit(1)
     end
 
