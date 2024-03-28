@@ -83,9 +83,30 @@ module DeepL
 
       with_spinner do
         translator = DeepL::Translator.new
+        if option.glossary_name
+          glossary_list = translator.glossary_list
+          glossary = glossary_list.find { |g| g["name"] == option.glossary_name }
+          if glossary.nil?
+            raise DeepLError.new("Glossary '#{option.glossary_name}' is not found")
+          else
+            glossary_id = glossary["glossary_id"]
+            option.glossary_id = glossary_id if glossary_id.is_a?(String)
+
+            if DeepLError.debug
+              STDERR.puts(translator.avoid_spinner(
+                "[deepl-cli] Glossary '#{option.glossary_name}' is found: #{glossary_id}"
+              ))
+            end
+          end
+        end
+
         translated_text = translator.translate_text(
-          option.input_text, option.target_lang, option.source_lang,
-          option.formality, option.glossary_id, option.context
+          text: option.input_text,
+          target_lang: option.target_lang,
+          source_lang: option.source_lang,
+          formality: option.formality,
+          glossary_id: option.glossary_id,
+          context: option.context
         )
       end
 

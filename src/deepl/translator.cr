@@ -58,7 +58,7 @@ module DeepL
     end
 
     def translate_text(
-      text, target_lang, source_lang = nil, context_ = nil, split_sentences = nil,
+      text, target_lang, source_lang = nil, context = nil, split_sentences = nil,
       formality = nil, glossary_id = nil
     )
       params = Hash(String, String | Array(String)).new
@@ -68,7 +68,7 @@ module DeepL
       params["formality"] = formality if formality
       params["glossary_id"] = glossary_id if glossary_id
       # experimental feature
-      params["context"] = context_ if context_
+      params["context"] = context if context
       params["split_sentences"] = split_sentences if split_sentences
 
       response = Crest.post(api_url_translate, form: params, headers: http_headers_json, json: true)

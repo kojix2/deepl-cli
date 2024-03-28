@@ -193,8 +193,8 @@ module DeepL
         end
       end
 
-      on("-g", "--glossary ID", "Glossary ID") do |id|
-        opt.glossary_id = id
+      on("-g", "--glossary NAME", "Glossary name") do |name|
+        opt.glossary_name = name
       end
 
       on("-F", "--formality OPT", "Formality (default more less)") do |v|
