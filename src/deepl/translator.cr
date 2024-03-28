@@ -116,8 +116,9 @@ module DeepL
       )
 
       STDERR.puts(
-        "#{"\e[2K\r" if STDERR.tty?}" \
-        "[deepl-cli] Uploaded #{path} : #{parsed_response}"
+        avoid_spinner(
+          "[deepl-cli] Uploaded #{path} : #{parsed_response}"
+        )
       )
 
       document_handle
@@ -127,18 +128,22 @@ module DeepL
       check_status_of_document(document_handle.id, document_handle.key)
     end
 
-    def check_status_of_document(document_id, document_key)
+    def check_status_of_document(document_id, document_key, interval = 10)
       url = "#{api_url_document}/#{document_id}"
       data = {"document_key" => document_key}
+
       loop do
-        sleep 10
+        sleep interval
         response = Crest.post(url, form: data, headers: http_headers_json)
         handle_response(response)
         parsed_response = JSON.parse(response.body)
+
         STDERR.puts(
-          "#{"\e[2K\r" if STDERR.tty?}" \
-          "[deepl-cli] Status of document : #{parsed_response}"
+          avoid_spinner(
+            "[deepl-cli] Status of document : #{parsed_response}"
+          )
         )
+
         status = parsed_response.dig("status")
         break if status == "done"
         raise DocumentTranslationError.new if status == "error"
@@ -160,8 +165,9 @@ module DeepL
       end
 
       STDERR.puts(
-        "#{"\e[2K\r" if STDERR.tty?}" \
-        "[deepl-cli] Saved #{output_path}"
+        avoid_spinner(
+          "[deepl-cli] Saved #{output_path}"
+        )
       )
     end
 
@@ -268,6 +274,12 @@ module DeepL
 
     private def auth_key_is_free_account?
       auth_key.ends_with?(":fx")
+    end
+
+    # FIXME: Refactoring required
+    def avoid_spinner(str)
+      return str unless STDERR.tty?
+      "#{"\e[2K\r" if STDERR.tty?}" + str
     end
   end
 end

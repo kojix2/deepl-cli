@@ -44,7 +44,7 @@ module DeepL
       end
     rescue ex
       error_message = "[deepl-cli] ERROR: #{ex.class} #{ex.message}"
-      error_message += "\n#{ex.response.body}" if ex.is_a?(Crest::RequestFailed)
+      error_message += "\n#{ex.response}" if ex.is_a?(Crest::RequestFailed)
       error_message += "\n#{ex.backtrace.join("\n")}" if DeepLError.debug
       STDERR.puts error_message
       exit(1)
@@ -76,6 +76,7 @@ module DeepL
         option.input_text = ARGF.gets_to_end
       end
 
+      # Remove ANSI escape codes from the input text
       option.input_text = remove_ansi_escape_codes(option.input_text)
 
       translated_text = ""
