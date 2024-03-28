@@ -71,6 +71,24 @@ module DeepL
       text.gsub(ansi_escape_8bit, "")
     end
 
+    def set_glossary_id_from_name
+      glossary_name = option.glossary_name
+      translator = DeepL::Translator.new
+      glossary_list = translator.glossary_list
+      glossary = glossary_list.find { |g| g["name"] == glossary_name }
+      if glossary.nil?
+        raise DeepLError.new("Glossary '#{glossary_name}' is not found")
+      else
+        glossary_id = glossary["glossary_id"].to_s
+        if DeepLError.debug
+          STDERR.puts(translator.avoid_spinner(
+            "[deepl-cli] Glossary '#{glossary_name}' is found: #{glossary_id}"
+          ))
+        end
+        option.glossary_id = glossary_id
+      end
+    end
+
     def translate_text
       if option.input_text.empty?
         option.input_text = ARGF.gets_to_end
@@ -81,24 +99,10 @@ module DeepL
 
       translated_text = ""
 
+      set_glossary_id_from_name
+
       with_spinner do
         translator = DeepL::Translator.new
-        if option.glossary_name
-          glossary_list = translator.glossary_list
-          glossary = glossary_list.find { |g| g["name"] == option.glossary_name }
-          if glossary.nil?
-            raise DeepLError.new("Glossary '#{option.glossary_name}' is not found")
-          else
-            glossary_id = glossary["glossary_id"]
-            option.glossary_id = glossary_id if glossary_id.is_a?(String)
-
-            if DeepLError.debug
-              STDERR.puts(translator.avoid_spinner(
-                "[deepl-cli] Glossary '#{option.glossary_name}' is found: #{glossary_id}"
-              ))
-            end
-          end
-        end
 
         translated_text = translator.translate_text(
           text: option.input_text,
@@ -125,12 +129,18 @@ module DeepL
       end
       STDERR.puts "[deepl-cli] Start translating #{option.input_path}"
 
+      set_glossary_id_from_name
+
       with_spinner do
         translator = DeepL::Translator.new
         translator.translate_document(
-          option.input_path, option.target_lang, option.source_lang,
-          option.formality, option.glossary_id, option.output_format,
-          option.output_path
+          path: option.input_path,
+          target_lang: option.target_lang,
+          source_lang: option.source_lang,
+          formality: option.formality,
+          glossary_id: option.glossary_id,
+          output_format: option.output_format,
+          output_path: option.output_path
         )
       end
     end

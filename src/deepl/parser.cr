@@ -52,7 +52,7 @@ module DeepL
           opt.target_lang = to.upcase
         end
 
-        on("-g", "--glossary ID", "Glossary ID") do |id|
+        on("-g", "--glossary NAME", "Glossary name") do |id|
           opt.glossary_id = id
         end
 
