@@ -165,7 +165,7 @@ module DeepL
 
     def create_glossary
       # FIXME check TSV file format
-      
+
       entry_format = "tsv"
 
       # A corner case still not handled:
