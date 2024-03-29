@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: shards install --without-development --release
       - name: Build executable
-        run: crystal build scripts/deepl-dialog.cr --release
+        run: crystal build examples/deepl-dialog.cr --release
       - uses: actions/upload-artifact@v3
         with:
           name: deepl-dialog

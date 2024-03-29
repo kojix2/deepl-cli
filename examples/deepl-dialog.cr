@@ -1,10 +1,9 @@
 require "../src/deepl/translator"
 
 cmd = <<-CMD
-powershell.exe -command
+powershell -Command
     Add-Type -AssemblyName System.Windows.Forms
     $openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
-    $openFileDialog.initialDirectory = $InitialDirectory
     $openFileDialog.filter = "All files (*.*)| *.*"
     $openFileDialog.ShowDialog() > $null
     Write-Host $openFileDialog.Filename
