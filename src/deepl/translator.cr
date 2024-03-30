@@ -98,6 +98,12 @@ module DeepL
       output_extension = output_format ? ".#{output_format.downcase}" : path.extension
 
       output_path ||= path.parent / (output_base_name + output_extension)
+
+      # Do not overwrite the original file
+      if File.exists?(output_path)
+        output_path = path.parent / (output_base_name + "_#{Time.utc.to_unix}" + output_extension)
+      end
+
       download_document(output_path, document_handle)
       # rescue ex
       #   raise DocumentTranslationError.new
