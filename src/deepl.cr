@@ -1,4 +1,3 @@
-require "option_parser"
 require "./deepl/version"
 require "./deepl/app"
 
