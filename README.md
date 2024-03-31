@@ -91,27 +91,30 @@ deepl glossary [options]
     -l, --list                       List glossaries (short form)
     -p, --language-pairs             List language pairs
 
-### Examples
+## Examples
+
+### Text translation
 
 To translate the text "Hola mundo" from Spanish (ES) to English (EN):
 
 ```sh
-deepl -i "Hola mundo" -f ES -t EN
-# Hello world
+deepl -i "Hola mundo" -t EN        # Hello world
 ```
 
-Short options:
+From standard stream:
 
 ```sh
-deepl -i "Hola mundo" -f es
-# Hello world
+echo "Hola mundo" | deepl -t en    # Hello world
 ```
 
-From stream:
+Translation from standard input is useful for viewing help:
 
 ```sh
-echo "Hola mundo" | deepl -f ES -t EN
-# Hello world
+git --help | deepl -t fr | less
+```
+
+```sh
+man git | deepl -t de | less
 ```
 
 Multiple lines:
@@ -125,11 +128,75 @@ deepl -f es
 # Ctrl + D
 ```
 
-Display a list of available languages
+### Translate document
+
+You can translate documents directly:
+
+```sh
+deepl doc your.pdf -t EN
+# Save to your_EN.pdf
+```
+
+Translation of multiple documents:
+
+```sh
+find . -name "*.pdf" -exec deepl doc -t ja {} +
+```
+
+```sh
+ls -1 *.docx | xargs -L1 deepl doc -t ko
+```
+
+```sh
+fd -e pdf -e docx -x deepl doc -t zh
+```
+
+### Glossaries
+
+Create a glossary:
+
+```
+deepl glossary create -n mydic -f en -t ja mydict.tsv
+```
+
+List glossaries:
+
+```
+deepl glossary list
+# deepl glossary -l
+```
+
+Use glossary:
+
+```
+deepl -g mydict
+```
+
+```
+deepl doc -g mydict
+```
+
+Display the contents of the glossary:
+
+```
+deepl glossary view -n mydict
+```
+
+List of languages in which Glossary can be created:
+
+```
+deepl glossary -p
+```
+
+### Information
+
+Display a list of available languages (from)
 
 ```sh
 deepl -f
 ```
+
+Display a list of available languages (to)
 
 ```sh
 deepl -t
