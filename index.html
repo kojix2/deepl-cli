@@ -218,12 +218,13 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
     <use href="#octicon-link"/>
   </svg>
 </a>Translate Text</h3>
-<p>To translate the text &quot;Hola mundo&quot; from Spanish (ES) to English (EN):</p>
+<p>To translate the text &quot;Hola mundo&quot; from Spanish (ES) to English (EN).</p>
 <pre><code class="language-sh">deepl -i &quot;Hola mundo&quot; -t EN        # Hello world</code></pre>
-<p>From standard stream:</p>
+<p>From standard stream.</p>
 <pre><code class="language-sh">echo &quot;Hola mundo&quot; | deepl -t en    # Hello world</code></pre>
-<p>Translation from standard input is useful for viewing help:</p>
+<p>Translation from standard input is useful for viewing help.</p>
 <pre><code class="language-sh">git --help | deepl -t fr | less</code></pre>
+<p>man can also be translated. (removing ANSI escape sequences)</p>
 <pre><code class="language-sh">man git | deepl -t de | less</code></pre>
 <p>Multiple lines:
 Press <code>Ctrl+D</code> when finished typing.
@@ -232,22 +233,23 @@ This is especially useful when copy-pasting from the clipboard.</p>
 # Hola
 # mundo
 # Ctrl + D</code></pre>
-<p>You can also pass a text file as an argument:</p>
-<pre><code class="language-crystal">deepl <span class="o">-</span>t pl foo.txt
-<span class="s">``</span>
-
-( <span class="t">Experimental</span> ) <span class="t">Translate</span> text from the clipboard.
-</code></pre>
-<p>deepl --paste</p>
-<pre><code class="language-crystal">
-### Translate documents
-
-You can translate documents directly:
-
-```sh
-deepl doc your.pdf -t EN
+<p>( Experimental feature ) Translate text from the clipboard.</p>
+<pre><code class="language-crystal">deepl --paste</code></pre>
+<p>You can also pass a text file as an argument.</p>
+<pre><code class="language-crystal">deepl <span class="o">-</span>t pl foo.txt</code></pre>
+<p>Multiple text files can be passed.</p>
+<pre><code class="language-crystal">deepl <span class="o">-</span>t nl foo.txt bar.txt</code></pre>
+<p>However, if you are translating multiple files, you may want to add filename to the header.</p>
+<pre><code class="language-crystal">bat --style header *.txt | deepl -t it</code></pre>
+<h3><a id="translate-documents-1" class="anchor" href="#translate-documents-1">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Translate documents</h3>
+<p>You can translate documents directly.</p>
+<pre><code class="language-sh">deepl doc your.pdf -t EN
 # Save to your_EN.pdf</code></pre>
-<p>Translation of multiple documents:</p>
+<p>Translation of multiple documents.</p>
 <pre><code class="language-sh">find . -name &quot;*.pdf&quot; -exec deepl doc -t ja {} +</code></pre>
 <pre><code class="language-sh">ls -1 *.docx | xargs -L1 deepl doc -t ko</code></pre>
 <pre><code class="language-sh">fd -e pdf -e docx -x deepl doc -t zh</code></pre>
@@ -256,17 +258,17 @@ deepl doc your.pdf -t EN
     <use href="#octicon-link"/>
   </svg>
 </a>Glossaries</h3>
-<p>Create a glossary:</p>
+<p>Create a glossary.</p>
 <pre><code class="language-sh">deepl glossary create -n mydic -f en -t ja mydict.tsv</code></pre>
-<p>List glossaries:</p>
+<p>List glossaries.</p>
 <pre><code class="language-sh">deepl glossary list
 # deepl glossary -l</code></pre>
-<p>Using glossary for translation:</p>
+<p>Using glossary for translation.</p>
 <pre><code class="language-sh">deepl -g mydict</code></pre>
 <pre><code class="language-sh">deepl doc -g mydict</code></pre>
-<p>Display the contents of the glossary:</p>
+<p>Display the contents of the glossary.</p>
 <pre><code class="language-sh">deepl glossary view -n mydict</code></pre>
-<p>List of languages in which Glossary can be created:</p>
+<p>List of languages in which Glossary can be created.</p>
 <pre><code class="language-sh">deepl glossary -p</code></pre>
 <h3><a id="information" class="anchor" href="#information">
   <svg class="octicon-link" aria-hidden="true">
