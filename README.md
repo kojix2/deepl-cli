@@ -2,7 +2,7 @@
 
 [![build](https://github.com/kojix2/deepl-cli/actions/workflows/build.yml/badge.svg)](https://github.com/kojix2/deepl-cli/actions/workflows/build.yml)
 
-A simple command-line tool for the [DeepL API](https://www.deepl.com/pro-api/), written in [Crystal](https://github.com/crystal-lang/crystal).
+DeepL CLI is a simple command-line tool for the [DeepL API](https://www.deepl.com/pro-api/), written in [Crystal](https://github.com/crystal-lang/crystal). 
 
 - Supports document translation
 - Supports glossaries
@@ -12,10 +12,11 @@ A simple command-line tool for the [DeepL API](https://www.deepl.com/pro-api/), 
 
 ### Download
 
-- Download Linux binary from [Releases](https://github.com/kojix2/deepl-cli/releases)
-- unzip file: `tar -xvf deepl.tar.gz`
-- move file to executable path: `sudo mv deepl /usr/local/bin/`
-- Binaries for Linux are statically linked, but not for macOS. homebrew is recommended for macOS.
+- Download the Linux binary from the [Releases](https://github.com/kojix2/deepl-cli/releases)
+- Unzip: `tar -xvf deepl.tar.gz`
+- Move to the executable path: `sudo mv deepl /usr/local/bin/`
+
+Note: Binaries for Linux are statically linked. For macOS, we recommend using homebrew.
 
 ### Homebrew (macOS)
 
@@ -32,7 +33,7 @@ export HTTPS_PROXY=https://[IP]:[port]
 
 ## Prerequisites
 
-[Create a API key for DeepL](https://www.deepl.com/pro-api), then set it as an environment variable:
+You will need an API key for DeepL. [Create one here](https://www.deepl.com/pro-api) and set it as an environment variable:
 
 ```sh
 export DEEPL_AUTH_KEY=your_api_key_here
@@ -50,6 +51,8 @@ deepl [options] <file>
 deepl [options] <file>
 ```
 
+Options:
+
 ```txt
     -i, --input TEXT                 Input text
     -f, --from [LANG]                Source language [AUTO]
@@ -61,7 +64,7 @@ deepl [options] <file>
     -A, --ansi                       Do not remove ANSI escape codes
 ```
 
-Note that since this tool is used on a terminal, ANSI escape sequences are removed by default.
+Note: ANSI escape sequences are removed by default.
 
 ### Translate documents
 
@@ -70,6 +73,8 @@ To translate a document, use the `doc` subcommand:
 ```sh
 deepl doc [options] <file>
 ```
+
+Options for document translation:
 
 ```txt
     -f, --from [LANG]                Source language [AUTO]
@@ -88,26 +93,30 @@ For glossary management, use the `glossary` subcommand:
 deepl glossary [options]
 ```
 
+Options for glossary management:
+
 ```txt
     list                             List glossaries
-    create                           Create glossary
-    delete                           Delete glossary
-    view                             View glossary
-    -l, --list                       List glossaries (short form)
+    create                           Create a glossary
+    delete                           Delete a glossary
+    view                             View a glossary
+    -l, --list                       List glossaries
     -p, --language-pairs             List language pairs
 ```
 
 ## Examples
 
+Below are examples for translating text, translating documents, and working with glossaries.
+
 ### Translate Text
 
-To translate the text "Hola mundo" from Spanish (ES) to English (EN).
+To translate the text "Hola mundo" from Spanish (ES) to English (EN):
 
 ```sh
 deepl -i "Hola mundo" -t EN        # Hello world
 ```
 
-From standard stream.
+Or, using standard stream:
 
 ```sh
 echo "Hola mundo" | deepl -t en    # Hello world
@@ -245,6 +254,8 @@ deepl -u
 ```
 
 ## Development
+
+Contributions are always welcome.
 
 - Report bugs
 - Fix bugs and submit pull requests

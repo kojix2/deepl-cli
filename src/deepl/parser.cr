@@ -90,7 +90,7 @@ module DeepL
           _on_help_
         end
 
-        on("create", "Create glossary") do |name|
+        on("create", "Create a glossary") do |name|
           opt.action = Action::CreateGlossary
           self.banner = "Usage: deepl glossary create [options] <tsv|csv>"
           @handlers.clear
@@ -113,7 +113,7 @@ module DeepL
           _on_help_
         end
 
-        on("delete", "Delete glossary") do
+        on("delete", "Delete a glossary") do
           opt.action = Action::DeleteGlossary
           self.banner = "Usage: deepl glossary delete [options]"
           @handlers.clear
@@ -134,7 +134,7 @@ module DeepL
           _on_help_
         end
 
-        on("view", "View glossary") do
+        on("view", "View a glossary") do
           opt.action = Action::OutputGlossaryEntries
           self.banner = "Usage: deepl glossary view [options]"
           @handlers.clear
