@@ -119,7 +119,7 @@
   </svg>
 </a>DeepL CLI</h1>
 <p><a href="https://github.com/kojix2/deepl-cli/actions/workflows/build.yml"><img src="https://github.com/kojix2/deepl-cli/actions/workflows/build.yml/badge.svg" alt="build" /></a></p>
-<p>A simple command-line tool for the <a href="https://www.deepl.com/pro-api/">DeepL API</a>, written in <a href="https://github.com/crystal-lang/crystal">Crystal</a>.</p>
+<p>DeepL CLI is a simple command-line tool for the <a href="https://www.deepl.com/pro-api/">DeepL API</a>, written in <a href="https://github.com/crystal-lang/crystal">Crystal</a>.</p>
 <ul>
 <li>Supports document translation</li>
 <li>Supports glossaries</li>
@@ -136,11 +136,11 @@
   </svg>
 </a>Download</h3>
 <ul>
-<li>Download Linux binary from <a href="https://github.com/kojix2/deepl-cli/releases">Releases</a></li>
-<li>unzip file: <code>tar -xvf deepl.tar.gz</code></li>
-<li>move file to executable path: <code>sudo mv deepl /usr/local/bin/</code></li>
-<li>Binaries for Linux are statically linked, but not for macOS. homebrew is recommended for macOS.</li>
+<li>Download the Linux binary from the <a href="https://github.com/kojix2/deepl-cli/releases">Releases</a></li>
+<li>Unzip: <code>tar -xvf deepl.tar.gz</code></li>
+<li>Move to the executable path: <code>sudo mv deepl /usr/local/bin/</code></li>
 </ul>
+<p>Note: Binaries for Linux are statically linked. For macOS, we recommend using homebrew.</p>
 <h3><a id="homebrew-mac-os" class="anchor" href="#homebrew-mac-os">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -159,7 +159,7 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
     <use href="#octicon-link"/>
   </svg>
 </a>Prerequisites</h2>
-<p><a href="https://www.deepl.com/pro-api">Create a API key for DeepL</a>, then set it as an environment variable:</p>
+<p>You will need an API key for DeepL. <a href="https://www.deepl.com/pro-api">Create one here</a> and set it as an environment variable:</p>
 <pre><code class="language-sh">export DEEPL_AUTH_KEY=your_api_key_here</code></pre>
 <h2><a id="usage" class="anchor" href="#usage">
   <svg class="octicon-link" aria-hidden="true">
@@ -173,6 +173,7 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
   </svg>
 </a>Translate text</h3>
 <pre><code class="language-sh">deepl [options] &lt;file&gt;</code></pre>
+<p>Options:</p>
 <pre><code class="language-txt">    -i, --input TEXT                 Input text
     -f, --from [LANG]                Source language [AUTO]
     -t, --to [LANG]                  Target language [EN]
@@ -181,7 +182,7 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
     -C, --context TEXT               Context (experimental)
     -S, --split-sentences OPT        Split sentences
     -A, --ansi                       Do not remove ANSI escape codes</code></pre>
-<p>Note that since this tool is used on a terminal, ANSI escape sequences are removed by default.</p>
+<p>Note: ANSI escape sequences are removed by default.</p>
 <h3><a id="translate-documents" class="anchor" href="#translate-documents">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -189,6 +190,7 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 </a>Translate documents</h3>
 <p>To translate a document, use the <code>doc</code> subcommand:</p>
 <pre><code class="language-sh">deepl doc [options] &lt;file&gt;</code></pre>
+<p>Options for document translation:</p>
 <pre><code class="language-txt">    -f, --from [LANG]                Source language [AUTO]
     -t, --to [LANG]                  Target language [EN]
     -g, --glossary ID                Glossary ID
@@ -202,25 +204,27 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 </a>Manage Glossaries</h3>
 <p>For glossary management, use the <code>glossary</code> subcommand:</p>
 <pre><code class="language-sh">deepl glossary [options]</code></pre>
+<p>Options for glossary management:</p>
 <pre><code class="language-txt">    list                             List glossaries
-    create                           Create glossary
-    delete                           Delete glossary
-    view                             View glossary
-    -l, --list                       List glossaries (short form)
+    create                           Create a glossary
+    delete                           Delete a glossary
+    view                             View a glossary
+    -l, --list                       List glossaries
     -p, --language-pairs             List language pairs</code></pre>
 <h2><a id="examples" class="anchor" href="#examples">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Examples</h2>
+<p>Below are examples for translating text, translating documents, and working with glossaries.</p>
 <h3><a id="translate-text-1" class="anchor" href="#translate-text-1">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Translate Text</h3>
-<p>To translate the text &quot;Hola mundo&quot; from Spanish (ES) to English (EN).</p>
+<p>To translate the text &quot;Hola mundo&quot; from Spanish (ES) to English (EN):</p>
 <pre><code class="language-sh">deepl -i &quot;Hola mundo&quot; -t EN        # Hello world</code></pre>
-<p>From standard stream.</p>
+<p>Or, using standard stream:</p>
 <pre><code class="language-sh">echo &quot;Hola mundo&quot; | deepl -t en    # Hello world</code></pre>
 <p>Translation from standard input is useful for viewing help.</p>
 <pre><code class="language-sh">git --help | deepl -t fr | less</code></pre>
@@ -290,6 +294,7 @@ This is especially useful when copy-pasting from the clipboard.</p>
     <use href="#octicon-link"/>
   </svg>
 </a>Development</h2>
+<p>Contributions are always welcome.</p>
 <ul>
 <li>Report bugs</li>
 <li>Fix bugs and submit pull requests</li>
