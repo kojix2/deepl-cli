@@ -50,6 +50,7 @@ deepl [options] <file>
 deepl [options] <file>
 ```
 
+```txt
     -i, --input TEXT                 Input text
     -f, --from [LANG]                Source language [AUTO]
     -t, --to [LANG]                  Target language [EN]
@@ -58,6 +59,7 @@ deepl [options] <file>
     -C, --context TEXT               Context (experimental)
     -S, --split-sentences OPT        Split sentences
     -A, --ansi                       Do not remove ANSI escape codes
+```
 
 Note that since this tool is used on a terminal, ANSI escape sequences are removed by default.
 
@@ -69,12 +71,14 @@ To translate a document, use the `doc` subcommand:
 deepl doc [options] <file>
 ```
 
+```txt
     -f, --from [LANG]                Source language [AUTO]
     -t, --to [LANG]                  Target language [EN]
     -g, --glossary ID                Glossary ID
     -F, --formality OPT              Formality (default more less)
     -o, --output FILE                Output file
     -O, --output-format FORMAT       Output file format
+```
 
 ### Manage Glossaries
 
@@ -84,12 +88,14 @@ For glossary management, use the `glossary` subcommand:
 deepl glossary [options]
 ```
 
+```txt
     list                             List glossaries
     create                           Create glossary
     delete                           Delete glossary
     view                             View glossary
     -l, --list                       List glossaries (short form)
     -p, --language-pairs             List language pairs
+```
 
 ## Examples
 
@@ -155,36 +161,36 @@ fd -e pdf -e docx -x deepl doc -t zh
 
 Create a glossary:
 
-```
+```sh
 deepl glossary create -n mydic -f en -t ja mydict.tsv
 ```
 
 List glossaries:
 
-```
+```sh
 deepl glossary list
 # deepl glossary -l
 ```
 
-Use glossary:
+Using glossary for translation:
 
-```
+```sh
 deepl -g mydict
 ```
 
-```
+```sh
 deepl doc -g mydict
 ```
 
 Display the contents of the glossary:
 
-```
+```sh
 deepl glossary view -n mydict
 ```
 
 List of languages in which Glossary can be created:
 
-```
+```sh
 deepl glossary -p
 ```
 
@@ -235,7 +241,7 @@ A compiled binary file will be created in the `bin` directory.
 
 ### DeepL API Library
 
-https://github.com/kojix2/deepl.cr/
+- [https://github.com/kojix2/deepl.cr/](https://github.com/kojix2/deepl.cr/)
 
 ## License
 
