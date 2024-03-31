@@ -173,14 +173,14 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
   </svg>
 </a>Translate Text</h3>
 <pre><code class="language-sh">deepl [options] &lt;file&gt;</code></pre>
-<pre><code class="language-crystal">-i, --input TEXT                 Input text
--f, --from [LANG]                Source language [AUTO]
--t, --to [LANG]                  Target language [EN]
--g, --glossary ID                Glossary ID
--F, --formality OPT              Formality (default more less)
--C, --context TEXT               Context (experimental)
--S, --split-sentences OPT        Split sentences
--A, --ansi                       Do not remove ANSI escape codes</code></pre>
+<pre><code class="language-txt">    -i, --input TEXT                 Input text
+    -f, --from [LANG]                Source language [AUTO]
+    -t, --to [LANG]                  Target language [EN]
+    -g, --glossary ID                Glossary ID
+    -F, --formality OPT              Formality (default more less)
+    -C, --context TEXT               Context (experimental)
+    -S, --split-sentences OPT        Split sentences
+    -A, --ansi                       Do not remove ANSI escape codes</code></pre>
 <p>Note that since this tool is used on a terminal, ANSI escape sequences are removed by default.</p>
 <h3><a id="translate-document" class="anchor" href="#translate-document">
   <svg class="octicon-link" aria-hidden="true">
@@ -189,12 +189,12 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 </a>Translate Document</h3>
 <p>To translate a document, use the <code>doc</code> subcommand:</p>
 <pre><code class="language-sh">deepl doc [options] &lt;file&gt;</code></pre>
-<pre><code class="language-crystal">-f, --from [LANG]                Source language [AUTO]
--t, --to [LANG]                  Target language [EN]
--g, --glossary ID                Glossary ID
--F, --formality OPT              Formality (default more less)
--o, --output FILE                Output file
--O, --output-format FORMAT       Output file format</code></pre>
+<pre><code class="language-txt">    -f, --from [LANG]                Source language [AUTO]
+    -t, --to [LANG]                  Target language [EN]
+    -g, --glossary ID                Glossary ID
+    -F, --formality OPT              Formality (default more less)
+    -o, --output FILE                Output file
+    -O, --output-format FORMAT       Output file format</code></pre>
 <h3><a id="manage-glossaries" class="anchor" href="#manage-glossaries">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -202,12 +202,12 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 </a>Manage Glossaries</h3>
 <p>For glossary management, use the <code>glossary</code> subcommand:</p>
 <pre><code class="language-sh">deepl glossary [options]</code></pre>
-<pre><code class="language-crystal">list                             List glossaries
-create                           Create glossary
-delete                           Delete glossary
-view                             View glossary
--l, --list                       List glossaries (short form)
--p, --language-pairs             List language pairs</code></pre>
+<pre><code class="language-txt">    list                             List glossaries
+    create                           Create glossary
+    delete                           Delete glossary
+    view                             View glossary
+    -l, --list                       List glossaries (short form)
+    -p, --language-pairs             List language pairs</code></pre>
 <h2><a id="examples" class="anchor" href="#examples">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -250,17 +250,17 @@ This is especially useful when copy-pasting from the clipboard.</p>
   </svg>
 </a>Glossaries</h3>
 <p>Create a glossary:</p>
-<pre><code class="language-crystal">deepl glossary create <span class="o">-</span>n mydic <span class="o">-</span>f en <span class="o">-</span>t ja mydict.tsv</code></pre>
+<pre><code class="language-sh">deepl glossary create -n mydic -f en -t ja mydict.tsv</code></pre>
 <p>List glossaries:</p>
-<pre><code class="language-crystal">deepl glossary list
-<span class="c"># deepl glossary -l</span></code></pre>
-<p>Use glossary:</p>
-<pre><code class="language-crystal">deepl <span class="o">-</span>g mydict</code></pre>
-<pre><code class="language-crystal">deepl doc <span class="o">-</span>g mydict</code></pre>
+<pre><code class="language-sh">deepl glossary list
+# deepl glossary -l</code></pre>
+<p>Using glossary for translation:</p>
+<pre><code class="language-sh">deepl -g mydict</code></pre>
+<pre><code class="language-sh">deepl doc -g mydict</code></pre>
 <p>Display the contents of the glossary:</p>
-<pre><code class="language-crystal">deepl glossary view <span class="o">-</span>n mydict</code></pre>
+<pre><code class="language-sh">deepl glossary view -n mydict</code></pre>
 <p>List of languages in which Glossary can be created:</p>
-<pre><code class="language-crystal">deepl glossary <span class="o">-</span>p</code></pre>
+<pre><code class="language-sh">deepl glossary -p</code></pre>
 <h3><a id="information" class="anchor" href="#information">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -308,7 +308,9 @@ shards build --release
     <use href="#octicon-link"/>
   </svg>
 </a>DeepL API Library</h3>
-<p>https://github.com/kojix2/deepl.cr/</p>
+<ul>
+<li><a href="https://github.com/kojix2/deepl.cr/">https://github.com/kojix2/deepl.cr/</a></li>
+</ul>
 <h2><a id="license" class="anchor" href="#license">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
