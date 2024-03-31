@@ -1,3 +1,5 @@
+require "./config"
+
 module DeepL
   enum Action : UInt8
     TranslateText

@@ -1,6 +1,6 @@
 require "option_parser"
 require "./options"
-require "./translator"
+require "./cli/version"
 
 module DeepL
   class Parser < OptionParser

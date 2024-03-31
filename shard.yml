@@ -1,5 +1,5 @@
 name: deepl-cli
-version: 0.3.0.beta3
+version: 0.3.0.beta4
 
 authors:
   - kojix2 <2xijok@gmail.com>
@@ -9,6 +9,8 @@ targets:
     main: src/cli.cr
 
 dependencies:
+  deepl:
+    github: kojix2/deepl.cr
   crest:
     github: mamantoha/crest
   term-spinner:

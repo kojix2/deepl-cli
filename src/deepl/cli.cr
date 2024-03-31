@@ -1,7 +1,6 @@
+require "deepl/translator"
 require "term-spinner"
 require "./parser"
-require "./translator"
-require "./exceptions"
 
 module DeepL
   class CLI
