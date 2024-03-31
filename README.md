@@ -2,7 +2,7 @@
 
 [![build](https://github.com/kojix2/deepl-cli/actions/workflows/build.yml/badge.svg)](https://github.com/kojix2/deepl-cli/actions/workflows/build.yml)
 
-DeepL CLI is a simple command-line tool for the [DeepL API](https://www.deepl.com/pro-api/), written in [Crystal](https://github.com/crystal-lang/crystal). 
+DeepL CLI is a simple command-line tool for the [DeepL API](https://www.deepl.com/pro-api/), written in [Crystal](https://github.com/crystal-lang/crystal).
 
 - Supports document translation
 - Supports glossaries
@@ -113,30 +113,28 @@ Below are examples for translating text, translating documents, and working with
 To translate the text "Hola mundo" from Spanish (ES) to English (EN):
 
 ```sh
-deepl -i "Hola mundo" -t EN        # Hello world
+deepl -i "Hola mundo" -t en        # Translation: Hello world
 ```
 
-Or, using standard stream:
+Or, using standard input:
 
 ```sh
-echo "Hola mundo" | deepl -t en    # Hello world
+echo "Hola mundo" | deepl -t en    # Translation: Hello world
 ```
 
-Translation from standard input is useful for viewing help.
+Standard input translation is useful for quick references.
 
 ```sh
 git --help | deepl -t fr | less
 ```
 
-man can also be translated. (removing ANSI escape sequences)
+The `man` command can also be translated (by removing ANSI escape sequences):
 
 ```sh
 man git | deepl -t de | less
 ```
 
-Multiple lines:
-Press `Ctrl+D` when finished typing.
-This is especially useful when copy-pasting from the clipboard.
+To translate multiple lines, press `Ctrl+D` when you have finished typing. This is particularly useful when copying and pasting from the clipboard.
 
 ```sh
 deepl -f es
@@ -145,40 +143,40 @@ deepl -f es
 # Ctrl + D
 ```
 
-( Experimental feature ) Translate text from the clipboard.
+(Experimental feature) Translate text from the clipboard:
 
-```
+```sh
 deepl --paste
 ```
 
-You can also pass a text file as an argument.
+You can also pass a text file as an argument:
 
-```
+```sh
 deepl -t pl foo.txt
 ```
 
-Multiple text files can be passed.
+It's possible to pass multiple text files:
 
-```
+```sh
 deepl -t nl foo.txt bar.txt
 ```
 
-However, if you are translating multiple files, you may want to add filename to the header.
+If you are translating multiple files, you might want to add the filename to the header:
 
-```
+```sh
 bat --style header *.txt | deepl -t it
 ```
 
 ### Translate documents
 
-You can translate documents directly.
+You can directly translate documents:
 
 ```sh
-deepl doc your.pdf -t EN
-# Save to your_EN.pdf
+deepl doc your.pdf -t pt
+# The translated document will be saved as your_EN.pdf
 ```
 
-Translation of multiple documents.
+You can also translate multiple documents:
 
 ```sh
 find . -name "*.pdf" -exec deepl doc -t ja {} +
@@ -194,20 +192,20 @@ fd -e pdf -e docx -x deepl doc -t zh
 
 ### Glossaries
 
-Create a glossary.
+To create a glossary:
 
 ```sh
-deepl glossary create -n mydic -f en -t ja mydict.tsv
+deepl glossary create -n mydic -f ru -t pt mydict.tsv
 ```
 
-List glossaries.
+To list glossaries:
 
 ```sh
 deepl glossary list
-# deepl glossary -l
+# or you can use shorthand: deepl glossary -l
 ```
 
-Using glossary for translation.
+To use a glossary for translation:
 
 ```sh
 deepl -g mydict
@@ -217,13 +215,13 @@ deepl -g mydict
 deepl doc -g mydict
 ```
 
-Display the contents of the glossary.
+To display the contents of the glossary:
 
 ```sh
 deepl glossary view -n mydict
 ```
 
-List of languages in which Glossary can be created.
+To list the languages in which glossaries can be created:
 
 ```sh
 deepl glossary -p
@@ -231,19 +229,19 @@ deepl glossary -p
 
 ### Information
 
-Display a list of available languages (from)
+To display a list of available source languages:
 
 ```sh
 deepl -f
 ```
 
-Display a list of available languages (to)
+To display a list of available target languages:
 
 ```sh
 deepl -t
 ```
 
-Output usage information
+To output usage information:
 
 ```sh
 deepl -u
