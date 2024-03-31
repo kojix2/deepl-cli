@@ -4,7 +4,7 @@ require "./translator"
 require "./exceptions"
 
 module DeepL
-  class App
+  class CLI
     getter parser : Parser
     getter option : Options
 
@@ -239,7 +239,7 @@ module DeepL
     end
 
     def print_version
-      puts DeepL::VERSION
+      puts DeepL::CLI::VERSION
     end
 
     def print_help

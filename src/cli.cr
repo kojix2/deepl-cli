@@ -1,3 +1,3 @@
-require "./deepl"
+require "./deepl/cli"
 
-DeepL::App.new.run
+DeepL::CLI.new.run

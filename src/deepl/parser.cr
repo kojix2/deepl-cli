@@ -32,7 +32,7 @@ module DeepL
       self.banner = <<-BANNER
 
         Program: DeepL CLI (Simple command line tool for DeepL)
-        Version: #{DeepL::VERSION}
+        Version: #{DeepL::CLI::VERSION}
         Source:  https://github.com/kojix2/deepl-cli
 
         Usage: deepl [options] <file>

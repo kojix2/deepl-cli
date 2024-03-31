@@ -9,10 +9,10 @@ targets:
     main: src/cli.cr
 
 dependencies:
+  crest:
+    github: mamantoha/crest
   term-spinner:
     github: crystal-term/spinner
     branch: master
-  crest:
-    github: mamantoha/crest
 
 license: MIT

@@ -8,7 +8,7 @@ module DeepL
     end
 
     def self.user_agent : String
-      ENV["DEEPL_USER_AGENT"]? || "deepl-cli/#{VERSION}"
+      ENV["DEEPL_USER_AGENT"]? || "deepl-cli/#{CLI::VERSION}"
     end
 
     def self.target_lang : String

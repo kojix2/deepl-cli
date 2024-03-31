@@ -3,7 +3,7 @@ require "crest"
 require "../ext/crest"
 require "./exceptions"
 require "./config"
-require "./version"
+require "./cli/version"
 
 module DeepL
   class Translator
