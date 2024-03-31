@@ -44,7 +44,7 @@ export DEEPL_AUTH_KEY=your_api_key_here
 deepl [options] <file>
 ```
 
-### Translate Text
+### Translate text
 
 ```sh
 deepl [options] <file>
@@ -63,7 +63,7 @@ deepl [options] <file>
 
 Note that since this tool is used on a terminal, ANSI escape sequences are removed by default.
 
-### Translate Document
+### Translate documents
 
 To translate a document, use the `doc` subcommand:
 
@@ -99,7 +99,7 @@ deepl glossary [options]
 
 ## Examples
 
-### Text translation
+### Translate Text
 
 To translate the text "Hola mundo" from Spanish (ES) to English (EN):
 
@@ -134,7 +134,19 @@ deepl -f es
 # Ctrl + D
 ```
 
-### Translate document
+You can also pass a text file as an argument:
+
+```
+deepl -t pl foo.txt
+``
+
+( Experimental ) Translate text from the clipboard.
+
+```
+deepl --paste
+```
+
+### Translate documents
 
 You can translate documents directly:
 
