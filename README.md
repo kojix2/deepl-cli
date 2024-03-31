@@ -101,23 +101,25 @@ deepl glossary [options]
 
 ### Translate Text
 
-To translate the text "Hola mundo" from Spanish (ES) to English (EN):
+To translate the text "Hola mundo" from Spanish (ES) to English (EN).
 
 ```sh
 deepl -i "Hola mundo" -t EN        # Hello world
 ```
 
-From standard stream:
+From standard stream.
 
 ```sh
 echo "Hola mundo" | deepl -t en    # Hello world
 ```
 
-Translation from standard input is useful for viewing help:
+Translation from standard input is useful for viewing help.
 
 ```sh
 git --help | deepl -t fr | less
 ```
+
+man can also be translated. (removing ANSI escape sequences)
 
 ```sh
 man git | deepl -t de | less
@@ -134,28 +136,40 @@ deepl -f es
 # Ctrl + D
 ```
 
-You can also pass a text file as an argument:
-
-```
-deepl -t pl foo.txt
-``
-
-( Experimental ) Translate text from the clipboard.
+( Experimental feature ) Translate text from the clipboard.
 
 ```
 deepl --paste
 ```
 
+You can also pass a text file as an argument.
+
+```
+deepl -t pl foo.txt
+```
+
+Multiple text files can be passed.
+
+```
+deepl -t nl foo.txt bar.txt
+```
+
+However, if you are translating multiple files, you may want to add filename to the header.
+
+```
+bat --style header *.txt | deepl -t it
+```
+
 ### Translate documents
 
-You can translate documents directly:
+You can translate documents directly.
 
 ```sh
 deepl doc your.pdf -t EN
 # Save to your_EN.pdf
 ```
 
-Translation of multiple documents:
+Translation of multiple documents.
 
 ```sh
 find . -name "*.pdf" -exec deepl doc -t ja {} +
@@ -171,20 +185,20 @@ fd -e pdf -e docx -x deepl doc -t zh
 
 ### Glossaries
 
-Create a glossary:
+Create a glossary.
 
 ```sh
 deepl glossary create -n mydic -f en -t ja mydict.tsv
 ```
 
-List glossaries:
+List glossaries.
 
 ```sh
 deepl glossary list
 # deepl glossary -l
 ```
 
-Using glossary for translation:
+Using glossary for translation.
 
 ```sh
 deepl -g mydict
@@ -194,13 +208,13 @@ deepl -g mydict
 deepl doc -g mydict
 ```
 
-Display the contents of the glossary:
+Display the contents of the glossary.
 
 ```sh
 deepl glossary view -n mydict
 ```
 
-List of languages in which Glossary can be created:
+List of languages in which Glossary can be created.
 
 ```sh
 deepl glossary -p
