@@ -145,7 +145,9 @@ deepl -u
 # character_limit: 1000000000000
 ```
 
-## Contributing
+## Development
+
+### Contributing
 
 1. Fork this repository
 2. Create your feature branch (`git checkout -b my-new-feature`)
@@ -163,6 +165,10 @@ shards build --release
 ```
 
 A compiled binary file will be created in the `bin` directory.
+
+### DeepL API Library
+
+https://github.com/kojix2/deepl.cr/
 
 ## License
 
