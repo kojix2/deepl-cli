@@ -1,3 +1,4 @@
+require "easyclip"
 require "option_parser"
 require "./options"
 require "./cli/version"
@@ -147,8 +148,6 @@ module DeepL
             opt.glossary_name = name
           end
 
-          # TODO: on("-n", "--name
-
           _on_debug_
 
           _on_help_
@@ -176,6 +175,24 @@ module DeepL
       on("-i", "--input TEXT", "Input text") do |text|
         opt.input_text = text
       end
+
+      # FIXME: This option is experimental.
+      # The name of the option may change in the future.
+      on("-p", "--paste", "Input text from clipboard (experimental)") do
+        text = EasyClip.paste
+        if text.empty?
+          STDERR.puts "[deepl-cli] ERROR: Clipboard is empty."
+          exit(1)
+        end
+        STDERR.puts "[deepl-cli] Input text from clipboard: \n#{text}\n\n"
+        opt.input_text = text
+      end
+
+      # FIXME: This option is experimental.
+      # The name of the option may change in the future.
+      # on("-c", "--copy", "Copy translated text to clipboard (experimental)") do
+      #   # TODO?
+      # end
 
       on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
         if from.empty?

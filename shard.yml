@@ -15,6 +15,9 @@ dependencies:
   crest:
     github: mamantoha/crest
     version: "~> 1.3"
+  easyclip:
+    github: kojix2/easyclip
+    branch: main
   term-spinner:
     github: crystal-term/spinner
     branch: master
