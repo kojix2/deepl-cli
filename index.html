@@ -208,20 +208,23 @@ delete                           Delete glossary
 view                             View glossary
 -l, --list                       List glossaries (short form)
 -p, --language-pairs             List language pairs</code></pre>
-<h3><a id="examples" class="anchor" href="#examples">
+<h2><a id="examples" class="anchor" href="#examples">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
-</a>Examples</h3>
+</a>Examples</h2>
+<h3><a id="text-translation" class="anchor" href="#text-translation">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Text translation</h3>
 <p>To translate the text &quot;Hola mundo&quot; from Spanish (ES) to English (EN):</p>
-<pre><code class="language-sh">deepl -i &quot;Hola mundo&quot; -f ES -t EN
-# Hello world</code></pre>
-<p>Short options:</p>
-<pre><code class="language-sh">deepl -i &quot;Hola mundo&quot; -f es
-# Hello world</code></pre>
-<p>From stream:</p>
-<pre><code class="language-sh">echo &quot;Hola mundo&quot; | deepl -f ES -t EN
-# Hello world</code></pre>
+<pre><code class="language-sh">deepl -i &quot;Hola mundo&quot; -t EN        # Hello world</code></pre>
+<p>From standard stream:</p>
+<pre><code class="language-sh">echo &quot;Hola mundo&quot; | deepl -t en    # Hello world</code></pre>
+<p>Translation from standard input is useful for viewing help:</p>
+<pre><code class="language-sh">git --help | deepl -t fr | less</code></pre>
+<pre><code class="language-sh">man git | deepl -t de | less</code></pre>
 <p>Multiple lines:
 Press <code>Ctrl+D</code> when finished typing.
 This is especially useful when copy-pasting from the clipboard.</p>
@@ -229,8 +232,43 @@ This is especially useful when copy-pasting from the clipboard.</p>
 # Hola
 # mundo
 # Ctrl + D</code></pre>
-<p>Display a list of available languages</p>
+<h3><a id="translate-document-1" class="anchor" href="#translate-document-1">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Translate document</h3>
+<p>You can translate documents directly:</p>
+<pre><code class="language-sh">deepl doc your.pdf -t EN
+# Save to your_EN.pdf</code></pre>
+<p>Translation of multiple documents:</p>
+<pre><code class="language-sh">find . -name &quot;*.pdf&quot; -exec deepl doc -t ja {} +</code></pre>
+<pre><code class="language-sh">ls -1 *.docx | xargs -L1 deepl doc -t ko</code></pre>
+<pre><code class="language-sh">fd -e pdf -e docx -x deepl doc -t zh</code></pre>
+<h3><a id="glossaries" class="anchor" href="#glossaries">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Glossaries</h3>
+<p>Create a glossary:</p>
+<pre><code class="language-crystal">deepl glossary create <span class="o">-</span>n mydic <span class="o">-</span>f en <span class="o">-</span>t ja mydict.tsv</code></pre>
+<p>List glossaries:</p>
+<pre><code class="language-crystal">deepl glossary list
+<span class="c"># deepl glossary -l</span></code></pre>
+<p>Use glossary:</p>
+<pre><code class="language-crystal">deepl <span class="o">-</span>g mydict</code></pre>
+<pre><code class="language-crystal">deepl doc <span class="o">-</span>g mydict</code></pre>
+<p>Display the contents of the glossary:</p>
+<pre><code class="language-crystal">deepl glossary view <span class="o">-</span>n mydict</code></pre>
+<p>List of languages in which Glossary can be created:</p>
+<pre><code class="language-crystal">deepl glossary <span class="o">-</span>p</code></pre>
+<h3><a id="information" class="anchor" href="#information">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Information</h3>
+<p>Display a list of available languages (from)</p>
 <pre><code class="language-sh">deepl -f</code></pre>
+<p>Display a list of available languages (to)</p>
 <pre><code class="language-sh">deepl -t</code></pre>
 <p>Output usage information</p>
 <pre><code class="language-sh">deepl -u
