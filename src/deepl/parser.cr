@@ -74,7 +74,7 @@ module DeepL
       end
 
       on("glossary", "Manage glossaries") do
-        self.banner = "Usage: deepl glossary [options] <file>"
+        self.banner = "Usage: deepl glossary [options]"
         @handlers.clear
         @flags.clear
 
@@ -91,7 +91,7 @@ module DeepL
 
         on("create", "Create glossary") do |name|
           opt.action = Action::CreateGlossary
-          self.banner = "Usage: deepl glossary create [options]"
+          self.banner = "Usage: deepl glossary create [options] <tsv|csv>"
           @handlers.clear
           @flags.clear
 
