@@ -171,7 +171,7 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
-</a>Translate Text</h3>
+</a>Translate text</h3>
 <pre><code class="language-sh">deepl [options] &lt;file&gt;</code></pre>
 <pre><code class="language-txt">    -i, --input TEXT                 Input text
     -f, --from [LANG]                Source language [AUTO]
@@ -182,11 +182,11 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
     -S, --split-sentences OPT        Split sentences
     -A, --ansi                       Do not remove ANSI escape codes</code></pre>
 <p>Note that since this tool is used on a terminal, ANSI escape sequences are removed by default.</p>
-<h3><a id="translate-document" class="anchor" href="#translate-document">
+<h3><a id="translate-documents" class="anchor" href="#translate-documents">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
-</a>Translate Document</h3>
+</a>Translate documents</h3>
 <p>To translate a document, use the <code>doc</code> subcommand:</p>
 <pre><code class="language-sh">deepl doc [options] &lt;file&gt;</code></pre>
 <pre><code class="language-txt">    -f, --from [LANG]                Source language [AUTO]
@@ -213,11 +213,11 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
     <use href="#octicon-link"/>
   </svg>
 </a>Examples</h2>
-<h3><a id="text-translation" class="anchor" href="#text-translation">
+<h3><a id="translate-text-1" class="anchor" href="#translate-text-1">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
-</a>Text translation</h3>
+</a>Translate Text</h3>
 <p>To translate the text &quot;Hola mundo&quot; from Spanish (ES) to English (EN):</p>
 <pre><code class="language-sh">deepl -i &quot;Hola mundo&quot; -t EN        # Hello world</code></pre>
 <p>From standard stream:</p>
@@ -232,13 +232,20 @@ This is especially useful when copy-pasting from the clipboard.</p>
 # Hola
 # mundo
 # Ctrl + D</code></pre>
-<h3><a id="translate-document-1" class="anchor" href="#translate-document-1">
-  <svg class="octicon-link" aria-hidden="true">
-    <use href="#octicon-link"/>
-  </svg>
-</a>Translate document</h3>
-<p>You can translate documents directly:</p>
-<pre><code class="language-sh">deepl doc your.pdf -t EN
+<p>You can also pass a text file as an argument:</p>
+<pre><code class="language-crystal">deepl <span class="o">-</span>t pl foo.txt
+<span class="s">``</span>
+
+( <span class="t">Experimental</span> ) <span class="t">Translate</span> text from the clipboard.
+</code></pre>
+<p>deepl --paste</p>
+<pre><code class="language-crystal">
+### Translate documents
+
+You can translate documents directly:
+
+```sh
+deepl doc your.pdf -t EN
 # Save to your_EN.pdf</code></pre>
 <p>Translation of multiple documents:</p>
 <pre><code class="language-sh">find . -name &quot;*.pdf&quot; -exec deepl doc -t ja {} +</code></pre>
