@@ -76,14 +76,14 @@ module DeepL
 
       glossary_name = option.glossary_name
       translator = DeepL::Translator.new
-      glossary_list = translator.glossary_list
+      glossary_list = translator.list_glossaries
       glossary = glossary_list.find { |g| g["name"] == glossary_name }
       if glossary.nil?
         raise DeepLError.new("Glossary '#{glossary_name}' is not found")
       else
         glossary_id = glossary["glossary_id"].to_s
         if DeepLError.debug
-          STDERR.puts(translator.avoid_spinner(
+          STDERR.puts(avoid_spinner(
             "[deepl-cli] Glossary '#{glossary_name}' is found: #{glossary_id}"
           ))
         end
@@ -150,7 +150,7 @@ module DeepL
     def print_glossary_language_pairs
       translator = DeepL::Translator.new
       previous_source_lang = ""
-      translator.glossary_language_pairs.each do |kv|
+      translator.get_glossary_language_pairs.each do |kv|
         source_lang, target_lang = kv.values.map(&.to_s)
         if source_lang != previous_source_lang
           puts if previous_source_lang != ""
@@ -203,20 +203,20 @@ module DeepL
       elsif glossary_id.nil? && glossary_name.nil?
         raise DeepLError.new("Glossary ID or Glossary Name is not specified")
       elsif glossary_id
-        puts translator.glossary_entries_from_id(glossary_id)
+        puts translator.get_glossary_entries_from_id(glossary_id)
       elsif glossary_name
-        puts translator.glossary_entries_from_name(glossary_name)
+        puts translator.get_glossary_entries_from_name(glossary_name)
       end
     end
 
     def print_glossary_list
       translator = DeepL::Translator.new
-      pp translator.glossary_list
+      pp translator.list_glossaries
     end
 
     def print_source_languages
       translator = DeepL::Translator.new
-      translator.source_languages.each do |lang|
+      translator.get_source_languages.each do |lang|
         language, name = lang.values.map(&.to_s)
         puts "- #{language.ljust(7)}#{name}"
       end
@@ -224,7 +224,7 @@ module DeepL
 
     def print_target_languages
       translator = DeepL::Translator.new
-      translator.target_languages.each do |lang|
+      translator.get_target_languages.each do |lang|
         language, name, supports_formality = lang.values.map(&.to_s)
         formality = (supports_formality == "true") ? "yes" : "no"
         puts "- #{language.ljust(7)}#{name.ljust(20)}\tformality support [#{formality}]"
@@ -234,7 +234,7 @@ module DeepL
     def print_usage
       translator = DeepL::Translator.new
       puts translator.api_url_base
-      puts translator.usage.map { |k, v| "#{k}: #{v}" }.join("\n")
+      puts translator.get_usage.map { |k, v| "#{k}: #{v}" }.join("\n")
     end
 
     def print_version
@@ -243,6 +243,11 @@ module DeepL
 
     def print_help
       puts parser.help_message
+    end
+
+    private def avoid_spinner(str)
+      return str unless STDERR.tty?
+      "#{"\e[2K\r" if STDERR.tty?}" + str
     end
   end
 end
