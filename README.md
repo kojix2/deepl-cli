@@ -18,7 +18,10 @@ DeepL CLI is a simple command-line tool for the [DeepL API](https://www.deepl.co
 
 Note: Binaries for Linux are statically linked. For macOS, we recommend using homebrew.
 
-### Homebrew (macOS)
+### Homebrew
+
+[![deepl-cli (macos)](https://github.com/kojix2/homebrew-brew/actions/workflows/deepl-cli-macos.yml/badge.svg)](https://github.com/kojix2/homebrew-brew/actions/workflows/deepl-cli-macos.yml)
+[![deepl-cli (ubuntu)](https://github.com/kojix2/homebrew-brew/actions/workflows/deepl-cli-ubuntu.yml/badge.svg)](https://github.com/kojix2/homebrew-brew/actions/workflows/deepl-cli-ubuntu.yml)
 
 ```sh
 brew install kojix2/brew/deepl-cli
