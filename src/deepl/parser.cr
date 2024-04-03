@@ -14,7 +14,7 @@ module DeepL
 
     macro _on_debug_
       on("-d", "--debug", "Show backtrace on error") do
-        DeepLError.debug = true
+        CLI.debug = true
       end
     end
 

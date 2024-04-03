@@ -4,18 +4,8 @@ require "term-spinner"
 require "./parser"
 
 module DeepL
-  class Translator
-    def guess_target_language : String
-      # Friendlier debug message
-      guessed_lang = previous_def
-      if DeepL.debug?
-        STDERR.puts("[deepl.cr] Guessed target language: #{guessed_lang}")
-      end
-      guessed_lang
-    end
-  end
-
   class CLI
+    class_property debug : Bool = false
     getter parser : Parser
     getter option : Options
 
@@ -58,7 +48,7 @@ module DeepL
     rescue ex
       error_message = "[deepl-cli] ERROR: #{ex.class} #{ex.message}"
       error_message += "\n#{ex.response}" if ex.is_a?(Crest::RequestFailed)
-      error_message += "\n#{ex.backtrace.join("\n")}" if DeepLError.debug
+      error_message += "\n#{ex.backtrace.join("\n")}" if CLI.debug
       STDERR.puts error_message
       exit(1)
     end
@@ -96,7 +86,7 @@ module DeepL
         raise DeepLError.new("Glossary '#{glossary_name}' is not found")
       else
         glossary_id = glossary.glossary_id.to_s
-        if DeepLError.debug
+        if CLI.debug
           STDERR.puts(avoid_spinner(
             "[deepl-cli] Glossary '#{glossary_name}' is found: #{glossary_id}"
           ))
