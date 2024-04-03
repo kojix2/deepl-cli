@@ -33,5 +33,6 @@ module DeepL
     property split_sentences : String? = nil
     property output_format : String? = nil
     property no_ansi : Bool = true
+    property interval : Float32 = 5.0
   end
 end

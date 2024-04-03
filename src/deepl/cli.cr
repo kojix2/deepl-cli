@@ -150,7 +150,8 @@ module DeepL
           formality: option.formality,
           glossary_id: option.glossary_id,
           output_format: option.output_format,
-          output_path: option.output_path
+          output_path: option.output_path,
+          interval: option.interval
         )
       end
     end

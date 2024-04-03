@@ -69,6 +69,10 @@ module DeepL
           opt.output_format = format
         end
 
+        on("-s", "--interval SEC", "Interval between requests") do |sec|
+          opt.interval = sec.to_f32
+        end
+
         _on_debug_
 
         _on_help_
