@@ -100,14 +100,11 @@ module DeepL
       # Remove ANSI escape codes from the input text
       option.input_text = remove_ansi_escape_codes(option.input_text)
 
-      translated_text = ""
-
-      set_glossary_id_from_name
-
+      result = nil
       with_spinner do
         translator = DeepL::Translator.new
 
-        translated_text = translator.translate_text(
+        result = translator.translate_text(
           text: option.input_text,
           target_lang: option.target_lang,
           source_lang: option.source_lang,
@@ -117,7 +114,14 @@ module DeepL
         )
       end
 
-      puts translated_text
+      r = result.not_nil!
+      result_text = r.text
+      result_source_lang = r.detected_source_language
+
+      if option.detect_source_lanuage
+        STDERR.puts "[deepl-cli] Detected source language: #{result_source_lang}"
+      end
+      puts result.not_nil!.text
     end
 
     def translate_document
@@ -234,7 +238,7 @@ module DeepL
 
     def print_usage
       translator = DeepL::Translator.new
-      puts translator.api_url_base
+      puts translator.server_url
       puts translator.get_usage.map { |k, v| "#{k}: #{v}" }.join("\n")
     end
 

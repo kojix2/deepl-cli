@@ -24,6 +24,7 @@ module DeepL
     property output_path : Path? = nil
     property target_lang : String = Config.target_lang
     property source_lang : String? = nil
+    property detect_source_lanuage : Bool = false
     property formality : String? = nil
     property glossary_id : String? = nil
     property glossary_name : String? = nil

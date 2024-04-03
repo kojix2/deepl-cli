@@ -176,6 +176,22 @@ module DeepL
         opt.input_text = text
       end
 
+      on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
+        if from.empty?
+          opt.action = Action::ListFromLanguages
+        else
+          opt.source_lang = from.upcase
+        end
+      end
+
+      on("-t", "--to [LANG]", "Target language [#{opt.target_lang}]") do |to|
+        if to.empty?
+          opt.action = Action::ListTargetLanguages
+        else
+          opt.target_lang = to.upcase
+        end
+      end
+
       # FIXME: This option is experimental.
       # The name of the option may change in the future.
       on("-p", "--paste", "Input text from clipboard (experimental)") do
@@ -194,20 +210,8 @@ module DeepL
       #   # TODO?
       # end
 
-      on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
-        if from.empty?
-          opt.action = Action::ListFromLanguages
-        else
-          opt.source_lang = from.upcase
-        end
-      end
-
-      on("-t", "--to [LANG]", "Target language [#{opt.target_lang}]") do |to|
-        if to.empty?
-          opt.action = Action::ListTargetLanguages
-        else
-          opt.target_lang = to.upcase
-        end
+      on("-D", "--detect-language", "Detect source language") do
+        opt.detect_source_lanuage = true
       end
 
       on("-g", "--glossary NAME", "Glossary name") do |name|
