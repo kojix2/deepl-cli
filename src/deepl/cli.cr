@@ -38,6 +38,8 @@ module DeepL
         delete_glossary
       when Action::ListGlossaries
         print_glossary_list
+      when Action::ListGlossariesLong
+        print_glossary_list_long
       when Action::OutputGlossaryEntries
         output_glossary_entries
       when Action::ListFromLanguages
@@ -89,11 +91,11 @@ module DeepL
       glossary_name = option.glossary_name
       translator = DeepL::Translator.new
       glossary_list = translator.list_glossaries
-      glossary = glossary_list.find { |g| g["name"] == glossary_name }
+      glossary = glossary_list.find { |g| g.name == glossary_name }
       if glossary.nil?
         raise DeepLError.new("Glossary '#{glossary_name}' is not found")
       else
-        glossary_id = glossary["glossary_id"].to_s
+        glossary_id = glossary.glossary_id.to_s
         if DeepLError.debug
           STDERR.puts(avoid_spinner(
             "[deepl-cli] Glossary '#{glossary_name}' is found: #{glossary_id}"
@@ -227,7 +229,27 @@ module DeepL
 
     def print_glossary_list
       translator = DeepL::Translator.new
-      pp translator.list_glossaries
+      glossary_list = translator.list_glossaries
+      return if glossary_list.empty?
+      glossary_list.each do |glossary|
+        puts glossary.name
+      end
+    end
+
+    def print_glossary_list_long
+      translator = DeepL::Translator.new
+      glossary_list = translator.list_glossaries
+      return if glossary_list.empty?
+      max = glossary_list.map { |g| g.name.size }.max.not_nil!
+      glossary_list.each do |glossary|
+        puts [
+          glossary.name.rjust(max + 1),
+          "#{glossary.source_lang} -> #{glossary.target_lang}",
+          glossary.entry_count,
+          glossary.creation_time,
+          glossary.glossary_id,
+        ].join("\t")
+      end
     end
 
     def print_source_languages

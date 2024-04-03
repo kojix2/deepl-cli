@@ -80,7 +80,7 @@ module DeepL
         @flags.clear
 
         on("list", "List glossaries") do
-          opt.action = Action::ListGlossaries
+          opt.action = Action::ListGlossariesLong
           self.banner = "Usage: deepl glossary list [options]"
           @handlers.clear
           @flags.clear

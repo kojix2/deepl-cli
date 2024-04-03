@@ -9,6 +9,7 @@ module DeepL
     DeleteGlossary
     OutputGlossaryEntries
     ListGlossaries
+    ListGlossariesLong
     ListFromLanguages
     ListTargetLanguages
     RetrieveUsage
