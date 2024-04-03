@@ -4,6 +4,17 @@ require "term-spinner"
 require "./parser"
 
 module DeepL
+  class Translator
+    def guess_target_language : String
+      # Friendlier debug message
+      guessed_lang = previous_def
+      if DeepL.debug?
+        STDERR.puts("[deepl.cr] Guessed target language: #{guessed_lang}")
+      end
+      guessed_lang
+    end
+  end
+
   class CLI
     getter parser : Parser
     getter option : Options
