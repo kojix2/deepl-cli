@@ -176,6 +176,16 @@ module DeepL
         self.help_message = self.to_s
       end
 
+      on("usage", "Check Usage and Limits") do
+        opt.action = Action::RetrieveUsage
+        # @handlers.clear
+        # @flags.clear
+      end
+
+      on("text", "Translate text (default)") do
+        opt.action = Action::TranslateText
+      end
+
       on("-i", "--input TEXT", "Input text") do |text|
         opt.input_text = text
       end
@@ -198,7 +208,7 @@ module DeepL
 
       # FIXME: This option is experimental.
       # The name of the option may change in the future.
-      on("-p", "--paste", "Input text from clipboard (experimental)") do
+      on("-p", "--paste", "Input text from clipboard") do
         text = EasyClip.paste
         if text.empty?
           STDERR.puts "[deepl-cli] ERROR: Clipboard is empty."
@@ -214,7 +224,7 @@ module DeepL
       #   # TODO?
       # end
 
-      on("-D", "--detect-language", "Detect source language") do
+      on("-D", "--detect-language", "Output detected source language") do
         opt.detect_source_lanuage = true
       end
 
@@ -236,10 +246,6 @@ module DeepL
 
       on("-A", "--ansi", "Do not remove ANSI escape codes") do
         opt.no_ansi = false
-      end
-
-      on("-u", "--usage", "Check Usage and Limits") do
-        opt.action = Action::RetrieveUsage
       end
 
       _on_debug_
