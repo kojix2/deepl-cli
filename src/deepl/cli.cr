@@ -159,8 +159,11 @@ module DeepL
     def print_glossary_language_pairs
       translator = DeepL::Translator.new
       previous_source_lang = ""
-      translator.get_glossary_language_pairs.each do |kv|
-        source_lang, target_lang = kv.values.map(&.to_s)
+      pairs = translator.get_glossary_language_pairs
+      puts "Supported glossary language pairs"
+      pairs.each do |pair|
+        source_lang = pair.source_lang
+        target_lang = pair.target_lang
         if source_lang != previous_source_lang
           puts if previous_source_lang != ""
           print "- #{source_lang} :\t"
