@@ -245,18 +245,26 @@ module DeepL
 
     def print_source_languages
       translator = DeepL::Translator.new
-      translator.get_source_languages.each do |lang|
-        language, name = lang.values.map(&.to_s)
-        puts "- #{language.ljust(7)}#{name}"
-      end
+      langinfo = translator.get_source_languages
+      print_langinfo(langinfo)
     end
 
     def print_target_languages
       translator = DeepL::Translator.new
-      translator.get_target_languages.each do |lang|
-        language, name, supports_formality = lang.values.map(&.to_s)
-        formality = (supports_formality == "true") ? "yes" : "no"
-        puts "- #{language.ljust(7)}#{name.ljust(20)}\tformality support [#{formality}]"
+      langinfo = translator.get_target_languages
+      print_langinfo(langinfo)
+    end
+
+    private def print_langinfo(langinfo : Array(LanguageInfo)) : Nil
+      langinfo.each do |info|
+        abbrev = info.language
+        name = info.name
+        formality = info.supports_formality
+        row = String.build { |s|
+          s << "- #{abbrev.ljust(7)}#{name.ljust(24)}"
+          s << "supports formality" if formality
+        }
+        puts row
       end
     end
 
