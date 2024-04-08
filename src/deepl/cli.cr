@@ -137,7 +137,6 @@ module DeepL
       when 2..
         STDERR.puts "[deepl-cli] Files #{ARGV.join(", ")} are ignored"
       end
-      STDERR.puts "[deepl-cli] Start translating #{option.input_path}"
 
       set_glossary_id_from_name
 
