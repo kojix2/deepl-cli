@@ -4,7 +4,7 @@
 
 DeepL CLI is a simple command-line tool for the [DeepL API](https://www.deepl.com/pro-api/), written in [Crystal](https://github.com/crystal-lang/crystal).
 
-- Supports document translation
+- Supports document translation `pdf`, `docx`, `txt`, etc. 
 - Supports glossaries
 - Precompiled binaries available
 
@@ -87,6 +87,16 @@ Options for document translation:
     -o, --output FILE                Output file
     -O, --output-format FORMAT       Output file format
 ```
+
+Supported file formats.
+
+- `docx` - Microsoft Word Document
+- `pptx` - Microsoft PowerPoint Document
+- `xlsx` - Microsoft Excel Document
+- `pdf` - Portable Document Format
+- `htm` / `html` - HTML Document
+- `txt` - Plain Text Document
+- `xlf` / `xliff` - XLIFF Document, version 2.1
 
 ### Manage Glossaries
 
