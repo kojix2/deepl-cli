@@ -152,7 +152,9 @@ module DeepL
           output_format: option.output_format,
           output_path: option.output_path,
           interval: option.interval
-        )
+        ) do |progress|
+          STDERR.puts avoid_spinner(progress)
+        end
       end
     end
 
