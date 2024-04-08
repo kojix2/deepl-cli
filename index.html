@@ -121,7 +121,7 @@
 <p><a href="https://github.com/kojix2/deepl-cli/actions/workflows/build.yml"><img src="https://github.com/kojix2/deepl-cli/actions/workflows/build.yml/badge.svg" alt="build" /></a></p>
 <p>DeepL CLI is a simple command-line tool for the <a href="https://www.deepl.com/pro-api/">DeepL API</a>, written in <a href="https://github.com/crystal-lang/crystal">Crystal</a>.</p>
 <ul>
-<li>Supports document translation</li>
+<li>Supports document translation <code>pdf</code>, <code>docx</code>, <code>txt</code>, etc.</li>
 <li>Supports glossaries</li>
 <li>Precompiled binaries available</li>
 </ul>
@@ -199,6 +199,16 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
     -F, --formality OPT              Formality (default more less)
     -o, --output FILE                Output file
     -O, --output-format FORMAT       Output file format</code></pre>
+<p>Supported file formats.</p>
+<ul>
+<li><code>docx</code> - Microsoft Word Document</li>
+<li><code>pptx</code> - Microsoft PowerPoint Document</li>
+<li><code>xlsx</code> - Microsoft Excel Document</li>
+<li><code>pdf</code> - Portable Document Format</li>
+<li><code>htm</code> / <code>html</code> - HTML Document</li>
+<li><code>txt</code> - Plain Text Document</li>
+<li><code>xlf</code> / <code>xliff</code> - XLIFF Document, version 2.1</li>
+</ul>
 <h3><a id="manage-glossaries" class="anchor" href="#manage-glossaries">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
