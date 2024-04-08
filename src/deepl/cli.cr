@@ -255,16 +255,21 @@ module DeepL
     def print_target_languages
       translator = DeepL::Translator.new
       langinfo = translator.get_target_languages
-      print_langinfo(langinfo)
+      default_target_language = translator.guess_target_language
+      print_langinfo(langinfo, default: default_target_language)
     end
 
-    private def print_langinfo(langinfo : Array(LanguageInfo)) : Nil
+    private def print_langinfo(
+      langinfo : Array(LanguageInfo),
+      default : String? = nil
+    ) : Nil
       langinfo.each do |info|
         abbrev = info.language
         name = info.name
         formality = info.supports_formality
         row = String.build { |s|
-          s << "- #{abbrev.ljust(7)}#{name.ljust(24)}"
+          s << ((default && (default == abbrev)) ? "+ " : "- ")
+          s << "#{abbrev.ljust(7)}#{name.ljust(24)}"
           s << "supports formality" if formality
         }
         puts row
