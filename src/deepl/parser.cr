@@ -176,12 +176,6 @@ module DeepL
         self.help_message = self.to_s
       end
 
-      on("usage", "Check Usage and Limits") do
-        opt.action = Action::RetrieveUsage
-        # @handlers.clear
-        # @flags.clear
-      end
-
       on("text", "Translate text (default)") do
         opt.action = Action::TranslateText
       end
@@ -246,6 +240,12 @@ module DeepL
 
       on("-A", "--ansi", "Do not remove ANSI escape codes") do
         opt.no_ansi = false
+      end
+
+      on("-u", "--usage", "Check Usage and Limits") do
+        opt.action = Action::RetrieveUsage
+        # @handlers.clear
+        # @flags.clear
       end
 
       _on_debug_
