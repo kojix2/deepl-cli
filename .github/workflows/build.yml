@@ -21,6 +21,8 @@ jobs:
           crystal: latest
       - name: Install dependencies
         run: shards install --without-development --release
+      - name: Run tests
+        run: crystal spec
       - name: Build executable
         run: shards build --release
       - name: Run executable (help)
