@@ -62,7 +62,7 @@ module DeepL
         end
 
         on("-o", "--output FILE", "Output file") do |file|
-          opt.output_path = Path[file]
+          opt.output_file = Path[file]
         end
 
         on("-O", "--output-format FORMAT", "Output file format") do |format|

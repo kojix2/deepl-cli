@@ -23,7 +23,7 @@ module DeepL
     property action : Action = Action::TranslateText
     property input_text : String = ""
     property input_path : Path = Path.new
-    property output_path : Path? = nil
+    property output_file : Path? = nil
     property target_lang : String = Config.target_lang
     property source_lang : String? = nil
     property detect_source_lanuage : Bool = false
