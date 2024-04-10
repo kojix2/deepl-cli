@@ -250,6 +250,12 @@ module DeepL
         STDERR.puts self
         exit(1)
       end
+
+      missing_option do |flag|
+        STDERR.puts "[deepl-cli] ERROR: #{flag} expects an argument."
+        STDERR.puts self
+        exit(1)
+      end
     end
 
     def parse(args)
