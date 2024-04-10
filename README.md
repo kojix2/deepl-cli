@@ -205,6 +205,8 @@ fd -e pdf -e docx -x deepl doc -t zh
 
 ### Glossaries
 
+The DeepL API supports glossaries. See [here](https://developers.deepl.com/docs/api-reference/glossaries#formats) for the format of the glossary file.
+
 To create a glossary:
 
 ```sh
