@@ -46,7 +46,7 @@ jobs:
         if: matrix.os == 'windows'
         run: |
           shards install --without-development --release
-          shards build --release
+          shards build --release --static
           Set-ExecutionPolicy RemoteSigned -Scope Process
           Compress-Archive -Path bin/deepl.exe -DestinationPath bin/deepl-windows.zip
 
