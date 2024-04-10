@@ -26,6 +26,13 @@ module DeepL
       @help_message = self.to_s
     end
 
+    macro _set_action_(action, banner)
+      opt.action = {{action}}
+      @handlers.clear
+      @flags.clear
+      self.banner = {{banner}}
+    end
+
     def initialize
       super()
       @opt = Options.new
@@ -41,10 +48,7 @@ module DeepL
         BANNER
 
       on("doc", "Translate document") do
-        opt.action = Action::TranslateDocument
-        @handlers.clear
-        @flags.clear
-        self.banner = "Usage: deepl doc [options] <file>"
+        _set_action_(Action::TranslateDocument, "Usage: deepl doc [options] <file>")
 
         on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
           opt.source_lang = from.upcase
@@ -80,15 +84,10 @@ module DeepL
       end
 
       on("glossary", "Manage glossaries") do
-        self.banner = "Usage: deepl glossary [options]"
-        @handlers.clear
-        @flags.clear
+        _set_action_(Action::Help, "Usage: deepl glossary [options] <subcommand>")
 
         on("list", "List glossaries") do
-          opt.action = Action::ListGlossariesLong
-          self.banner = "Usage: deepl glossary list [options]"
-          @handlers.clear
-          @flags.clear
+          _set_action_(Action::ListGlossariesLong, "Usage: deepl glossary list [options]")
 
           _on_debug_
 
@@ -96,10 +95,7 @@ module DeepL
         end
 
         on("create", "Create a glossary") do |name|
-          opt.action = Action::CreateGlossary
-          self.banner = "Usage: deepl glossary create [options] <tsv|csv>"
-          @handlers.clear
-          @flags.clear
+          _set_action_(Action::CreateGlossary, "Usage: deepl glossary create [options] <tsv|csv>")
 
           on("-n", "--name NAME", "Glossary name") do |name|
             opt.glossary_name = name
@@ -119,10 +115,7 @@ module DeepL
         end
 
         on("delete", "Delete a glossary") do
-          opt.action = Action::DeleteGlossary
-          self.banner = "Usage: deepl glossary delete <name>"
-          @handlers.clear
-          @flags.clear
+          _set_action_(Action::DeleteGlossary, "Usage: deepl glossary delete <name>")
 
           on("-i", "--id ID", "View glossary by Glossary ID") do |id|
             opt.glossary_id = id
@@ -134,10 +127,7 @@ module DeepL
         end
 
         on("view", "View a glossary") do
-          opt.action = Action::OutputGlossaryEntries
-          self.banner = "Usage: deepl glossary view <name>"
-          @handlers.clear
-          @flags.clear
+          _set_action_(Action::OutputGlossaryEntries, "Usage: deepl glossary view <name>")
 
           on("-i", "--id ID", "Delete glossary by Glossary ID") do |id|
             opt.glossary_id = id
@@ -160,9 +150,6 @@ module DeepL
         _on_debug_
 
         _on_help_
-
-        # the deepl glossary subcommand prints help and exits if no arguments are passed.
-        opt.action = Action::Help
       end
 
       on("text", "Translate text (default)") do
@@ -189,8 +176,6 @@ module DeepL
         end
       end
 
-      # FIXME: This option is experimental.
-      # The name of the option may change in the future.
       on("-p", "--paste", "Input text from clipboard") do
         text = EasyClip.paste
         if text.empty?
