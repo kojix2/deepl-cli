@@ -177,6 +177,8 @@ module DeepL
         entries: option.input_text,
         entry_format: entry_format
       )
+
+      STDERR.puts "[deepl-cli] Glossary #{option.glossary_name} is created"
     end
 
     def delete_glossary
@@ -188,16 +190,25 @@ module DeepL
         glossary_name = ARGV[0]
         translator.delete_glossary_by_name(glossary_name)
       end
+
+      STDERR.puts "[deepl-cli] Glossary #{glossary_name} is deleted"
     end
 
     def output_glossary_entries
       translator = DeepL::Translator.new
+      output_file = option.output_file
       if ARGV.size == 0
         print_help
         exit(1)
       else
         glossary_name = ARGV[0]
-        puts translator.get_glossary_entries_by_name(glossary_name)
+        entries_text = translator.get_glossary_entries_by_name(glossary_name)
+      end
+      if output_file
+        File.write(output_file, entries_text)
+        STDERR.puts "[deepl-cli] Glossary entries are written to #{output_file}"
+      else
+        puts entries_text
       end
     end
 

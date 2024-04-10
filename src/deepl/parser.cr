@@ -133,6 +133,10 @@ module DeepL
           #   opt.glossary_id = id
           # end
 
+          on("-o", "--output FILE", "Output file") do |file|
+            opt.output_file = Path[file]
+          end
+
           _on_debug_
 
           _on_help_
