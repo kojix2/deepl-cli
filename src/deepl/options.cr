@@ -28,7 +28,7 @@ module DeepL
     property source_lang : String? = nil
     property detect_source_lanuage : Bool = false
     property formality : String? = nil
-    property glossary_id : String? = nil
+    # property glossary_id : String? = nil
     property glossary_name : String? = nil
     property context : String? = nil
     property split_sentences : String? = nil

@@ -58,8 +58,8 @@ module DeepL
           opt.target_lang = to.upcase
         end
 
-        on("-g", "--glossary NAME", "Glossary name") do |id|
-          opt.glossary_id = id
+        on("-g", "--glossary NAME", "Glossary name") do |name|
+          opt.glossary_name = name
         end
 
         on("-F", "--formality OPT", "Formality (default more less)") do |v|
@@ -117,9 +117,9 @@ module DeepL
         on("delete", "Delete a glossary") do
           _set_action_(Action::DeleteGlossary, "Usage: deepl glossary delete <name>")
 
-          on("-i", "--id ID", "View glossary by Glossary ID") do |id|
-            opt.glossary_id = id
-          end
+          # on("-i", "--id ID", "View glossary by Glossary ID") do |id|
+          #   opt.glossary_id = id
+          # end
 
           _on_debug_
 
@@ -129,9 +129,9 @@ module DeepL
         on("view", "View a glossary") do
           _set_action_(Action::OutputGlossaryEntries, "Usage: deepl glossary view <name>")
 
-          on("-i", "--id ID", "Delete glossary by Glossary ID") do |id|
-            opt.glossary_id = id
-          end
+          # on("-i", "--id ID", "Delete glossary by Glossary ID") do |id|
+          #   opt.glossary_id = id
+          # end
 
           _on_debug_
 

@@ -84,9 +84,6 @@ module DeepL
 
       result = nil
       translator = DeepL::Translator.new
-      if option.glossary_name
-        option.glossary_id = translator.convert_glossary_name_to_id(option.glossary_name.not_nil!)
-      end
 
       with_spinner do
         result = translator.translate_text(
@@ -94,7 +91,7 @@ module DeepL
           target_lang: option.target_lang,
           source_lang: option.source_lang,
           formality: option.formality,
-          glossary_id: option.glossary_id,
+          glossary_name: option.glossary_name, # original option of deepl.cr
           context: option.context
         )
       end
@@ -121,9 +118,6 @@ module DeepL
       end
 
       translator = DeepL::Translator.new
-      if option.glossary_name
-        option.glossary_id = translator.convert_glossary_name_to_id(option.glossary_name.not_nil!)
-      end
 
       with_spinner do
         translator.translate_document(
@@ -131,7 +125,7 @@ module DeepL
           target_lang: option.target_lang,
           source_lang: option.source_lang,
           formality: option.formality,
-          glossary_id: option.glossary_id,
+          glossary_name: option.glossary_name, # original option of deepl.cr
           output_format: option.output_format,
           output_file: option.output_file,
           interval: option.interval
@@ -187,33 +181,23 @@ module DeepL
 
     def delete_glossary
       translator = DeepL::Translator.new
-      glossary_id = option.glossary_id
-      if glossary_id
-        translator.delete_glossary(glossary_id)
+      if ARGV.size == 0
+        print_help
+        exit(1)
       else
-        if ARGV.size == 0
-          print_help
-          exit(1)
-        else
-          glossary_name = ARGV[0]
-          translator.delete_glossary_by_name(glossary_name)
-        end
+        glossary_name = ARGV[0]
+        translator.delete_glossary_by_name(glossary_name)
       end
     end
 
     def output_glossary_entries
       translator = DeepL::Translator.new
-      glossary_id = option.glossary_id
-      if glossary_id
-        puts translator.get_glossary_entries(glossary_id)
+      if ARGV.size == 0
+        print_help
+        exit(1)
       else
-        if ARGV.size == 0
-          print_help
-          exit(1)
-        else
-          glossary_name = ARGV[0]
-          puts translator.get_glossary_entries_by_name(glossary_name)
-        end
+        glossary_name = ARGV[0]
+        puts translator.get_glossary_entries_by_name(glossary_name)
       end
     end
 
