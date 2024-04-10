@@ -7,9 +7,6 @@ module DeepL
   class Parser < OptionParser
     getter opt : Options
 
-    # Crystal's OptionParser returns to its initial state after parsing
-    # by `with_preserved_state`. This also initialises @flags.
-    # @help_message is needed to store subcommand messages.
     property help_message : String
 
     macro _on_debug_
@@ -21,8 +18,12 @@ module DeepL
     macro _on_help_
       on("-h", "--help", "Show this help") do
         opt.action = Action::Help
-        self.help_message = self.to_s
       end
+
+      # Crystal's OptionParser returns to its initial state after parsing
+      # by `with_preserved_state`. This also initialises @flags.
+      # @help_message is needed to store subcommand messages.
+      @help_message = self.to_s
     end
 
     def initialize
@@ -119,19 +120,13 @@ module DeepL
 
         on("delete", "Delete a glossary") do
           opt.action = Action::DeleteGlossary
-          self.banner = "Usage: deepl glossary delete [options]"
+          self.banner = "Usage: deepl glossary delete <name>"
           @handlers.clear
           @flags.clear
 
           on("-i", "--id ID", "View glossary by Glossary ID") do |id|
             opt.glossary_id = id
           end
-
-          on("-n", "--name NAME", "Delete glossary by Glossary Name") do |name|
-            opt.glossary_name = name
-          end
-
-          # TODO: on("-n", "--name
 
           _on_debug_
 
@@ -140,16 +135,12 @@ module DeepL
 
         on("view", "View a glossary") do
           opt.action = Action::OutputGlossaryEntries
-          self.banner = "Usage: deepl glossary view [options]"
+          self.banner = "Usage: deepl glossary view <name>"
           @handlers.clear
           @flags.clear
 
           on("-i", "--id ID", "Delete glossary by Glossary ID") do |id|
             opt.glossary_id = id
-          end
-
-          on("-n", "--name NAME", "View glossary by Glossary Name") do |name|
-            opt.glossary_name = name
           end
 
           _on_debug_
@@ -170,10 +161,8 @@ module DeepL
 
         _on_help_
 
-        # FIXME:
-        # Currently, the deepl glossary subcommand prints help and exits if no arguments are passed.
+        # the deepl glossary subcommand prints help and exits if no arguments are passed.
         opt.action = Action::Help
-        self.help_message = self.to_s
       end
 
       on("text", "Translate text (default)") do

@@ -74,27 +74,6 @@ module DeepL
       text.gsub(ansi_escape_8bit, "")
     end
 
-    def set_glossary_id_from_name
-      return unless option.glossary_id.nil?
-      return if option.glossary_name.nil?
-
-      glossary_name = option.glossary_name
-      translator = DeepL::Translator.new
-      glossary_list = translator.list_glossaries
-      glossary = glossary_list.find { |g| g.name == glossary_name }
-      if glossary.nil?
-        raise DeepLError.new("Glossary '#{glossary_name}' is not found")
-      else
-        glossary_id = glossary.glossary_id.to_s
-        if CLI.debug
-          STDERR.puts(avoid_spinner(
-            "[deepl-cli] Glossary '#{glossary_name}' is found: #{glossary_id}"
-          ))
-        end
-        option.glossary_id = glossary_id
-      end
-    end
-
     def translate_text
       if option.input_text.empty?
         option.input_text = ARGF.gets_to_end
@@ -104,9 +83,12 @@ module DeepL
       option.input_text = remove_ansi_escape_codes(option.input_text)
 
       result = nil
-      with_spinner do
-        translator = DeepL::Translator.new
+      translator = DeepL::Translator.new
+      if option.glossary_name
+        option.glossary_id = translator.convert_glossary_name_to_id(option.glossary_name.not_nil!)
+      end
 
+      with_spinner do
         result = translator.translate_text(
           text: option.input_text,
           target_lang: option.target_lang,
@@ -138,10 +120,12 @@ module DeepL
         STDERR.puts "[deepl-cli] Files #{ARGV.join(", ")} are ignored"
       end
 
-      set_glossary_id_from_name
+      translator = DeepL::Translator.new
+      if option.glossary_name
+        option.glossary_id = translator.convert_glossary_name_to_id(option.glossary_name.not_nil!)
+      end
 
       with_spinner do
-        translator = DeepL::Translator.new
         translator.translate_document(
           path: option.input_path,
           target_lang: option.target_lang,
@@ -203,22 +187,33 @@ module DeepL
 
     def delete_glossary
       translator = DeepL::Translator.new
-      translator.delete_glossary(option.glossary_id.not_nil!)
+      glossary_id = option.glossary_id
+      if glossary_id
+        translator.delete_glossary(glossary_id)
+      else
+        if ARGV.size == 0
+          print_help
+          exit(1)
+        else
+          glossary_name = ARGV[0]
+          translator.delete_glossary_by_name(glossary_name)
+        end
+      end
     end
 
     def output_glossary_entries
       translator = DeepL::Translator.new
       glossary_id = option.glossary_id
-      glossary_name = option.glossary_name
-
-      if glossary_id && glossary_name
-        raise DeepLError.new("Glossary ID and Glossary Name are specified at the same time")
-      elsif glossary_id.nil? && glossary_name.nil?
-        raise DeepLError.new("Glossary ID or Glossary Name is not specified")
-      elsif glossary_id
-        puts translator.get_glossary_entries_from_id(glossary_id)
-      elsif glossary_name
-        puts translator.get_glossary_entries_from_name(glossary_name)
+      if glossary_id
+        puts translator.get_glossary_entries(glossary_id)
+      else
+        if ARGV.size == 0
+          print_help
+          exit(1)
+        else
+          glossary_name = ARGV[0]
+          puts translator.get_glossary_entries_by_name(glossary_name)
+        end
       end
     end
 
