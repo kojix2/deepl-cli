@@ -61,7 +61,7 @@ Options:
     -f, --from [LANG]                Source language [AUTO]
     -t, --to [LANG]                  Target language [EN]
     -p, --paste                      Input text from clipboard
-    -g, --glossary NAME              Glossary ID
+    -g, --glossary NAME              Glossary name
     -F, --formality OPT              Formality (default more less)
     -C, --context TEXT               Context (experimental)
     -S, --split-sentences OPT        Split sentences
@@ -83,7 +83,7 @@ Options for document translation:
 ```txt
     -f, --from [LANG]                Source language [AUTO]
     -t, --to [LANG]                  Target language [EN]
-    -g, --glossary NAME              Glossary ID
+    -g, --glossary NAME              Glossary name
     -F, --formality OPT              Formality (default more less)
     -o, --output FILE                Output file
     -O, --output-format FORMAT       Output file format
