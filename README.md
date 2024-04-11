@@ -60,7 +60,8 @@ Options:
     -i, --input TEXT                 Input text
     -f, --from [LANG]                Source language [AUTO]
     -t, --to [LANG]                  Target language [EN]
-    -g, --glossary ID                Glossary ID
+    -p, --paste                      Input text from clipboard
+    -g, --glossary NAME              Glossary ID
     -F, --formality OPT              Formality (default more less)
     -C, --context TEXT               Context (experimental)
     -S, --split-sentences OPT        Split sentences
@@ -82,7 +83,7 @@ Options for document translation:
 ```txt
     -f, --from [LANG]                Source language [AUTO]
     -t, --to [LANG]                  Target language [EN]
-    -g, --glossary ID                Glossary ID
+    -g, --glossary NAME              Glossary ID
     -F, --formality OPT              Formality (default more less)
     -o, --output FILE                Output file
     -O, --output-format FORMAT       Output file format
@@ -165,7 +166,7 @@ deepl --paste
 You can also pass a text file as an argument:
 
 ```sh
-deepl -t pl foo.txt
+deepl -t tr foo.txt
 ```
 
 It's possible to pass multiple text files:
@@ -180,6 +181,12 @@ If you are translating multiple files, you might want to add the filename to the
 bat --style header *.txt | deepl -t it
 ```
 
+To use a glossary for translation:
+
+```sh
+deepl -g myglossary -f ru
+```
+
 ### Translate documents
 
 You can directly translate documents:
@@ -189,7 +196,19 @@ deepl doc your.pdf -t pt
 # The translated document will be saved as your_EN.pdf
 ```
 
-You can also translate multiple documents:
+To use a glossary for translation:
+
+```sh
+deepl doc -g myglossary -f pl
+```
+
+To translate a PDF document and save it in docx format:
+
+```
+deepl doc input.pdf -O docx -o output.docx
+```
+
+To translate multiple files, use Unix commands such as `find`, `xargs`, `fd`:
 
 ```sh
 find . -name "*.pdf" -exec deepl doc -t ja {} +
@@ -210,24 +229,31 @@ The DeepL API supports glossaries. See [here](https://developers.deepl.com/docs/
 To create a glossary:
 
 ```sh
-deepl glossary create -n mydic -f ru -t pt mydict.tsv
+deepl glossary create -n mydic -f en -t pt mydict.tsv
 ```
 
 To list glossaries:
 
 ```sh
 deepl glossary list
-# or you can use shorthand: deepl glossary -l
 ```
 
-To use a glossary for translation:
+To list only the names of the glossary
 
 ```sh
-deepl -g mydict
+deepl glossary -l
 ```
 
+To use a glossary for text translation:
+
 ```sh
-deepl doc -g mydict
+deepl -g mydict -f en
+```
+
+To use a glossary for document translation:
+
+```sh
+deepl doc -g mydict -f en
 ```
 
 To display the contents of the glossary:
