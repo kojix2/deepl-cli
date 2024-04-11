@@ -292,6 +292,33 @@ deepl -u
 # character_limit: 1000000000000
 ```
 
+### Environment Variables
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>DEEPL_AUTH_KEY</td>
+      <td>DeepL API authentication key</td>
+    </tr>
+    <tr>
+      <td>DEEPL_TARGET_LANG</td>
+      <td>Default target language</td>
+    </tr>
+    <tr>
+      <td>DEEPL_USER_AGENT</td>
+      <td>User-Agent</td>
+    </tr>
+  </tbody>
+</table>
+
+DeepL CLI automatically detects the target language, but if this does not work, the environment variable `DEEPL_TARGET_LANG` can be set.
+
 ## Contributing
 
 - Report bugs
@@ -307,10 +334,19 @@ Compilation from source code
 git clone https://github.com/kojix2/deepl-cli
 cd deepl-cli
 shards build --release
-# sudo cp bin/deepl /usr/local/bin
 ```
 
-A compiled binary file will be created in the `bin` directory.
+A compiled binary file will be created in the `bin` directory. Installation is simply copying the generated binary.
+
+```
+sudo cp bin/deepl /usr/local/bin
+```
+
+If you encounter a bug, follow the command with the `-d` option and run it. You can view the backtrace.
+
+```sh
+deepl doc -d a.pdf
+```
 
 ### DeepL API Library
 
