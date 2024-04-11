@@ -179,7 +179,8 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 <pre><code class="language-txt">    -i, --input TEXT                 Input text
     -f, --from [LANG]                Source language [AUTO]
     -t, --to [LANG]                  Target language [EN]
-    -g, --glossary ID                Glossary ID
+    -p, --paste                      Input text from clipboard
+    -g, --glossary NAME              Glossary ID
     -F, --formality OPT              Formality (default more less)
     -C, --context TEXT               Context (experimental)
     -S, --split-sentences OPT        Split sentences
@@ -195,7 +196,7 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 <p>Options for document translation:</p>
 <pre><code class="language-txt">    -f, --from [LANG]                Source language [AUTO]
     -t, --to [LANG]                  Target language [EN]
-    -g, --glossary ID                Glossary ID
+    -g, --glossary NAME              Glossary ID
     -F, --formality OPT              Formality (default more less)
     -o, --output FILE                Output file
     -O, --output-format FORMAT       Output file format</code></pre>
@@ -250,11 +251,13 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 <p>(Experimental feature) Translate text from the clipboard:</p>
 <pre><code class="language-sh">deepl --paste</code></pre>
 <p>You can also pass a text file as an argument:</p>
-<pre><code class="language-sh">deepl -t pl foo.txt</code></pre>
+<pre><code class="language-sh">deepl -t tr foo.txt</code></pre>
 <p>It's possible to pass multiple text files:</p>
 <pre><code class="language-sh">deepl -t nl foo.txt bar.txt</code></pre>
 <p>If you are translating multiple files, you might want to add the filename to the header:</p>
 <pre><code class="language-sh">bat --style header *.txt | deepl -t it</code></pre>
+<p>To use a glossary for translation:</p>
+<pre><code class="language-sh">deepl -g myglossary -f ru</code></pre>
 <h3><a id="translate-documents-1" class="anchor" href="#translate-documents-1">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -263,7 +266,11 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 <p>You can directly translate documents:</p>
 <pre><code class="language-sh">deepl doc your.pdf -t pt
 # The translated document will be saved as your_EN.pdf</code></pre>
-<p>You can also translate multiple documents:</p>
+<p>To use a glossary for translation:</p>
+<pre><code class="language-sh">deepl doc -g myglossary -f pl</code></pre>
+<p>To translate a PDF document and save it in docx format:</p>
+<pre><code class="language-crystal">deepl doc input.pdf <span class="o">-</span><span class="t">O</span> docx <span class="o">-</span>o output.docx</code></pre>
+<p>To translate multiple files, use Unix commands such as <code>find</code>, <code>xargs</code>, <code>fd</code>:</p>
 <pre><code class="language-sh">find . -name &quot;*.pdf&quot; -exec deepl doc -t ja {} +</code></pre>
 <pre><code class="language-sh">ls -1 *.docx | xargs -L1 deepl doc -t ko</code></pre>
 <pre><code class="language-sh">fd -e pdf -e docx -x deepl doc -t zh</code></pre>
@@ -274,13 +281,15 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 </a>Glossaries</h3>
 <p>The DeepL API supports glossaries. See <a href="https://developers.deepl.com/docs/api-reference/glossaries#formats">here</a> for the format of the glossary file.</p>
 <p>To create a glossary:</p>
-<pre><code class="language-sh">deepl glossary create -n mydic -f ru -t pt mydict.tsv</code></pre>
+<pre><code class="language-sh">deepl glossary create -n mydic -f en -t pt mydict.tsv</code></pre>
 <p>To list glossaries:</p>
-<pre><code class="language-sh">deepl glossary list
-# or you can use shorthand: deepl glossary -l</code></pre>
-<p>To use a glossary for translation:</p>
-<pre><code class="language-sh">deepl -g mydict</code></pre>
-<pre><code class="language-sh">deepl doc -g mydict</code></pre>
+<pre><code class="language-sh">deepl glossary list</code></pre>
+<p>To list only the names of the glossary</p>
+<pre><code class="language-sh">deepl glossary -l</code></pre>
+<p>To use a glossary for text translation:</p>
+<pre><code class="language-sh">deepl -g mydict -f en</code></pre>
+<p>To use a glossary for document translation:</p>
+<pre><code class="language-sh">deepl doc -g mydict -f en</code></pre>
 <p>To display the contents of the glossary:</p>
 <pre><code class="language-sh">deepl glossary view -n mydict</code></pre>
 <p>To list the languages in which glossaries can be created:</p>
