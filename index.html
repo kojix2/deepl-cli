@@ -309,6 +309,34 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 # https://api.deepl.com/v2
 # character_count: 614842
 # character_limit: 1000000000000</code></pre>
+<h3><a id="environment-variables" class="anchor" href="#environment-variables">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Environment Variables</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>DEEPL_AUTH_KEY</td>
+      <td>DeepL API authentication key</td>
+    </tr>
+    <tr>
+      <td>DEEPL_TARGET_LANG</td>
+      <td>Default target language</td>
+    </tr>
+    <tr>
+      <td>DEEPL_USER_AGENT</td>
+      <td>User-Agent</td>
+    </tr>
+  </tbody>
+</table>
+<p>DeepL CLI automatically detects the target language, but if this does not work, the environment variable <code>DEEPL_TARGET_LANG</code> can be set.</p>
 <h2><a id="contributing" class="anchor" href="#contributing">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -328,9 +356,11 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 <p>Compilation from source code</p>
 <pre><code class="language-sh">git clone https://github.com/kojix2/deepl-cli
 cd deepl-cli
-shards build --release
-# sudo cp bin/deepl /usr/local/bin</code></pre>
-<p>A compiled binary file will be created in the <code>bin</code> directory.</p>
+shards build --release</code></pre>
+<p>A compiled binary file will be created in the <code>bin</code> directory. Installation is simply copying the generated binary.</p>
+<pre><code class="language-crystal">sudo cp bin<span class="o">/</span>deepl <span class="s">/usr/</span>local<span class="o">/</span>bin</code></pre>
+<p>If you encounter a bug, follow the command with the <code>-d</code> option and run it. You can view the backtrace.</p>
+<pre><code class="language-sh">deepl doc -d a.pdf</code></pre>
 <h3><a id="deep-l-api-library" class="anchor" href="#deep-l-api-library">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
