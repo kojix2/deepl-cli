@@ -157,7 +157,7 @@ deepl -f es
 # Ctrl + D
 ```
 
-(Experimental feature) Translate text from the clipboard:
+Translate text from the clipboard:
 
 ```sh
 deepl --paste
@@ -193,7 +193,7 @@ You can directly translate documents:
 
 ```sh
 deepl doc your.pdf -t pt
-# The translated document will be saved as your_EN.pdf
+# The translated document will be saved as your_PT.pdf
 ```
 
 To use a glossary for translation:
@@ -238,7 +238,7 @@ To list glossaries:
 deepl glossary list
 ```
 
-To list only the names of the glossary
+To list only the names of the glossary:
 
 ```sh
 deepl glossary -l
@@ -247,19 +247,19 @@ deepl glossary -l
 To use a glossary for text translation:
 
 ```sh
-deepl -g mydict -f en
+deepl -g mydict -f en deep.txt
 ```
 
 To use a glossary for document translation:
 
 ```sh
-deepl doc -g mydict -f en
+deepl doc -g mydict -f en deep.pdf
 ```
 
 To display the contents of the glossary:
 
 ```sh
-deepl glossary view -n mydict
+deepl glossary view mydict
 ```
 
 To list the languages in which glossaries can be created:
@@ -292,16 +292,16 @@ deepl -u
 # character_limit: 1000000000000
 ```
 
-## Development
-
-Contributions are always welcome.
+## Contributing
 
 - Report bugs
 - Fix bugs and submit pull requests
 - Write, clarify, or fix documentation
 - Suggest or add new features
 
-### Compilation from source code
+## Development
+
+Compilation from source code
 
 ```sh
 git clone https://github.com/kojix2/deepl-cli
