@@ -248,7 +248,7 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 # Hola
 # mundo
 # Ctrl + D</code></pre>
-<p>(Experimental feature) Translate text from the clipboard:</p>
+<p>Translate text from the clipboard:</p>
 <pre><code class="language-sh">deepl --paste</code></pre>
 <p>You can also pass a text file as an argument:</p>
 <pre><code class="language-sh">deepl -t tr foo.txt</code></pre>
@@ -265,7 +265,7 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 </a>Translate documents</h3>
 <p>You can directly translate documents:</p>
 <pre><code class="language-sh">deepl doc your.pdf -t pt
-# The translated document will be saved as your_EN.pdf</code></pre>
+# The translated document will be saved as your_PT.pdf</code></pre>
 <p>To use a glossary for translation:</p>
 <pre><code class="language-sh">deepl doc -g myglossary -f pl</code></pre>
 <p>To translate a PDF document and save it in docx format:</p>
@@ -284,14 +284,14 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 <pre><code class="language-sh">deepl glossary create -n mydic -f en -t pt mydict.tsv</code></pre>
 <p>To list glossaries:</p>
 <pre><code class="language-sh">deepl glossary list</code></pre>
-<p>To list only the names of the glossary</p>
+<p>To list only the names of the glossary:</p>
 <pre><code class="language-sh">deepl glossary -l</code></pre>
 <p>To use a glossary for text translation:</p>
-<pre><code class="language-sh">deepl -g mydict -f en</code></pre>
+<pre><code class="language-sh">deepl -g mydict -f en deep.txt</code></pre>
 <p>To use a glossary for document translation:</p>
-<pre><code class="language-sh">deepl doc -g mydict -f en</code></pre>
+<pre><code class="language-sh">deepl doc -g mydict -f en deep.pdf</code></pre>
 <p>To display the contents of the glossary:</p>
-<pre><code class="language-sh">deepl glossary view -n mydict</code></pre>
+<pre><code class="language-sh">deepl glossary view mydict</code></pre>
 <p>To list the languages in which glossaries can be created:</p>
 <pre><code class="language-sh">deepl glossary -p</code></pre>
 <h3><a id="information" class="anchor" href="#information">
@@ -309,23 +309,23 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 # https://api.deepl.com/v2
 # character_count: 614842
 # character_limit: 1000000000000</code></pre>
-<h2><a id="development" class="anchor" href="#development">
+<h2><a id="contributing" class="anchor" href="#contributing">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
-</a>Development</h2>
-<p>Contributions are always welcome.</p>
+</a>Contributing</h2>
 <ul>
 <li>Report bugs</li>
 <li>Fix bugs and submit pull requests</li>
 <li>Write, clarify, or fix documentation</li>
 <li>Suggest or add new features</li>
 </ul>
-<h3><a id="compilation-from-source-code" class="anchor" href="#compilation-from-source-code">
+<h2><a id="development" class="anchor" href="#development">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
-</a>Compilation from source code</h3>
+</a>Development</h2>
+<p>Compilation from source code</p>
 <pre><code class="language-sh">git clone https://github.com/kojix2/deepl-cli
 cd deepl-cli
 shards build --release
