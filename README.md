@@ -321,6 +321,7 @@ DeepL CLI automatically detects the target language, but if this does not work, 
 
 ## Contributing
 
+- Fork this repository
 - Report bugs
 - Fix bugs and submit pull requests
 - Write, clarify, or fix documentation
