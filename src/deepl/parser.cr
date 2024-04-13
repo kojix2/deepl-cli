@@ -220,6 +220,13 @@ module DeepL
         opt.no_ansi = false
       end
 
+      # Why is --output option is needed?
+      # Because utf-8 is not fully supported in Windows console.
+
+      on("-o", "--output FILE", "Output file") do |file|
+        opt.output_file = Path[file]
+      end
+
       on("-u", "--usage", "Check Usage and Limits") do
         opt.action = Action::RetrieveUsage
         # @handlers.clear

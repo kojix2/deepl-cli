@@ -103,7 +103,13 @@ module DeepL
       if option.detect_source_lanuage
         STDERR.puts "[deepl-cli] Detected source language: #{result_source_lang}"
       end
-      puts result.not_nil!.text
+
+      if output_file = option.output_file
+        File.write(output_file, result_text)
+        STDERR.puts "[deepl-cli] Translated text is written to #{output_file}"
+      else
+        puts result_text
+      end
     end
 
     def translate_document
