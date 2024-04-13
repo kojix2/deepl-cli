@@ -196,12 +196,12 @@ module DeepL
       #   # TODO?
       # end
 
-      on("-D", "--detect-language", "Output detected source language") do
-        opt.detect_source_lanuage = true
-      end
-
       on("-g", "--glossary NAME", "Glossary name") do |name|
         opt.glossary_name = name
+      end
+
+      on("-D", "--detect-language", "Output detected source language") do
+        opt.detect_source_lanuage = true
       end
 
       on("-F", "--formality OPT", "Formality (default more less)") do |v|
