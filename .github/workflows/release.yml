@@ -32,7 +32,7 @@ jobs:
           docker exec alpine shards install --without-development --release --static
           docker exec alpine shards build --release --static
           docker exec alpine chmod +x bin/deepl
-          tar -czvf bin/deepl-linux.tar.gz bin/deepl
+          tar -C bin -czvf deepl-linux.tar.gz deepl
 
       - name: Run Mac Build x64
         if: matrix.os == 'macos'
@@ -40,7 +40,7 @@ jobs:
           shards install --without-development --release
           shards build --release
           chmod +x bin/deepl
-          tar -czvf bin/deepl-macos.tar.gz bin/deepl
+          tar -C bin -czvf deepl-macos.tar.gz deepl
 
       - name: Run Windows Build x64
         if: matrix.os == 'windows'
