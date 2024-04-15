@@ -62,10 +62,12 @@ module DeepL
     end
 
     private def with_spinner(&block)
+      result = nil
       spinner = Term::Spinner.new(clear: true)
       spinner.run do
-        block.call
+        result = block.call
       end
+      return result
     end
 
     private def remove_ansi_escape_codes(text)
@@ -247,7 +249,10 @@ module DeepL
     end
 
     def edit_glossary_core(translator, glossary_info)
-      entries_text = translator.get_glossary_entries(glossary_info.glossary_id)
+      entries_text = ""
+      with_spinner do
+        entries_text = translator.get_glossary_entries(glossary_info.glossary_id)
+      end
 
       # save to a tempfile
       entries_file = File.tempfile do |f|
@@ -266,25 +271,22 @@ module DeepL
       end
 
       entries_text_2 = File.read(entries_file.path)
-      if entries_text == entries_text_2
-        STDERR.puts "[deepl-cli] No changes are made"
-        return
-      end
       entries_file.delete
 
       # validate glossary
       # validate_glossary(entries_text)
 
       # upload the edited glossary
-      translator.create_glossary(
-        name: glossary_info.name,
-        source_lang: glossary_info.source_lang,
-        target_lang: glossary_info.target_lang,
-        entries: entries_text_2,
-        entry_format: "tsv"
-      )
-
-      translator.delete_glossary(glossary_info.glossary_id)
+      with_spinner do
+        translator.create_glossary(
+          name: glossary_info.name,
+          source_lang: glossary_info.source_lang,
+          target_lang: glossary_info.target_lang,
+          entries: entries_text_2,
+          entry_format: "tsv"
+        )
+        translator.delete_glossary(glossary_info.glossary_id)
+      end
       STDERR.puts("[deepl-cli] Glossary #{glossary_info.name} is updated")
     rescue e
       entries_file.delete if entries_file
