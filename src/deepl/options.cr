@@ -1,24 +1,7 @@
 require "./config"
+require "./action"
 
 module DeepL
-  enum Action : UInt8
-    TranslateText
-    # TranslateXML
-    TranslateDocument
-    ListGlossaryLanguagePairs
-    CreateGlossary
-    DeleteGlossary
-    OutputGlossaryEntries
-    ListGlossaries
-    ListGlossariesLong
-    ListFromLanguages
-    ListTargetLanguages
-    RetrieveUsage
-    Version
-    Help
-    None
-  end
-
   struct Options
     property action : Action = Action::TranslateText
     property input_text : String = ""
