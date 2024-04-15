@@ -114,28 +114,36 @@ module DeepL
           _on_help_
         end
 
-        on("delete", "Delete a glossary") do
-          _set_action_(Action::DeleteGlossary, "Usage: deepl glossary delete <name>")
+        on("delete", "Delete glossaries") do
+          _set_action_(Action::DeleteGlossaryByName, "Usage: deepl glossary delete <names>")
+
+          on("-i", "--id", "Delete glossary by Glossary ids instead of names") do
+            opt.action = Action::DeleteGlossaryById
+          end
 
           _on_debug_
 
           _on_help_
         end
 
-        on("edit", "Edit a glossary") do
-          _set_action_(Action::EditGlossary, "Usage: deepl glossary edit <name>")
+        on("edit", "Edit glossaries") do
+          _set_action_(Action::EditGlossaryByName, "Usage: deepl glossary edit <names>")
+
+          on("-i", "--id", "Delete glossary by Glossary ids instead of names") do
+            opt.action = Action::DeleteGlossaryById
+          end
 
           _on_debug_
 
           _on_help_
         end
 
-        on("view", "View a glossary") do
-          _set_action_(Action::OutputGlossaryEntries, "Usage: deepl glossary view <name>")
+        on("view", "View glossaries") do
+          _set_action_(Action::OutputGlossaryEntriesByName, "Usage: deepl glossary view <names>")
 
-          # on("-i", "--id ID", "Delete glossary by Glossary ID") do |id|
-          #   opt.glossary_id = id
-          # end
+          on("-i", "--id ID", "Delete glossary by Glossary ids instead of names") do
+            opt.action = Action::OutputGlossaryEntriesById
+          end
 
           on("-o", "--output FILE", "Output file") do |file|
             opt.output_file = Path[file]

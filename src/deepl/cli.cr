@@ -24,16 +24,22 @@ module DeepL
         print_glossary_language_pairs
       when Action::CreateGlossary
         create_glossary
-      when Action::DeleteGlossary
-        delete_glossary
-      when Action::EditGlossary
-        edit_glossary
+      when Action::DeleteGlossaryByName
+        delete_glossary_by_name
+      when Action::DeleteGlossaryById
+        delete_glossary_by_id
+      when Action::EditGlossaryByName
+        edit_glossary_by_name
+      when Action::EditGlossaryById
+        edit_glossary_by_id
       when Action::ListGlossaries
         print_glossary_list
       when Action::ListGlossariesLong
         print_glossary_list_long
-      when Action::OutputGlossaryEntries
-        output_glossary_entries
+      when Action::OutputGlossaryEntriesByName
+        output_glossary_entries_by_name
+      when Action::OutputGlossaryEntriesById
+        output_glossary_entries_by_id
       when Action::ListFromLanguages
         print_source_languages
       when Action::ListTargetLanguages
@@ -189,30 +195,59 @@ module DeepL
       STDERR.puts "[deepl-cli] Glossary #{option.glossary_name} is created"
     end
 
-    def delete_glossary
+    def delete_glossary_by_name
       if ARGV.size == 0
         print_help
         exit(1)
       end
       translator = DeepL::Translator.new
-      glossary_name = ARGV[0]
-      translator.delete_glossary_by_name(glossary_name)
-
-      STDERR.puts "[deepl-cli] Glossary #{glossary_name} is deleted"
+      ARGV.each do |glossary_name|
+        translator.delete_glossary_by_name(glossary_name)
+        STDERR.puts "[deepl-cli] Glossary #{glossary_name} is deleted"
+      end
     end
 
-    def edit_glossary
+    def delete_glossary_by_id
+      if ARGV.size == 0
+        print_help
+        exit(1)
+      end
+      translator = DeepL::Translator.new
+      ARGV.each do |glossary_id|
+        info = translator.get_glossary_info(glossary_id)
+        translator.delete_glossary(glossary_id)
+        STDERR.puts "[deepl-cli] Glossary #{info.name} is deleted"
+      end
+    end
+
+    def edit_glossary_by_name
       if ARGV.size == 0
         print_help
         exit(1)
       end
 
-      entries_file = nil
       translator = DeepL::Translator.new
-      glossary_name = ARGV[0]
-      glossary_id = translator.convert_glossary_name_to_id(glossary_name)
-      glossayr_info = translator.get_glossary_info(glossary_id)
-      entries_text = translator.get_glossary_entries(glossary_id)
+      ARGV.each do |glossary_name|
+        glossary_info = translator.get_glossary_info_by_name(glossary_name)
+        edit_glossary_core(translator, glossary_info)
+      end
+    end
+
+    def edit_glossary_by_id
+      if ARGV.size == 0
+        print_help
+        exit(1)
+      end
+
+      translator = DeepL::Translator.new
+      ARGV.each do |glossary_id|
+        glossary_info = translator.get_glossary_info(glossary_id)
+        edit_glossary_core(translator, glossary_info)
+      end
+    end
+
+    def edit_glossary_core(translator, glossary_info)
+      entries_text = translator.get_glossary_entries(glossary_info.glossary_id)
 
       # save to a tempfile
       entries_file = File.tempfile do |f|
@@ -222,11 +257,11 @@ module DeepL
         system("#{ENV["EDITOR"]} #{entries_file.path}")
       else
         {% if flag?(:darwin) %}
-        system("open #{entries_file.path}")
+          system("vim #{entries_file.path}")
         {% elsif flag?(:linux) %}
-        system("xdg-open #{entries_file.path}")
+          system("vim #{entries_file.path}")
         {% elsif flag?(:windows) %}
-        system("notepad #{entries_file.path}")
+          system("notepad #{entries_file.path}")
         {% end %}
       end
 
@@ -242,34 +277,55 @@ module DeepL
 
       # upload the edited glossary
       translator.create_glossary(
-        name: glossary_name,
-        source_lang: glossayr_info.source_lang,
-        target_lang: glossayr_info.target_lang,
+        name: glossary_info.name,
+        source_lang: glossary_info.source_lang,
+        target_lang: glossary_info.target_lang,
         entries: entries_text_2,
         entry_format: "tsv"
       )
 
-      translator.delete_glossary(glossary_id)
-      STDERR.puts("[deepl-cli] Glossary #{glossary_name} is updated")
+      translator.delete_glossary(glossary_info.glossary_id)
+      STDERR.puts("[deepl-cli] Glossary #{glossary_info.name} is updated")
     rescue e
       entries_file.delete if entries_file
       raise e
     end
 
-    def output_glossary_entries
+    def output_glossary_entries_by_name
       if ARGV.size == 0
         print_help
         exit(1)
       end
       translator = DeepL::Translator.new
       output_file = option.output_file
-      glossary_name = ARGV[0]
-      entries_text = translator.get_glossary_entries_by_name(glossary_name)
-      if output_file
-        File.write(output_file, entries_text)
-        STDERR.puts "[deepl-cli] Glossary entries are written to #{output_file}"
-      else
-        puts entries_text
+      File.delete(output_file) if output_file && File.exists?(output_file)
+      ARGV.each do |glossary_name|
+        entries_text = translator.get_glossary_entries_by_name(glossary_name)
+        if output_file
+          File.write(output_file, entries_text, mode: "a")
+          STDERR.puts "[deepl-cli] Glossary entries of #{glossary_name} are written to #{output_file}"
+        else
+          puts entries_text
+        end
+      end
+    end
+
+    def output_glossary_entries_by_id
+      if ARGV.size == 0
+        print_help
+        exit(1)
+      end
+      translator = DeepL::Translator.new
+      output_file = option.output_file
+      File.delete(output_file) if output_file && File.exists?(output_file)
+      ARGV.each do |glossary_id|
+        entries_text = translator.get_glossary_entries(glossary_id)
+        if output_file
+          File.write(output_file, entries_text, mode: "a")
+          STDERR.puts "[deepl-cli] Glossary entries of #{glossary_id} are written to #{output_file}"
+        else
+          puts entries_text
+        end
       end
     end
 

@@ -5,9 +5,12 @@ module DeepL
     TranslateDocument
     ListGlossaryLanguagePairs
     CreateGlossary
-    DeleteGlossary
-    EditGlossary
-    OutputGlossaryEntries
+    DeleteGlossaryByName
+    DeleteGlossaryById
+    EditGlossaryByName
+    EditGlossaryById
+    OutputGlossaryEntriesByName
+    OutputGlossaryEntriesById
     ListGlossaries
     ListGlossariesLong
     ListFromLanguages
