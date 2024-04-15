@@ -117,9 +117,13 @@ module DeepL
         on("delete", "Delete a glossary") do
           _set_action_(Action::DeleteGlossary, "Usage: deepl glossary delete <name>")
 
-          # on("-i", "--id ID", "View glossary by Glossary ID") do |id|
-          #   opt.glossary_id = id
-          # end
+          _on_debug_
+
+          _on_help_
+        end
+
+        on("edit", "Edit a glossary") do
+          _set_action_(Action::EditGlossary, "Usage: deepl glossary edit <name>")
 
           _on_debug_
 

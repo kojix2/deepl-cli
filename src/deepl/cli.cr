@@ -206,14 +206,54 @@ module DeepL
         print_help
         exit(1)
       end
+
+      entries_file = nil
       translator = DeepL::Translator.new
       glossary_name = ARGV[0]
-      entries_text = translator.get_glossary_entries_by_name(glossary_name)
+      glossary_id = translator.convert_glossary_name_to_id(glossary_name)
+      glossayr_info = translator.get_glossary_info(glossary_id)
+      entries_text = translator.get_glossary_entries(glossary_id)
 
       # save to a tempfile
-      # open editor
+      entries_file = File.tempfile do |f|
+        f.puts(entries_text)
+      end
+      if ENV.has_key?("EDITOR")
+        system("#{ENV["EDITOR"]} #{entries_file.path}")
+      else
+        {% if flag?(:darwin) %}
+        system("open #{entries_file.path}")
+        {% elsif flag?(:linux) %}
+        system("xdg-open #{entries_file.path}")
+        {% elsif flag?(:windows) %}
+        system("notepad #{entries_file.path}")
+        {% end %}
+      end
+
+      entries_text_2 = File.read(entries_file.path)
+      if entries_text == entries_text_2
+        STDERR.puts "[deepl-cli] No changes are made"
+        return
+      end
+      entries_file.delete
+
       # validate glossary
+      # validate_glossary(entries_text)
+
       # upload the edited glossary
+      translator.create_glossary(
+        name: glossary_name,
+        source_lang: glossayr_info.source_lang,
+        target_lang: glossayr_info.target_lang,
+        entries: entries_text_2,
+        entry_format: "tsv"
+      )
+
+      translator.delete_glossary(glossary_id)
+      STDERR.puts("[deepl-cli] Glossary #{glossary_name} is updated")
+    rescue e
+      entries_file.delete if entries_file
+      raise e
     end
 
     def output_glossary_entries
