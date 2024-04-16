@@ -117,7 +117,7 @@ module DeepL
         on("delete", "Delete glossaries") do
           _set_action_(Action::DeleteGlossaryByName, "Usage: deepl glossary delete <names>")
 
-          on("-i", "--id", "Delete glossary by Glossary ids instead of names") do
+          on("-i", "--id", "Delete glossary by ids instead of names") do
             opt.action = Action::DeleteGlossaryById
           end
 
@@ -129,7 +129,7 @@ module DeepL
         on("edit", "Edit glossaries") do
           _set_action_(Action::EditGlossaryByName, "Usage: deepl glossary edit <names>")
 
-          on("-i", "--id", "Delete glossary by Glossary ids instead of names") do
+          on("-i", "--id", "Delete glossary by ids instead of names") do
             opt.action = Action::DeleteGlossaryById
           end
 
@@ -141,7 +141,7 @@ module DeepL
         on("view", "View glossaries") do
           _set_action_(Action::OutputGlossaryEntriesByName, "Usage: deepl glossary view <names>")
 
-          on("-i", "--id ID", "Delete glossary by Glossary ids instead of names") do
+          on("-i", "--id ID", "Delete glossary by ids instead of names") do
             opt.action = Action::OutputGlossaryEntriesById
           end
 
