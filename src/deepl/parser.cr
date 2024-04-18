@@ -133,6 +133,10 @@ module DeepL
             opt.action = Action::DeleteGlossaryById
           end
 
+          on("-e", "--editor EDITOR", "Editor command [ENV[\"EDITOR\"]]") do |editor|
+            ENV["EDITOR"] = editor
+          end
+
           _on_debug_
 
           _on_help_
