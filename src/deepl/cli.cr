@@ -2,6 +2,7 @@ require "../ext/crest"
 require "deepl/translator"
 require "term-spinner"
 require "./parser"
+require "./utils"
 
 module DeepL
   class CLI
@@ -252,24 +253,7 @@ module DeepL
         entries_text = translator.get_glossary_entries(glossary_info.glossary_id)
       end
 
-      # save to a tempfile
-      entries_file = File.tempfile do |f|
-        f.puts(entries_text)
-      end
-      if ENV.has_key?("EDITOR")
-        system("#{ENV["EDITOR"]} #{entries_file.path}")
-      else
-        {% if flag?(:darwin) %}
-          system("vim #{entries_file.path}")
-        {% elsif flag?(:linux) %}
-          system("vim #{entries_file.path}")
-        {% elsif flag?(:windows) %}
-          system("notepad #{entries_file.path}")
-        {% end %}
-      end
-
-      entries_text_2 = File.read(entries_file.path)
-      entries_file.delete
+      entries_text_2 = Utils.edit_text(entries_text)
 
       # validate glossary
       # validate_glossary(entries_text)
@@ -286,9 +270,6 @@ module DeepL
         translator.delete_glossary(glossary_info.glossary_id)
       end
       STDERR.puts("[deepl-cli] Glossary #{glossary_info.name} is updated")
-    rescue e
-      entries_file.delete if entries_file
-      raise e
     end
 
     def output_glossary_entries_by_name
