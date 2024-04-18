@@ -92,7 +92,7 @@ module DeepL
       # Remove ANSI escape codes from the input text
       option.input_text = remove_ansi_escape_codes(option.input_text)
 
-      result = nil
+      result = [] of DeepL::TextResult
       translator = DeepL::Translator.new
 
       with_spinner do
@@ -106,19 +106,17 @@ module DeepL
         )
       end
 
-      r = result.not_nil!
-      result_text = r.text
-      result_source_lang = r.detected_source_language
+      output = option.output_file ? IO::Memory.new : STDOUT
 
-      if option.detect_source_lanuage
-        STDERR.puts "[deepl-cli] Detected source language: #{result_source_lang}"
+      result.each do |r|
+        if option.detect_source_lanuage
+          STDERR.puts "[deepl-cli] Detected source language: #{r.detected_source_language}"
+        end
+        output.puts r.text
       end
-
       if output_file = option.output_file
-        File.write(output_file, result_text)
+        File.open(output_file, "w") { |f| output.to_s(f) }
         STDERR.puts "[deepl-cli] Translated text is written to #{output_file}"
-      else
-        puts result_text
       end
     end
 
