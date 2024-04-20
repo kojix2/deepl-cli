@@ -112,8 +112,9 @@ Options for glossary management:
 ```txt
     list                             List glossaries
     create                           Create a glossary
-    delete                           Delete a glossary
-    view                             View a glossary
+    delete                           Delete glossaries
+    edit                             Edit glossaries
+    view                             View glossaries
     -l, --list                       List glossaries
     -p, --language-pairs             List language pairs
 ```
@@ -313,6 +314,10 @@ deepl -u
     <tr>
       <td>DEEPL_USER_AGENT</td>
       <td>User-Agent</td>
+    </tr>
+    <tr>
+      <td>EDITOR</td>
+      <td>Text editor for editing glossary</td>
     </tr>
   </tbody>
 </table>
