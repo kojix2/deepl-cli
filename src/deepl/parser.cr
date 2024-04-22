@@ -173,7 +173,12 @@ module DeepL
       end
 
       on("text", "Translate text (default)") do
+        # Reuse the options of the main command.
         opt.action = Action::TranslateText
+        self.banner = "Usage: deepl text [options]"
+        @flags.pop(2) # Remove "-h" and "--help" from the help message.
+
+        _on_help_ # overwrite the @handler of "-h" and "--help"
       end
 
       on("-i", "--input TEXT", "Input text") do |text|
