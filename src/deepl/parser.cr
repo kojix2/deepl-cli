@@ -222,7 +222,7 @@ module DeepL
       end
 
       on("-D", "--detect-language", "Output detected source language") do
-        opt.detect_source_lanuage = true
+        opt.detect_source_language = true
       end
 
       on("-F", "--formality OPT", "Formality (default more less)") do |v|

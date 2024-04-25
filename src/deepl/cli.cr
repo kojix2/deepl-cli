@@ -110,7 +110,7 @@ module DeepL
       output = option.output_file ? IO::Memory.new : STDOUT
 
       result.each do |r|
-        if option.detect_source_lanuage
+        if option.detect_source_language
           STDERR.puts "[deepl-cli] Detected source language: #{r.detected_source_language}"
         end
         output.puts r.text
