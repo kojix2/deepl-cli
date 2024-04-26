@@ -102,6 +102,13 @@ module DeepL
           target_lang: option.target_lang,
           source_lang: option.source_lang,
           formality: option.formality,
+          split_sentences: option.split_sentences,
+          preserve_formatting: option.preserve_formatting,
+          tag_handling: option.tag_handling,
+          outline_detection: option.outline_detection,
+          non_splitting_tags: option.non_splitting_tags,
+          splitting_tags: option.splitting_tags,
+          ignore_tags: option.ignore_tags,
           glossary_name: option.glossary_name, # original option of deepl.cr
           context: option.context
         )

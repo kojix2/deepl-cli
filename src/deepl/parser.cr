@@ -176,9 +176,41 @@ module DeepL
         # Reuse the options of the main command.
         opt.action = Action::TranslateText
         self.banner = "Usage: deepl text [options]"
-        @flags.pop(2) # Remove "-h" and "--help" from the help message.
 
-        _on_help_ # overwrite the @handler of "-h" and "--help"
+        @handlers.reject! %w(-h --help -d --debug -v --version -u --usage)
+        @flags.pop(4)
+
+        on("-s", "--split-sentences OPT", "Split sentences") do |v|
+          opt.split_sentences = v
+        end
+
+        on("-P", "--preserve-formatting", "Preserve formatting") do
+          opt.preserve_formatting = true
+        end
+
+        on("-T", "--tag-handling OPT", "Tag handling") do |v|
+          opt.tag_handling = v
+        end
+
+        on("-O", "--outline-detection", "Outline detection") do
+          opt.outline_detection = true
+        end
+
+        on("-N", "--non-splitting-tags TAGS", "Non-splitting tags") do |tags|
+          opt.non_splitting_tags = tags.split(",")
+        end
+
+        on("-S", "--splitting-tags TAGS", "Splitting tags") do |tags|
+          opt.splitting_tags = tags.split(",")
+        end
+
+        on("-I", "--ignore-tags TAGS", "Ignore tags") do |tags|
+          opt.ignore_tags = tags.split(",")
+        end
+
+        _on_debug_
+
+        _on_help_
       end
 
       on("-i", "--input TEXT", "Input text") do |text|
@@ -231,10 +263,6 @@ module DeepL
 
       on("-C", "--context TEXT", "Context (experimental)") do |text|
         opt.context = text
-      end
-
-      on("-S", "--split-sentences OPT", "Split sentences") do |v|
-        opt.split_sentences = v
       end
 
       on("-A", "--ansi", "Do not remove ANSI escape codes") do
