@@ -262,6 +262,9 @@ module DeepL
 
       entries_text_2 = Utils.edit_text(entries_text)
 
+      # If the glossary is not changed, return
+      return if entries_text.chomp == entries_text_2.chomp
+
       # validate glossary
       # validate_glossary(entries_text)
 
