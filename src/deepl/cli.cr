@@ -204,25 +204,65 @@ module DeepL
       STDERR.puts "[deepl-cli] Glossary #{option.glossary_name} is created"
     end
 
-    def delete_glossary_by_name
+    def argv_or_select_name_from_glossary_list
       if ARGV.size == 0
-        print_help
-        exit(1)
+        glossary_name = select_name_from_glossary_list.not_nil!
+        [glossary_name]
+      else
+        ARGV
       end
+    end
+
+    def argv_or_select_id_from_glossary_list_long
+      if ARGV.size == 0
+        glossary_id = select_id_from_glossary_list_long.not_nil!
+        glossary_ids = [glossary_id]
+      else
+        ARGV
+      end
+    end
+
+    def select_name_from_glossary_list : String?
+      prompt = Term::Prompt.new
       translator = DeepL::Translator.new
-      ARGV.each do |glossary_name|
+      glossary_list = translator.list_glossaries
+      return if glossary_list.empty?
+      glossary_names = glossary_list.map { |g| g.name }
+      glossary_name = prompt.select("Select glossary", glossary_names)
+    end
+
+    def select_id_from_glossary_list_long : String?
+      prompt = Term::Prompt.new
+      translator = DeepL::Translator.new
+      glossary_list = translator.list_glossaries
+      return if glossary_list.empty?
+      max = glossary_list.map { |g| g.name.size }.max.not_nil!
+      glossary_str_list = glossary_list.map do |glossary|
+        [
+          glossary.name.rjust(max + 1),
+          "#{glossary.source_lang} -> #{glossary.target_lang}",
+          glossary.entry_count,
+          glossary.creation_time,
+          glossary.glossary_id,
+        ].join("\t")
+      end
+      glossary_str = prompt.select("Select glossary", glossary_str_list)
+      glossary_id = glossary_str.not_nil!.split("\t").last
+    end
+
+    def delete_glossary_by_name
+      glossary_names = argv_or_select_name_from_glossary_list
+      translator = DeepL::Translator.new
+      glossary_names.each do |glossary_name|
         translator.delete_glossary_by_name(glossary_name)
         STDERR.puts "[deepl-cli] Glossary #{glossary_name} is deleted"
       end
     end
 
     def delete_glossary_by_id
-      if ARGV.size == 0
-        print_help
-        exit(1)
-      end
+      glossary_ids = argv_or_select_id_from_glossary_list_long
       translator = DeepL::Translator.new
-      ARGV.each do |glossary_id|
+      glossary_ids.each do |glossary_id|
         info = translator.get_glossary_info(glossary_id)
         translator.delete_glossary(glossary_id)
         STDERR.puts "[deepl-cli] Glossary #{info.name} is deleted"
@@ -230,13 +270,9 @@ module DeepL
     end
 
     def edit_glossary_by_name
-      if ARGV.size == 0
-        print_help
-        exit(1)
-      end
-
+      glossary_names = argv_or_select_name_from_glossary_list
       translator = DeepL::Translator.new
-      ARGV.each do |glossary_name|
+      glossary_names.each do |glossary_name|
         glossary_info_list = translator.get_glossary_info_by_name(glossary_name)
         # FIXME
         case glossary_info_list.size
@@ -255,13 +291,9 @@ module DeepL
     end
 
     def edit_glossary_by_id
-      if ARGV.size == 0
-        print_help
-        exit(1)
-      end
-
+      glossary_ids = argv_or_select_id_from_glossary_list_long
       translator = DeepL::Translator.new
-      ARGV.each do |glossary_id|
+      glossary_ids.each do |glossary_id|
         glossary_info = translator.get_glossary_info(glossary_id)
         edit_glossary_core(translator, glossary_info)
       end
@@ -296,14 +328,11 @@ module DeepL
     end
 
     def output_glossary_entries_by_name
-      if ARGV.size == 0
-        print_help
-        exit(1)
-      end
+      glossary_names = argv_or_select_name_from_glossary_list
       translator = DeepL::Translator.new
       output_file = option.output_file
       File.delete(output_file) if output_file && File.exists?(output_file)
-      ARGV.each do |glossary_name|
+      glossary_names.each do |glossary_name|
         entries_text = translator.get_glossary_entries_by_name(glossary_name)
         if output_file
           File.write(output_file, entries_text, mode: "a")
@@ -315,14 +344,11 @@ module DeepL
     end
 
     def output_glossary_entries_by_id
-      if ARGV.size == 0
-        print_help
-        exit(1)
-      end
+      glossary_ids = argv_or_select_id_from_glossary_list_long
       translator = DeepL::Translator.new
       output_file = option.output_file
       File.delete(output_file) if output_file && File.exists?(output_file)
-      ARGV.each do |glossary_id|
+      glossary_ids.each do |glossary_id|
         entries_text = translator.get_glossary_entries(glossary_id)
         if output_file
           File.write(output_file, entries_text, mode: "a")
