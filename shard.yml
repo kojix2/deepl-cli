@@ -21,5 +21,8 @@ dependencies:
   term-spinner:
     github: crystal-term/spinner
     branch: master
+  term-prompt:
+    github: crystal-term/prompt
+    branch: master
 
 license: MIT

@@ -1,5 +1,6 @@
 require "../ext/crest"
 require "deepl/translator"
+require "term-prompt"
 require "term-spinner"
 require "./parser"
 require "./utils"
@@ -236,8 +237,20 @@ module DeepL
 
       translator = DeepL::Translator.new
       ARGV.each do |glossary_name|
-        glossary_info = translator.get_glossary_info_by_name(glossary_name)
-        edit_glossary_core(translator, glossary_info)
+        glossary_info_list = translator.get_glossary_info_by_name(glossary_name)
+        # FIXME
+        case glossary_info_list.size
+        when 2..
+          creation_times = glossary_info_list.map { |g| g.creation_time }
+          prompt = Term::Prompt.new
+          tm = prompt.multi_select("Select creation date", creation_times)
+          glossary_info = glossary_info_list.find { |g| g.creation_time == tm }.not_nil!
+          edit_glossary_core(translator, glossary_info)
+        when 1
+          glossary_info = glossary_info_list.first
+          edit_glossary_core(translator, glossary_info)
+        when 0
+        end
       end
     end
 
