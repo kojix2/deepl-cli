@@ -33,7 +33,7 @@ jobs:
           docker exec alpine shards build --release --static
           docker exec alpine chmod +x bin/deepl
           docker exec alpine gzip bin/deepl
-          docker exec alpine mv bin/deepl.gz bin/deepl-linux.tar.gz
+          docker exec alpine mv bin/deepl.gz bin/deepl-linux.gz
 
       - name: Run Mac Build x64
         if: matrix.os == 'macos'
@@ -42,7 +42,7 @@ jobs:
           shards build --release
           chmod +x bin/deepl
           gzip bin/deepl
-          mv bin/deepl.gz bin/deepl-macos.tar.gz
+          mv bin/deepl.gz bin/deepl-macos.gz
 
       - name: Run Windows Build x64
         if: matrix.os == 'windows'
@@ -53,13 +53,10 @@ jobs:
           Compress-Archive -Path bin/deepl.exe -DestinationPath bin/deepl-windows.zip
 
       - name: Upload Release Asset
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
-            bin/deepl-linux.tar.gz
-            bin/deepl-macos.tar.gz
+            bin/deepl-linux.gz
+            bin/deepl-macos.gz
             bin/deepl-windows.zip
             LICENSE.txt
-
-      - name: Checksums
-        uses: wangzuo/action-release-checksums@v1
