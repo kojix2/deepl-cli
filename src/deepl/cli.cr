@@ -300,15 +300,15 @@ module DeepL
     end
 
     def edit_glossary_core(translator, glossary_info)
-      entries_text = ""
+      original_entries_text = ""
       with_spinner do
-        entries_text = translator.get_glossary_entries(glossary_info.glossary_id)
+        original_entries_text = translator.get_glossary_entries(glossary_info.glossary_id)
       end
 
-      entries_text_2 = Utils.edit_text(entries_text)
+      edited_entries_text = Utils.edit_text(original_entries_text)
 
       # If the glossary is not changed, return
-      return if entries_text.chomp == entries_text_2.chomp
+      return if original_entries_text.chomp == edited_entries_text.chomp
 
       # validate glossary
       # validate_glossary(entries_text)
@@ -319,7 +319,7 @@ module DeepL
           name: glossary_info.name,
           source_lang: glossary_info.source_lang,
           target_lang: glossary_info.target_lang,
-          entries: entries_text_2,
+          entries: edited_entries_text,
           entry_format: "tsv"
         )
         translator.delete_glossary(glossary_info.glossary_id)
