@@ -279,9 +279,13 @@ module DeepL
         when 2..
           creation_times = glossary_info_list.map { |g| g.creation_time }
           prompt = Term::Prompt.new
-          tm = prompt.multi_select("Select creation date", creation_times)
-          glossary_info = glossary_info_list.find { |g| g.creation_time == tm }.not_nil!
-          edit_glossary_core(translator, glossary_info)
+          tm = prompt.select("Select creation date", creation_times)
+          glossary_info = glossary_info_list.find { |g| g.creation_time == tm }
+          if glossary_info.nil?
+            STDERR.puts "[deepl-cli] Glossary #{glossary_name} #{tm} is not found"
+          else
+            edit_glossary_core(translator, glossary_info)
+          end
         when 1
           glossary_info = glossary_info_list.first
           edit_glossary_core(translator, glossary_info)
