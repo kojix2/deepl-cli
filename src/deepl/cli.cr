@@ -277,10 +277,10 @@ module DeepL
         # FIXME
         case glossary_info_list.size
         when 2..
-          creation_times = glossary_info_list.map { |g| g.creation_time }
+          creation_times = glossary_info_list.map { |g| g.creation_time.to_local.to_s }
           prompt = Term::Prompt.new
           tm = prompt.select("Select creation date", creation_times)
-          glossary_info = glossary_info_list.find { |g| g.creation_time == tm }
+          glossary_info = glossary_info_list.find { |g| g.creation_time.to_local.to_s == tm }
           if glossary_info.nil?
             STDERR.puts "[deepl-cli] Glossary #{glossary_name} #{tm} is not found"
           else
