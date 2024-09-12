@@ -151,7 +151,8 @@ module DeepL
           glossary_name: option.glossary_name, # original option of deepl.cr
           output_format: option.output_format,
           output_file: option.output_file,
-          interval: option.interval
+          interval: option.interval,
+          message_prefix: "[deepl-cli] "
         ) do |progress|
           STDERR.puts avoid_spinner(progress)
         end
