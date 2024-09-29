@@ -11,7 +11,7 @@ targets:
 dependencies:
   deepl:
     github: kojix2/deepl.cr
-    versin: "0.0.8"
+    branch: main
   crest:
     github: mamantoha/crest
     version: "~> 1.3"
