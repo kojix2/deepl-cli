@@ -257,6 +257,10 @@ module DeepL
         opt.detect_source_language = true
       end
 
+      on("-B", "--show-billed-characters", "Output billed characters") do
+        opt.show_billed_characters = true
+      end
+
       on("-F", "--formality OPT", "Formality (default more less)") do |v|
         opt.formality = v
       end

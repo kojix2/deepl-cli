@@ -111,7 +111,8 @@ module DeepL
           splitting_tags: option.splitting_tags,
           ignore_tags: option.ignore_tags,
           glossary_name: option.glossary_name, # original option of deepl.cr
-          context: option.context
+          context: option.context,
+          show_billed_characters: option.show_billed_characters
         )
       end
 
@@ -120,6 +121,9 @@ module DeepL
       result.each do |r|
         if option.detect_source_language
           STDERR.puts "[deepl-cli] Detected source language: #{r.detected_source_language}"
+        end
+        if option.show_billed_characters
+          STDERR.puts "[deepl-cli] Billed characters: #{r.billed_characters}"
         end
         output.puts r.text
       end

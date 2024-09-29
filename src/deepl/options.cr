@@ -10,6 +10,7 @@ module DeepL
     property target_lang : String = Config.target_lang
     property source_lang : String? = nil
     property detect_source_language : Bool = false
+    property show_billed_characters : Bool = false
     property formality : String? = nil
     # property glossary_id : String? = nil
     property glossary_name : String? = nil
