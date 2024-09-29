@@ -1,5 +1,5 @@
 name: deepl-cli
-version: 0.4.0
+version: 0.4.1
 
 authors:
   - kojix2 <2xijok@gmail.com>
@@ -11,7 +11,7 @@ targets:
 dependencies:
   deepl:
     github: kojix2/deepl.cr
-    branch: main
+    versin: "0.0.8"
   crest:
     github: mamantoha/crest
     version: "~> 1.3"
