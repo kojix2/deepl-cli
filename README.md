@@ -12,11 +12,9 @@ DeepL CLI is a simple command-line tool for the [DeepL API](https://www.deepl.co
 
 ### Download
 
-- Download the Linux binary from the [Releases](https://github.com/kojix2/deepl-cli/releases)
-- Unzip: `tar -xvf deepl.tar.gz`
-- Move to the executable path: `sudo mv deepl /usr/local/bin/`
-
-Note: Binaries for Linux are statically linked. For macOS, we recommend using homebrew.
+- Download the binary from the [Releases](https://github.com/kojix2/deepl-cli/releases)
+- Binaries for Linux are statically linked.
+- For macOS, we recommend using homebrew.
 
 ### Homebrew
 
