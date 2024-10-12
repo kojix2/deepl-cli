@@ -20,6 +20,9 @@ jobs:
       - uses: crystal-lang/install-crystal@v1
         with:
           crystal: latest
+      - name: Ubuntu - Install libreadline-dev
+        if: matrix.os == 'ubuntu'
+        run: sudo apt-get update && sudo apt-get install -y libreadline-dev
       - name: Install dependencies
         run: shards install --without-development --release
       - name: Run tests
