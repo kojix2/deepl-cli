@@ -22,6 +22,12 @@ module DeepL
         translate_text
       when Action::TranslateDocument
         translate_document
+      when Action::TranslateDocumentUpload
+        upload_document_to_translate
+      when Action::TranslateDocumentStatus
+        check_document_translation_status
+      when Action::TranslateDocumentDownload
+        download_translated_document
       when Action::ListGlossaryLanguagePairs
         print_glossary_language_pairs
       when Action::CreateGlossary
@@ -161,6 +167,28 @@ module DeepL
           STDERR.puts avoid_spinner(progress)
         end
       end
+    end
+
+    def upload_document_to_translate
+      raise "Not implemented"
+    end
+
+    def check_document_translation_status
+      translator = DeepL::Translator.new
+      document_id = option.document_id.not_nil!
+      document_key = option.document_key.not_nil!
+      document_handle = DocumentHandle.new(document_id, document_key)
+      status = translator.translate_document_get_status(document_handle)
+      puts status
+    end
+
+    def download_translated_document
+      translator = DeepL::Translator.new
+      document_id = option.document_id.not_nil!
+      document_key = option.document_key.not_nil!
+      output_file = option.output_file.not_nil!
+      document_handle = DocumentHandle.new(document_id, document_key)
+      translator.translate_document_download(output_file, handle: document_handle)
     end
 
     def print_glossary_language_pairs
@@ -408,7 +436,7 @@ module DeepL
 
     private def print_langinfo(
       langinfo : Array(LanguageInfo),
-      default : String? = nil
+      default : String? = nil,
     ) : Nil
       langinfo.each do |info|
         abbrev = info.language

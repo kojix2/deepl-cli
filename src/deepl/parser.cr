@@ -50,6 +50,26 @@ module DeepL
       on("doc", "Translate document") do
         _set_action_(Action::TranslateDocument, "Usage: deepl doc [options] <file>")
 
+        on("status", "Check translation status") do
+          _set_action_(Action::TranslateDocumentStatus, "Usage: deepl doc status [options]")
+
+          _on_debug_
+
+          _on_help_
+        end
+
+        on("download", "Download translated document") do
+          _set_action_(Action::TranslateDocumentDownload, "Usage: deepl doc download [options]")
+
+          on("-o", "--output FILE", "Output file") do |file|
+            opt.output_file = Path[file]
+          end
+
+          _on_debug_
+
+          _on_help_
+        end
+
         on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
           opt.source_lang = from.upcase
         end

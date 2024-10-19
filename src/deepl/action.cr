@@ -3,6 +3,9 @@ module DeepL
     TranslateText
     # TranslateXML
     TranslateDocument
+    TranslateDocumentUpload
+    TranslateDocumentStatus
+    TranslateDocumentDownload
     ListGlossaryLanguagePairs
     CreateGlossary
     DeleteGlossaryByName
