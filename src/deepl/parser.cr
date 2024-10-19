@@ -53,6 +53,14 @@ module DeepL
         on("status", "Check translation status") do
           _set_action_(Action::TranslateDocumentStatus, "Usage: deepl doc status [options]")
 
+          on("-i", "--id", "Document ID (required)") do |id|
+            opt.document_id = id
+          end
+
+          on("-k", "--key", "Document key (required)") do |key|
+            opt.document_key = key
+          end
+
           _on_debug_
 
           _on_help_
@@ -60,6 +68,14 @@ module DeepL
 
         on("download", "Download translated document") do
           _set_action_(Action::TranslateDocumentDownload, "Usage: deepl doc download [options]")
+
+          on("-i", "--id", "Document ID (required)") do |id|
+            opt.document_id = id
+          end
+
+          on("-k", "--key", "Document key (required)") do |key|
+            opt.document_key = key
+          end
 
           on("-o", "--output FILE", "Output file") do |file|
             opt.output_file = Path[file]
