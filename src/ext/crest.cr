@@ -24,7 +24,7 @@ module Crest
       method : Symbol,
       url : String,
       form = {} of String => String,
-      **args
+      **args,
     )
       previous_def
       url = URI.parse(@url)
