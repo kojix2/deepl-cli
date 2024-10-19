@@ -170,11 +170,14 @@ module DeepL
     end
 
     def upload_document_to_translate
-      raise "Not implemented"
+      raise NotImplementedError.new("This action is not implemented yet")
     end
 
     def check_document_translation_status
       translator = DeepL::Translator.new
+      if option.document_id.nil? || option.document_key.nil?
+        raise "Document ID or key is not specified"
+      end
       document_id = option.document_id.not_nil!
       document_key = option.document_key.not_nil!
       document_handle = DocumentHandle.new(document_id, document_key)
@@ -184,6 +187,12 @@ module DeepL
 
     def download_translated_document
       translator = DeepL::Translator.new
+      if option.document_id.nil? || option.document_key.nil?
+        raise "Document ID or key is not specified"
+      end
+      if option.output_file.nil?
+        raise "Output file is not specified"
+      end
       document_id = option.document_id.not_nil!
       document_key = option.document_key.not_nil!
       output_file = option.output_file.not_nil!
