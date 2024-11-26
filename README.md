@@ -186,6 +186,12 @@ To use a glossary for translation:
 deepl -g myglossary -f ru
 ```
 
+To refer to the original text, you can use `tee dev/stderr`:
+
+```sh
+fortune | tee /dev/stderr | deepl
+```
+
 ### Translate documents
 
 You can directly translate documents:
