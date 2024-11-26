@@ -263,6 +263,8 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 <pre><code class="language-sh">bat --style header *.txt | deepl -t it</code></pre>
 <p>To use a glossary for translation:</p>
 <pre><code class="language-sh">deepl -g myglossary -f ru</code></pre>
+<p>To refer to the original text, you can use <code>tee dev/stderr</code>:</p>
+<pre><code class="language-sh">fortune | tee /dev/stderr | deepl</code></pre>
 <h3><a id="translate-documents-1" class="anchor" href="#translate-documents-1">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
