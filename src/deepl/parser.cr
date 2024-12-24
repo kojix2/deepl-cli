@@ -54,8 +54,8 @@ module DeepL
           opt.source_lang = from.upcase
         end
 
-        on("-t", "--to [LANG]", "Target language [#{opt.target_lang}]") do |to|
-          opt.target_lang = to.upcase
+        on("-t", "--to [LANG]", "Target language [#{opt.target_lang}]") do |to_|
+          opt.target_lang = to_.upcase
         end
 
         on("-g", "--glossary NAME", "Glossary name") do |name|
@@ -105,8 +105,8 @@ module DeepL
             opt.source_lang = from.upcase
           end
 
-          on("-t", "--to [LANG]", "Target language [#{opt.target_lang}]") do |to|
-            opt.target_lang = to.upcase
+          on("-t", "--to [LANG]", "Target language [#{opt.target_lang}]") do |to_|
+            opt.target_lang = to_.upcase
           end
 
           _on_debug_
@@ -225,11 +225,11 @@ module DeepL
         end
       end
 
-      on("-t", "--to [LANG]", "Target language [#{opt.target_lang}]") do |to|
-        if to.empty?
+      on("-t", "--to [LANG]", "Target language [#{opt.target_lang}]") do |to_|
+        if to_.empty?
           opt.action = Action::ListTargetLanguages
         else
-          opt.target_lang = to.upcase
+          opt.target_lang = to_.upcase
         end
       end
 
