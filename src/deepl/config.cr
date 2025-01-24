@@ -1,7 +1,7 @@
 module DeepL
   class Config
     def self.target_lang : String
-      tl = ENV["DEEPL_TARGET_LANGUAGE"]?
+      tl = ENV["DEEPL_TARGET_LANG"]?
       return tl if tl
       # The language of the current locale
       # If the locale is de_DE.UTF-8, then the target language is DE

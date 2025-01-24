@@ -402,7 +402,7 @@ module DeepL
     def print_target_languages
       translator = DeepL::Translator.new
       langinfo = translator.get_target_languages
-      default_target_language = translator.guess_target_language
+      default_target_language = Config.target_lang
       print_langinfo(langinfo, default: default_target_language)
     end
 
