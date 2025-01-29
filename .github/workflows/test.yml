@@ -1,0 +1,73 @@
+name: test
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "51 3 * * 6" # Runs at 03:51, only on Saturday
+
+jobs:
+  build:
+    name: ubuntu
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: latest
+
+      - name: Ubuntu - Install libreadline-dev
+        run: sudo apt-get update && sudo apt-get install -y libreadline-dev
+
+      - name: Clone deepl-mock repository
+        run: git clone --depth=1 https://github.com/DeepLcom/deepl-mock.git deepl-mock
+
+      - name: Build deepl-mock Docker image
+        run: |
+          cd deepl-mock
+          docker build -t deepl-mock .
+
+      - name: Start deepl-mock server
+        run: docker run -d --rm --name deepl-mock -p3000:3000 -p3001:3001 deepl-mock
+
+      - name: Wait for deepl-mock to be ready
+        run: |
+          for i in {1..30}; do
+            if curl --silent http://localhost:3000/v2/translate > /dev/null; then
+              echo "deepl-mock server is ready"
+              break
+            fi
+            echo "Waiting for deepl-mock server to be ready..."
+            sleep 1
+          done
+
+      - name: Test deepl-mock server with curl
+        run: |
+          curl -X POST 'http://localhost:3001/v2/translate' \
+            --header 'Authorization: DeepL-Auth-Key [mock]' \
+            --header 'Content-Type: application/json' \
+            --data '{"text":["proton beam"],"target_lang":"DE"}'
+
+      - name: Install dependencies
+        run: shards install --without-development
+
+      - name: Run tests
+        run: crystal spec
+
+      - name: Build executable
+        run: shards build
+        env:
+          DEEPL_SERVER_URL: http://localhost:3000
+
+      - name: Run executable
+        run: |
+          bin/deepl -i "proton beam" -t DE --debug
+        env:
+          HTTP_PROXY: http://localhost:3001
+          DEEPL_AUTH_KEY: mock
