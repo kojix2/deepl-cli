@@ -72,6 +72,7 @@ jobs:
           bin/deepl -f
           bin/deepl -u
           bin/deepl glossary list
+          bin/deepl doc spec/fixtures/proton_beams.txt -t DE
         env:
           HTTP_PROXY: http://localhost:3001
           DEEPL_AUTH_KEY: mock
