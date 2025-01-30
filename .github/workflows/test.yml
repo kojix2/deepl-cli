@@ -68,6 +68,10 @@ jobs:
       - name: Run executable
         run: |
           bin/deepl -i "proton beam" -t DE --debug
+          bin/deepl -t
+          bin/deepl -f
+          bin/deepl -u
+          bin/deepl glossary list
         env:
           HTTP_PROXY: http://localhost:3001
           DEEPL_AUTH_KEY: mock
