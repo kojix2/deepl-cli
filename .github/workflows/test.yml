@@ -68,16 +68,19 @@ jobs:
       - name: Build executable
         run: shards build
 
-      - name: Run executable
+      - name: Run executable (version/help/usage)
         run: |
           set -eux
-          # --- version ---
           bin/deepl --version
           bin/deepl -v
-          # --- help ---
           bin/deepl --help
           bin/deepl -h
-          # --- translate text ---
+          bin/deepl --usage
+          bin/deepl -u
+
+      - name: Run executable (translate text)
+        run: |
+          set -eux
           bin/deepl -i "proton beam" -f EN -t DE
           bin/deepl --input "proton beam" --from EN --to DE
           cat spec/fixtures/proton_beams.txt | bin/deepl -f EN -t DE
@@ -85,13 +88,29 @@ jobs:
           bin/deepl -f EN -t DE -i "proton beam" -o translated.txt && cat translated.txt
           bin/deepl -t
           bin/deepl -f
-          # --- glossary ---
+
+      - name: Run executable (glossary)
+        run: |
+          set -eux
           bin/deepl glossary list
-          # --- translate document ---
+          crystal eval 'puts "sourceEntry1\ttargetEntry1\nsourceEntry2\ttargetEntry2"' > glossary.tsv
+          bin/deepl glossary create -n "Test Glossary" -f EN -t DE glossary.tsv
+          bin/deepl glossary list
+          bin/deepl glossary view "Test Glossary"
+          bin/deepl glossary delete "Test Glossary"
+          bin/deepl glossary -l
+          bin/deepl glossary -p
+          bin/deepl glossary -h
+          bin/deepl glossary list -h
+          bin/deepl glossary create -h
+          bin/deepl glossary delete -h
+          bin/deepl glossary edit -h
+          bin/deepl glossary view -h
+
+      - name: Run executable (translate document)
+        run: |
+          set -eux
           bin/deepl doc spec/fixtures/proton_beams.txt -t DE && cat spec/fixtures/proton_beams_DE.txt
-          # --- usage ---
-          bin/deepl --usage
-          bin/deepl -u
 
       - name: Stop deepl-mock server
         if: always()
