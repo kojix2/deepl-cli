@@ -7,11 +7,16 @@ on:
     - cron: "51 3 * * 6" # Runs at 03:51, only on Saturday
 
 jobs:
-  build:
+  test:
     name: ubuntu
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+
+    env:
+      HTTP_PROXY: http://localhost:3001
+      DEEPL_SERVER_URL: http://localhost:3000
+      DEEPL_AUTH_KEY: mock
 
     steps:
       - uses: actions/checkout@v4
@@ -49,9 +54,9 @@ jobs:
 
       - name: Test deepl-mock server with curl
         run: |
-          curl -X POST 'http://localhost:3001/v2/translate' \
-            --header 'Authorization: DeepL-Auth-Key [mock]' \
-            --header 'Content-Type: application/json' \
+          curl -X POST "${HTTP_PROXY}/v2/translate" \
+            --header "Authorization: DeepL-Auth-Key ${DEEPL_AUTH_KEY}" \
+            --header "Content-Type: application/json" \
             --data '{"text":["proton beam"],"target_lang":"DE"}'
 
       - name: Install dependencies
@@ -62,17 +67,17 @@ jobs:
 
       - name: Build executable
         run: shards build
-        env:
-          DEEPL_SERVER_URL: http://localhost:3000
 
       - name: Run executable
         run: |
+          set -eux
           bin/deepl -i "proton beam" -t DE --debug
           bin/deepl -t
           bin/deepl -f
           bin/deepl -u
           bin/deepl glossary list
           bin/deepl doc spec/fixtures/proton_beams.txt -t DE
-        env:
-          HTTP_PROXY: http://localhost:3001
-          DEEPL_AUTH_KEY: mock
+
+      - name: Stop deepl-mock server
+        if: always()
+        run: docker stop deepl-mock || true

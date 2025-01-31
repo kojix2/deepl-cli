@@ -7,7 +7,7 @@ on:
     - cron: "51 3 * * 6" # Runs at 03:51, only on Saturday
 jobs:
   build:
-    name: ${{ matrix.os }}
+    name: build ${{ matrix.os }}
     runs-on: ${{ matrix.os }}-latest
     strategy:
       fail-fast: false

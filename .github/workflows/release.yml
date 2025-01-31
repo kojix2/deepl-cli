@@ -6,8 +6,8 @@ on:
       - "v*"
 
 jobs:
-  build_release:
-    name: Build Release ${{ matrix.os }}
+  release:
+    name: build release ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu, macos, windows]
