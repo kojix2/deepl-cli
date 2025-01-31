@@ -430,7 +430,7 @@ module DeepL
     end
 
     def print_version
-      puts "deepl-cli #{VERSION}"
+      puts VERSION_STRING
     end
 
     def print_help
