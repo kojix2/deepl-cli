@@ -2,9 +2,9 @@
 
 [![build](https://github.com/kojix2/deepl-cli/actions/workflows/build.yml/badge.svg)](https://github.com/kojix2/deepl-cli/actions/workflows/build.yml)
 
-DeepL CLI is a simple command-line tool for the [DeepL API](https://www.deepl.com/pro-api/), written in [Crystal](https://github.com/crystal-lang/crystal).
+DeepL CLI is a fast and lightweight command-line tool for the [DeepL API](https://www.deepl.com/pro-api/), written in [Crystal](https://github.com/crystal-lang/crystal).
 
-- Supports document translation `pdf`, `docx`, `txt`, etc. 
+- Supports document translation `pdf`, `docx`, `txt`, etc.
 - Supports glossaries
 - Precompiled binaries available
 
