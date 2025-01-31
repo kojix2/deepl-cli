@@ -197,7 +197,7 @@ module DeepL
       document_key = option.document_key.not_nil!
       output_file = option.output_file.not_nil!
       document_handle = DocumentHandle.new(document_id, document_key)
-      translator.translate_document_download(output_file, handle: document_handle)
+      translator.translate_document_download(document_handle, output_file)
     end
 
     def print_glossary_language_pairs
