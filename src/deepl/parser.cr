@@ -30,7 +30,7 @@ module DeepL
       opt.action = {{action}}
       @handlers.clear
       @flags.clear
-      self.banner = {{banner}}
+      self.banner = "\n{{banner.id}}}\n"
     end
 
     def initialize
@@ -45,15 +45,18 @@ module DeepL
         Source:  https://github.com/kojix2/deepl-cli
 
         Usage: deepl [options] <file>
+
         BANNER
 
-      separator
       separator "Commands:"
 
       on("text", "Translate text (default)") do
         # Reuse the options of the main command.
-        opt.action = Action::TranslateText
-        self.banner = "Usage: deepl text [options]"
+        self.banner = <<-BANNER
+
+          Usage: deepl text [options] <text>
+
+        BANNER
 
         @handlers.reject! %w(-h --help -d --debug -v --version -u --usage)
         @flags.pop(4)
@@ -201,6 +204,8 @@ module DeepL
 
           _on_help_
         end
+
+        separator
 
         on("-l", "--list", "List glossaries (short form)") do
           opt.action = Action::ListGlossaries
