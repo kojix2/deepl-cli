@@ -408,7 +408,7 @@ module DeepL
 
     private def print_langinfo(
       langinfo : Array(LanguageInfo),
-      default : String? = nil
+      default : String? = nil,
     ) : Nil
       langinfo.each do |info|
         abbrev = info.language
