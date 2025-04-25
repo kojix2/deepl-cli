@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.14.0">
+<meta name="generator" content="Crystal Docs 1.15.1">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="deepl-cli">
 
@@ -121,9 +121,13 @@
 <div class="main-content">
 <h1 class="type-name">
 
-  <span class="kind">enum</span> DeepL::<wbr>Action
+  <span class="kind">
+    enum
+  </span> DeepL::<wbr>Action
 
 </h1>
+
+
 
 
 
@@ -152,7 +156,7 @@
   </h2>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L2" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L2" target="_blank">
         deepl/action.cr
       </a>
     
@@ -187,83 +191,98 @@
       </dd>
       
     
+      <dt class="entry-const" id="TranslateDocumentUpload">
+        <strong>TranslateDocumentUpload</strong> = <code><span class="n">2_u8</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="TranslateDocumentStatus">
+        <strong>TranslateDocumentStatus</strong> = <code><span class="n">3_u8</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="TranslateDocumentDownload">
+        <strong>TranslateDocumentDownload</strong> = <code><span class="n">4_u8</span></code>
+      </dt>
+      
+    
       <dt class="entry-const" id="ListGlossaryLanguagePairs">
-        <strong>ListGlossaryLanguagePairs</strong> = <code><span class="n">2_u8</span></code>
+        <strong>ListGlossaryLanguagePairs</strong> = <code><span class="n">5_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="CreateGlossary">
-        <strong>CreateGlossary</strong> = <code><span class="n">3_u8</span></code>
+        <strong>CreateGlossary</strong> = <code><span class="n">6_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="DeleteGlossaryByName">
-        <strong>DeleteGlossaryByName</strong> = <code><span class="n">4_u8</span></code>
+        <strong>DeleteGlossaryByName</strong> = <code><span class="n">7_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="DeleteGlossaryById">
-        <strong>DeleteGlossaryById</strong> = <code><span class="n">5_u8</span></code>
+        <strong>DeleteGlossaryById</strong> = <code><span class="n">8_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="EditGlossaryByName">
-        <strong>EditGlossaryByName</strong> = <code><span class="n">6_u8</span></code>
+        <strong>EditGlossaryByName</strong> = <code><span class="n">9_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="EditGlossaryById">
-        <strong>EditGlossaryById</strong> = <code><span class="n">7_u8</span></code>
+        <strong>EditGlossaryById</strong> = <code><span class="n">10_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="OutputGlossaryEntriesByName">
-        <strong>OutputGlossaryEntriesByName</strong> = <code><span class="n">8_u8</span></code>
+        <strong>OutputGlossaryEntriesByName</strong> = <code><span class="n">11_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="OutputGlossaryEntriesById">
-        <strong>OutputGlossaryEntriesById</strong> = <code><span class="n">9_u8</span></code>
+        <strong>OutputGlossaryEntriesById</strong> = <code><span class="n">12_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="ListGlossaries">
-        <strong>ListGlossaries</strong> = <code><span class="n">10_u8</span></code>
+        <strong>ListGlossaries</strong> = <code><span class="n">13_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="ListGlossariesLong">
-        <strong>ListGlossariesLong</strong> = <code><span class="n">11_u8</span></code>
+        <strong>ListGlossariesLong</strong> = <code><span class="n">14_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="ListFromLanguages">
-        <strong>ListFromLanguages</strong> = <code><span class="n">12_u8</span></code>
+        <strong>ListFromLanguages</strong> = <code><span class="n">15_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="ListTargetLanguages">
-        <strong>ListTargetLanguages</strong> = <code><span class="n">13_u8</span></code>
+        <strong>ListTargetLanguages</strong> = <code><span class="n">16_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="RetrieveUsage">
-        <strong>RetrieveUsage</strong> = <code><span class="n">14_u8</span></code>
+        <strong>RetrieveUsage</strong> = <code><span class="n">17_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="Version">
-        <strong>Version</strong> = <code><span class="n">15_u8</span></code>
+        <strong>Version</strong> = <code><span class="n">18_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="Help">
-        <strong>Help</strong> = <code><span class="n">16_u8</span></code>
+        <strong>Help</strong> = <code><span class="n">19_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="None">
-        <strong>None</strong> = <code><span class="n">17_u8</span></code>
+        <strong>None</strong> = <code><span class="n">20_u8</span></code>
       </dt>
       
     
@@ -271,12 +290,13 @@
 
 
 
+  
 
+  
 
+  
 
-
-
-
+  
   <h2>
     <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
   <svg class="octicon-link" aria-hidden="true">
@@ -290,90 +310,147 @@
       <li class="entry-summary">
         <a href="#create_glossary%3F-instance-method" class="signature"><strong>#create_glossary?</strong></a>
         
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#CreateGlossary">CreateGlossary</a></code></p></div>
+        
       </li>
     
       <li class="entry-summary">
         <a href="#delete_glossary_by_id%3F-instance-method" class="signature"><strong>#delete_glossary_by_id?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#DeleteGlossaryById">DeleteGlossaryById</a></code></p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#delete_glossary_by_name%3F-instance-method" class="signature"><strong>#delete_glossary_by_name?</strong></a>
         
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#DeleteGlossaryByName">DeleteGlossaryByName</a></code></p></div>
+        
       </li>
     
       <li class="entry-summary">
         <a href="#edit_glossary_by_id%3F-instance-method" class="signature"><strong>#edit_glossary_by_id?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#EditGlossaryById">EditGlossaryById</a></code></p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#edit_glossary_by_name%3F-instance-method" class="signature"><strong>#edit_glossary_by_name?</strong></a>
         
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#EditGlossaryByName">EditGlossaryByName</a></code></p></div>
+        
       </li>
     
       <li class="entry-summary">
         <a href="#help%3F-instance-method" class="signature"><strong>#help?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#Help">Help</a></code></p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#list_from_languages%3F-instance-method" class="signature"><strong>#list_from_languages?</strong></a>
         
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#ListFromLanguages">ListFromLanguages</a></code></p></div>
+        
       </li>
     
       <li class="entry-summary">
         <a href="#list_glossaries%3F-instance-method" class="signature"><strong>#list_glossaries?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#ListGlossaries">ListGlossaries</a></code></p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#list_glossaries_long%3F-instance-method" class="signature"><strong>#list_glossaries_long?</strong></a>
         
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#ListGlossariesLong">ListGlossariesLong</a></code></p></div>
+        
       </li>
     
       <li class="entry-summary">
         <a href="#list_glossary_language_pairs%3F-instance-method" class="signature"><strong>#list_glossary_language_pairs?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#ListGlossaryLanguagePairs">ListGlossaryLanguagePairs</a></code></p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#list_target_languages%3F-instance-method" class="signature"><strong>#list_target_languages?</strong></a>
         
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#ListTargetLanguages">ListTargetLanguages</a></code></p></div>
+        
       </li>
     
       <li class="entry-summary">
         <a href="#none%3F-instance-method" class="signature"><strong>#none?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#None">None</a></code></p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#output_glossary_entries_by_id%3F-instance-method" class="signature"><strong>#output_glossary_entries_by_id?</strong></a>
         
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#OutputGlossaryEntriesById">OutputGlossaryEntriesById</a></code></p></div>
+        
       </li>
     
       <li class="entry-summary">
         <a href="#output_glossary_entries_by_name%3F-instance-method" class="signature"><strong>#output_glossary_entries_by_name?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#OutputGlossaryEntriesByName">OutputGlossaryEntriesByName</a></code></p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#retrieve_usage%3F-instance-method" class="signature"><strong>#retrieve_usage?</strong></a>
         
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#RetrieveUsage">RetrieveUsage</a></code></p></div>
+        
       </li>
     
       <li class="entry-summary">
         <a href="#translate_document%3F-instance-method" class="signature"><strong>#translate_document?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#TranslateDocument">TranslateDocument</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#translate_document_download%3F-instance-method" class="signature"><strong>#translate_document_download?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#TranslateDocumentDownload">TranslateDocumentDownload</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#translate_document_status%3F-instance-method" class="signature"><strong>#translate_document_status?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#TranslateDocumentStatus">TranslateDocumentStatus</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#translate_document_upload%3F-instance-method" class="signature"><strong>#translate_document_upload?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#TranslateDocumentUpload">TranslateDocumentUpload</a></code></p></div>
         
       </li>
     
       <li class="entry-summary">
         <a href="#translate_text%3F-instance-method" class="signature"><strong>#translate_text?</strong></a>
         
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#TranslateText">TranslateText</a></code></p></div>
+        
       </li>
     
       <li class="entry-summary">
         <a href="#version%3F-instance-method" class="signature"><strong>#version?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#Version">Version</a></code></p></div>
         
       </li>
     
@@ -381,69 +458,69 @@
 
 
 
-<div class="methods-inherited">
+  <div class="methods-inherited">
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+
+    
+  </div>
+
   
-    
-
-
-    
-
-
-    
-
-
-    
-
 
   
-    
-
-
-    
-
-
-    
-
-
-    
-
 
   
-    
-
-
-    
-
-
-    
-
-
-    
-
 
   
-    
-
-
-    
-
-
-    
-
-
-    
-
-
-  
-</div>
-
-
-
-
-
-
-
-
   <h2>
     <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
   <svg class="octicon-link" aria-hidden="true">
@@ -461,10 +538,15 @@
         <a class="method-permalink" href="#create_glossary%3F-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#CreateGlossary">CreateGlossary</a></code></p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -477,10 +559,15 @@
         <a class="method-permalink" href="#delete_glossary_by_id%3F-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#DeleteGlossaryById">DeleteGlossaryById</a></code></p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -493,10 +580,15 @@
         <a class="method-permalink" href="#delete_glossary_by_name%3F-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#DeleteGlossaryByName">DeleteGlossaryByName</a></code></p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L11" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -509,10 +601,15 @@
         <a class="method-permalink" href="#edit_glossary_by_id%3F-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#EditGlossaryById">EditGlossaryById</a></code></p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L11" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L14" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -525,10 +622,15 @@
         <a class="method-permalink" href="#edit_glossary_by_name%3F-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#EditGlossaryByName">EditGlossaryByName</a></code></p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L13" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -541,10 +643,15 @@
         <a class="method-permalink" href="#help%3F-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#Help">Help</a></code></p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L20" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L23" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -557,10 +664,15 @@
         <a class="method-permalink" href="#list_from_languages%3F-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#ListFromLanguages">ListFromLanguages</a></code></p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L16" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L19" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -573,10 +685,15 @@
         <a class="method-permalink" href="#list_glossaries%3F-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#ListGlossaries">ListGlossaries</a></code></p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L14" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -589,10 +706,15 @@
         <a class="method-permalink" href="#list_glossaries_long%3F-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#ListGlossariesLong">ListGlossariesLong</a></code></p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L15" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -605,10 +727,15 @@
         <a class="method-permalink" href="#list_glossary_language_pairs%3F-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#ListGlossaryLanguagePairs">ListGlossaryLanguagePairs</a></code></p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L6" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -621,10 +748,15 @@
         <a class="method-permalink" href="#list_target_languages%3F-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#ListTargetLanguages">ListTargetLanguages</a></code></p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L20" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -637,10 +769,15 @@
         <a class="method-permalink" href="#none%3F-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#None">None</a></code></p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -653,10 +790,15 @@
         <a class="method-permalink" href="#output_glossary_entries_by_id%3F-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#OutputGlossaryEntriesById">OutputGlossaryEntriesById</a></code></p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L16" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -669,10 +811,15 @@
         <a class="method-permalink" href="#output_glossary_entries_by_name%3F-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#OutputGlossaryEntriesByName">OutputGlossaryEntriesByName</a></code></p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L15" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -685,10 +832,15 @@
         <a class="method-permalink" href="#retrieve_usage%3F-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#RetrieveUsage">RetrieveUsage</a></code></p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -701,10 +853,78 @@
         <a class="method-permalink" href="#translate_document%3F-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#TranslateDocument">TranslateDocument</a></code></p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L5" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L5" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="translate_document_download?-instance-method">
+      <div class="signature">
+        
+        def <strong>translate_document_download?</strong>
+
+        <a class="method-permalink" href="#translate_document_download%3F-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#TranslateDocumentDownload">TranslateDocumentDownload</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L8" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="translate_document_status?-instance-method">
+      <div class="signature">
+        
+        def <strong>translate_document_status?</strong>
+
+        <a class="method-permalink" href="#translate_document_status%3F-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#TranslateDocumentStatus">TranslateDocumentStatus</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L7" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="translate_document_upload?-instance-method">
+      <div class="signature">
+        
+        def <strong>translate_document_upload?</strong>
+
+        <a class="method-permalink" href="#translate_document_upload%3F-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#TranslateDocumentUpload">TranslateDocumentUpload</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L6" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -717,10 +937,15 @@
         <a class="method-permalink" href="#translate_text%3F-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#TranslateText">TranslateText</a></code></p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L3" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L3" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -733,14 +958,20 @@
         <a class="method-permalink" href="#version%3F-instance-method">#</a>
       </div>
       
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#Version">Version</a></code></p>
+        </div>
+      
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/aa9ad065d1b25b54590cb5d009baeb2da77b886f/src/deepl/action.cr#L19" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/485481ac8f92c407a5d3c770c9129f42c4400d3b/src/deepl/action.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
   
+
 
 
 </div>
