@@ -22,6 +22,12 @@ module DeepL
         translate_text
       when Action::TranslateDocument
         translate_document
+      when Action::TranslateDocumentUpload
+        upload_document_to_translate
+      when Action::TranslateDocumentStatus
+        check_document_translation_status
+      when Action::TranslateDocumentDownload
+        download_translated_document
       when Action::ListGlossaryLanguagePairs
         print_glossary_language_pairs
       when Action::CreateGlossary
@@ -112,7 +118,8 @@ module DeepL
           ignore_tags: option.ignore_tags,
           glossary_name: option.glossary_name, # original option of deepl.cr
           context: option.context,
-          show_billed_characters: option.show_billed_characters
+          show_billed_characters: option.show_billed_characters,
+          model_type: option.model_type
         )
       end
 
@@ -125,6 +132,9 @@ module DeepL
         if option.show_billed_characters
           STDERR.puts "[deepl-cli] Billed characters: #{r.billed_characters}"
         end
+        # if option.show_model_type && r.model_type_used
+        #   STDERR.puts "[deepl-cli] Model type used: #{r.model_type_used}"
+        # end
         output.puts r.text
       end
       if output_file = option.output_file
@@ -161,6 +171,37 @@ module DeepL
           STDERR.puts avoid_spinner(progress)
         end
       end
+    end
+
+    def upload_document_to_translate
+      raise NotImplementedError.new("This action is not implemented yet")
+    end
+
+    def check_document_translation_status
+      translator = DeepL::Translator.new
+      if option.document_id.nil? || option.document_key.nil?
+        raise "Document ID or key is not specified"
+      end
+      document_id = option.document_id.not_nil!
+      document_key = option.document_key.not_nil!
+      document_handle = DocumentHandle.new(document_id, document_key)
+      status = translator.translate_document_get_status(document_handle)
+      puts status
+    end
+
+    def download_translated_document
+      translator = DeepL::Translator.new
+      if option.document_id.nil? || option.document_key.nil?
+        raise "Document ID or key is not specified"
+      end
+      if option.output_file.nil?
+        raise "Output file is not specified"
+      end
+      document_id = option.document_id.not_nil!
+      document_key = option.document_key.not_nil!
+      output_file = option.output_file.not_nil!
+      document_handle = DocumentHandle.new(document_id, document_key)
+      translator.translate_document_download(document_handle, output_file)
     end
 
     def print_glossary_language_pairs

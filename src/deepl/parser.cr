@@ -97,6 +97,42 @@ module DeepL
       on("doc", "Translate document") do
         _set_action_(Action::TranslateDocument, "Usage: deepl doc [options] <file>")
 
+        on("status", "Check translation status") do
+          _set_action_(Action::TranslateDocumentStatus, "Usage: deepl doc status [options]")
+
+          on("-i", "--id", "Document ID (required)") do |id|
+            opt.document_id = id
+          end
+
+          on("-k", "--key", "Document key (required)") do |key|
+            opt.document_key = key
+          end
+
+          _on_debug_
+
+          _on_help_
+        end
+
+        on("download", "Download translated document") do
+          _set_action_(Action::TranslateDocumentDownload, "Usage: deepl doc download [options]")
+
+          on("-i", "--id", "Document ID (required)") do |id|
+            opt.document_id = id
+          end
+
+          on("-k", "--key", "Document key (required)") do |key|
+            opt.document_key = key
+          end
+
+          on("-o", "--output FILE", "Output file") do |file|
+            opt.output_file = Path[file]
+          end
+
+          _on_debug_
+
+          _on_help_
+        end
+
         on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
           opt.source_lang = from.upcase
         end
@@ -223,6 +259,56 @@ module DeepL
 
       separator
       separator "Options:"
+
+      on("text", "Translate text (default)") do
+        # Reuse the options of the main command.
+        opt.action = Action::TranslateText
+        self.banner = "Usage: deepl text [options]"
+
+        @handlers.reject! %w(-h --help -d --debug -v --version -u --usage)
+        @flags.pop(4)
+
+        on("-s", "--split-sentences OPT", "Split sentences") do |v|
+          opt.split_sentences = v
+        end
+
+        on("-P", "--preserve-formatting", "Preserve formatting") do
+          opt.preserve_formatting = true
+        end
+
+        on("-T", "--tag-handling OPT", "Tag handling") do |v|
+          opt.tag_handling = v
+        end
+
+        on("-O", "--outline-detection", "Outline detection") do
+          opt.outline_detection = true
+        end
+
+        on("-N", "--non-splitting-tags TAGS", "Non-splitting tags") do |tags|
+          opt.non_splitting_tags = tags.split(",")
+        end
+
+        on("-S", "--splitting-tags TAGS", "Splitting tags") do |tags|
+          opt.splitting_tags = tags.split(",")
+        end
+
+        on("-I", "--ignore-tags TAGS", "Ignore tags") do |tags|
+          opt.ignore_tags = tags.split(",")
+        end
+
+        on("-M", "--model TYPE", "Model type") do |type|
+          opt.model_type = type
+        end
+
+        # This option is useful for debugging.
+        # on("--show-model-type", "Output model type used") do
+        #   opt.show_model_type = true
+        # end
+
+        _on_debug_
+
+        _on_help_
+      end
 
       on("-i", "--input TEXT", "Input text") do |text|
         opt.input_text = text
