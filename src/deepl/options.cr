@@ -28,5 +28,8 @@ module DeepL
     # # document handle
     property document_id : String? = nil
     property document_key : String? = nil
+    # # model type
+    property model_type : String? = nil
+    # property show_model_type : Bool = false
   end
 end

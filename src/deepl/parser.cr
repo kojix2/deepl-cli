@@ -244,6 +244,15 @@ module DeepL
           opt.ignore_tags = tags.split(",")
         end
 
+        on("-M", "--model TYPE", "Model type") do |type|
+          opt.model_type = type
+        end
+
+        # This option is useful for debugging.
+        # on("--show-model-type", "Output model type used") do
+        #   opt.show_model_type = true
+        # end
+
         _on_debug_
 
         _on_help_

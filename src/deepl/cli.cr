@@ -118,7 +118,8 @@ module DeepL
           ignore_tags: option.ignore_tags,
           glossary_name: option.glossary_name, # original option of deepl.cr
           context: option.context,
-          show_billed_characters: option.show_billed_characters
+          show_billed_characters: option.show_billed_characters,
+          model_type: option.model_type
         )
       end
 
@@ -131,6 +132,9 @@ module DeepL
         if option.show_billed_characters
           STDERR.puts "[deepl-cli] Billed characters: #{r.billed_characters}"
         end
+        # if option.show_model_type && r.model_type_used
+        #   STDERR.puts "[deepl-cli] Model type used: #{r.model_type_used}"
+        # end
         output.puts r.text
       end
       if output_file = option.output_file
