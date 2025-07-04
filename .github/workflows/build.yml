@@ -29,6 +29,9 @@ jobs:
         run: crystal spec
       - name: Build executable
         run: shards build --release
+      - name: Show dependent libraries (macOS)
+        if: matrix.os == 'macos'
+        run: otool -L bin/deepl)
       - name: Run executable (help)
         run: bin/deepl --help
       - uses: actions/upload-artifact@v4
