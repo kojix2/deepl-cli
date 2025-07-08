@@ -39,7 +39,7 @@ jobs:
           OPENSSL_PREFIX=$(brew --prefix openssl@1.1)
           readlink -f $OPENSSL_PREFIX/lib/libssl.a
           readlink -f $OPENSSL_PREFIX/lib/libcrypto.a
-          shards build --release --link-flags="$OPENSSL_PREFIX/lib/libssl.a $OPENSSL_PREFIX/lib/libcrypto.a -lssl -lcrypto"
+          shards build --release --link-flags="/opt/homebrew/Cellar/openssl@1.1/1.1.1w/lib/libssl.a  /opt/homebrew/Cellar/openssl@1.1/1.1.1w/lib/libcrypto.a -lssl -lcrypto"
           otool -L bin/deepl
       - name: Run executable (help)
         run: bin/deepl --help
