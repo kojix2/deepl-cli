@@ -19,7 +19,7 @@ dependencies:
     github: kojix2/easyclip
     branch: main
   term-spinner:
-    github: crystal-term/spinner
+    github: kojix2/spinner2
     branch: master
   term-prompt:
     github: crystal-term/prompt
