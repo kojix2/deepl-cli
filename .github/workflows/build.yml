@@ -36,6 +36,7 @@ jobs:
       - name: Build executable (macOS)
         if: matrix.os == 'macos'
         run: |
+          brew install openssl@3
           OPENSSL_PREFIX=$(brew --prefix openssl@3)
           shards build --release --link-flags="$OPENSSL_PREFIX/lib/libssl.a $OPENSSL_PREFIX/lib/libcrypto.a -lz -liconv"
           otool -L bin/deepl
