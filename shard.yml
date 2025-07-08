@@ -11,7 +11,7 @@ targets:
 dependencies:
   deepl:
     github: kojix2/deepl.cr
-    branch: main
+    version: "0.0.10"
   crest:
     github: mamantoha/crest
     version: "~> 1.3"
@@ -20,9 +20,9 @@ dependencies:
     branch: main
   term-spinner:
     github: kojix2/spinner2
-    branch: master
+    version: "0.2.0"
   term-prompt:
     github: crystal-term/prompt
-    branch: master
+    version: "0.2.0"
 
 license: MIT
