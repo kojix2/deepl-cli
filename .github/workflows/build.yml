@@ -28,6 +28,16 @@ jobs:
       - name: Run tests
         run: crystal spec
       - name: Build executable
+        if: matrix.os == "macos"
+        run: |
+          brew update
+          brew install openssl@3
+          ln -s $(brew ls openssl@3 | grep libssl.a) .
+          ln -s $(brew ls openssl@3 | grep libcrypto.a) .
+          shards build --release --build-flags="-L$(pwd) $(pwd)/libssl.a $(pwd)/libcrypto.a"
+          otool -L bin/deepl
+      - name: Build executable
+        if: matrix.os != "macos"
         run: shards build --release
       - name: Show dependent libraries (macOS)
         if: matrix.os == 'macos'
