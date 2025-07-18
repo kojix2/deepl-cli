@@ -466,8 +466,11 @@ module DeepL
 
     def print_usage
       translator = DeepL::Translator.new
+      usage = translator.get_usage
       puts translator.server_url
-      puts translator.get_usage.map { |k, v| "#{k}: #{v}" }.join("\n")
+      puts "character_count: #{usage.character_count}"
+      puts "character_limit: #{usage.character_limit}"
+      # TODO: Print more details for Pro accounts
     end
 
     def print_version
