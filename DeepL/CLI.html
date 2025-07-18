@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Crystal Docs 1.15.1">
+<meta name="generator" content="Crystal Docs 1.16.3">
 <meta name="crystal_docs.project_version" content="main">
 <meta name="crystal_docs.project_name" content="deepl-cli">
 
@@ -158,14 +158,14 @@
   </h2>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L9" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L9" target="_blank">
         deepl/cli.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli/version.cr#L2" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli/version.cr#L2" target="_blank">
         deepl/cli/version.cr
       </a>
     
@@ -194,12 +194,10 @@
       <dt class="entry-const" id="VERSION_STRING">
         <strong>VERSION_STRING</strong> = <code><span class="k">if</span> (<span class="t">Translator</span><span class="t">::</span><span class="t">DEEPL_SERVER_URL</span> <span class="o">!=</span> <span class="t">Translator</span><span class="t">::</span><span class="t">DEEPL_DEFAULT_SERVER_URL</span>)
   <span class="s">&quot;deepl-cli </span><span class="i">#{</span><span class="t">VERSION</span><span class="i">}</span><span class="s"> (</span><span class="i">#{</span><span class="t">Translator</span><span class="t">::</span><span class="t">DEEPL_SERVER_URL</span><span class="i">}</span><span class="s">)&quot;</span>
+<span class="k">elsif</span> (<span class="t">Translator</span><span class="t">::</span><span class="t">DEEPL_SERVER_URL_FREE</span> <span class="o">!=</span> <span class="t">Translator</span><span class="t">::</span><span class="t">DEEPL_DEFAULT_SERVER_URL_FREE</span>)
+  <span class="s">&quot;deepl-cli </span><span class="i">#{</span><span class="t">VERSION</span><span class="i">}</span><span class="s"> (</span><span class="i">#{</span><span class="t">Translator</span><span class="t">::</span><span class="t">DEEPL_SERVER_URL_FREE</span><span class="i">}</span><span class="s">)&quot;</span>
 <span class="k">else</span>
-  <span class="k">if</span> (<span class="t">Translator</span><span class="t">::</span><span class="t">DEEPL_SERVER_URL_FREE</span> <span class="o">!=</span> <span class="t">Translator</span><span class="t">::</span><span class="t">DEEPL_DEFAULT_SERVER_URL_FREE</span>)
-    <span class="s">&quot;deepl-cli </span><span class="i">#{</span><span class="t">VERSION</span><span class="i">}</span><span class="s"> (</span><span class="i">#{</span><span class="t">Translator</span><span class="t">::</span><span class="t">DEEPL_SERVER_URL_FREE</span><span class="i">}</span><span class="s">)&quot;</span>
-  <span class="k">else</span>
-    <span class="s">&quot;deepl-cli </span><span class="i">#{</span><span class="t">VERSION</span><span class="i">}</span><span class="s">&quot;</span>
-  <span class="k">end</span>
+  <span class="s">&quot;deepl-cli </span><span class="i">#{</span><span class="t">VERSION</span><span class="i">}</span><span class="s">&quot;</span>
 <span class="k">end</span></code>
       </dt>
       
@@ -459,7 +457,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L14" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L14" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -487,7 +485,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -503,7 +501,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -533,7 +531,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L262" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L262" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -549,7 +547,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L253" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L253" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -565,7 +563,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L180" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L180" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -581,7 +579,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L225" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L225" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -597,7 +595,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L308" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L308" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -613,7 +611,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L299" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L299" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -629,7 +627,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L192" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L192" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -645,7 +643,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L343" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L343" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -661,7 +659,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L318" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L318" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -677,7 +675,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L352" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L352" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -693,7 +691,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -709,7 +707,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L396" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L396" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -725,7 +723,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L380" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L380" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -741,7 +739,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L11" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L11" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -757,7 +755,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L207" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L207" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -773,7 +771,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L412" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L412" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -789,7 +787,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L421" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L421" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -805,7 +803,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L477" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L480" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -821,7 +819,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L437" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L437" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -837,7 +835,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L443" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L443" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -853,7 +851,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L467" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L467" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -869,7 +867,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L473" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L476" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -885,7 +883,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L19" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L19" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -901,7 +899,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L280" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L280" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -917,7 +915,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L271" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L271" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -933,7 +931,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L146" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L146" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -949,7 +947,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L95" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L95" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -965,7 +963,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/82f432fd560ab6cbf843f3a6a8958f0dcba43b10/src/deepl/cli.cr#L176" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/cb21944cd8bfddac0480c8cc1ffb5c50c3b14f53/src/deepl/cli.cr#L176" target="_blank">View source</a>]
         
       </div>
     </div>
