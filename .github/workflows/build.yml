@@ -27,7 +27,31 @@ jobs:
         run: shards install --without-development --release
       - name: Run tests
         run: crystal spec
-      - name: Build executable
+      - name: Build executable (macOS - Static Linking)
+        if: matrix.os == 'macos'
+        run: |
+          brew update
+          brew install libgc pcre2 openssl@3 readline ncurses
+          ln -s $(brew ls libgc | grep libgc.a) .
+          ln -s $(brew ls pcre2 | grep libpcre2-8.a) .
+          ln -s $(brew ls openssl@3 | grep libssl.a) .
+          ln -s $(brew ls openssl@3 | grep libcrypto.a) .
+          ln -s $(brew ls readline | grep libreadline.a) .
+          ln -s $(brew ls ncurses | grep libncurses.a) .
+          ls -l *.a
+          export PKG_CONFIG_PATH="/opt/homebrew/opt/openssl@3/lib/pkgconfig:${PKG_CONFIG_PATH}"
+          STATIC_LIBS="-L $(pwd)"
+          STATIC_LIBS="$STATIC_LIBS $(pwd)/libgc.a"
+          STATIC_LIBS="$STATIC_LIBS $(pwd)/libpcre2-8.a"
+          STATIC_LIBS="$STATIC_LIBS $(pwd)/libssl.a"
+          STATIC_LIBS="$STATIC_LIBS $(pwd)/libcrypto.a"
+          STATIC_LIBS="$STATIC_LIBS $(pwd)/libreadline.a"
+          STATIC_LIBS="$STATIC_LIBS $(pwd)/libncurses.a"
+          STATIC_LIBS="$STATIC_LIBS -Wl,-search_paths_first"
+          echo "Link flags: $STATIC_LIBS"
+          shards build --link-flags="$STATIC_LIBS" --release
+      - name: Build executable (Non-macOS)
+        if: matrix.os != 'macos'
         run: shards build --release
       - name: Show dependent libraries (macOS)
         if: matrix.os == 'macos'
