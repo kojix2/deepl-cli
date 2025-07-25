@@ -61,7 +61,8 @@ jobs:
           docker exec alpine shards install --without-development --release --static
           docker exec alpine shards build --release --static
           docker exec alpine chmod +x bin/$BIN
-
+          ldd bin/$BIN
+          bin/$BIN --version
           PKG=deepl-${VERSION}-${{ matrix.target }}
           mkdir -p $PKG
           cp bin/$BIN $PKG/
@@ -85,7 +86,8 @@ jobs:
           STATIC_LIBS="-L $(pwd) $(pwd)/libgc.a $(pwd)/libpcre2-8.a $(pwd)/libssl.a $(pwd)/libcrypto.a $(pwd)/libreadline.a $(pwd)/libncurses.a -Wl,-search_paths_first"
           shards build --link-flags="$STATIC_LIBS" --release
           chmod +x bin/$BIN
-
+          otool -L bin/$BIN
+          bin/$BIN --version
           PKG=deepl-${VERSION}-${{ matrix.target }}
           mkdir -p $PKG
           cp bin/$BIN $PKG/
@@ -99,6 +101,7 @@ jobs:
         run: |
           shards install --without-development --release
           shards build --release --static
+          bin/deepl --version
           $pkg = "deepl-$env:VERSION-windows-x86_64"
           mkdir $pkg
           Copy-Item "bin/$env:BIN.exe" "$pkg/"
