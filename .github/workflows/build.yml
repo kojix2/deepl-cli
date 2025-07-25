@@ -45,6 +45,9 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "BIN=deepl" >> $GITHUB_ENV
 
+      - name: Install dependencies
+        run: shards install --without-development
+
       - name: Run tests
         run: crystal spec
 
