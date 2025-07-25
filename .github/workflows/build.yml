@@ -59,7 +59,7 @@ jobs:
           docker exec alpine shards install --without-development --release --static
           docker exec alpine shards build --release --static
           docker exec alpine chmod +x bin/$BIN
-          ldd bin/$BIN
+          ldd bin/$BIN || echo "Static binary (no dynamic dependencies)"
           bin/$BIN --version
           PKG=deepl-${VERSION}-${{ matrix.target }}
           mkdir -p $PKG
