@@ -62,6 +62,8 @@ jobs:
           docker exec alpine shards build --release --static
           docker exec alpine chmod +x bin/$BIN
           ldd bin/$BIN || echo "Static binary (no dynamic dependencies)"
+          file bin/$BIN
+          bin/$BIN --help
           bin/$BIN --version
           PKG=deepl-${VERSION}-${{ matrix.target }}
           mkdir -p $PKG
@@ -76,17 +78,21 @@ jobs:
         run: |
           shards install --without-development --release
           brew install libgc pcre2 openssl@3 readline ncurses
+          echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH"
+          unset PKG_CONFIG_PATH
+          echo "cleared PKG_CONFIG_PATH to avoid openSSL conflicts"
           ln -s $(brew ls libgc | grep libgc.a) .
           ln -s $(brew ls pcre2 | grep libpcre2-8.a) .
           ln -s $(brew ls openssl@3 | grep libssl.a) .
           ln -s $(brew ls openssl@3 | grep libcrypto.a) .
           ln -s $(brew ls readline | grep libreadline.a) .
           ln -s $(brew ls ncurses | grep libncurses.a) .
-          export PKG_CONFIG_PATH="/opt/homebrew/opt/openssl@3/lib/pkgconfig:${PKG_CONFIG_PATH}"
           STATIC_LIBS="-L $(pwd) $(pwd)/libgc.a $(pwd)/libpcre2-8.a $(pwd)/libssl.a $(pwd)/libcrypto.a $(pwd)/libreadline.a $(pwd)/libncurses.a -Wl,-search_paths_first"
           shards build --link-flags="$STATIC_LIBS" --release
           chmod +x bin/$BIN
           otool -L bin/$BIN
+          file bin/$BIN
+          bin/$BIN --help
           bin/$BIN --version
           PKG=deepl-${VERSION}-${{ matrix.target }}
           mkdir -p $PKG
@@ -101,6 +107,7 @@ jobs:
         run: |
           shards install --without-development --release
           shards build --release --static
+          bin/deepl --help
           bin/deepl --version
           $pkg = "deepl-$env:VERSION-windows-x86_64"
           mkdir $pkg
@@ -110,7 +117,7 @@ jobs:
           Compress-Archive -Path "$pkg/*" -DestinationPath "$pkg.zip"
 
       - name: Upload artifacts (non-release)
-        if: "!startsWith(github.ref, 'refs/tags/')"
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
         uses: actions/upload-artifact@v4
         with:
           name: deepl-cli-${{ matrix.target }}
