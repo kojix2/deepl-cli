@@ -15,7 +15,6 @@ DeepL CLI is a fast and lightweight command-line tool for the [DeepL API](https:
 
 - Download the binary from the [Releases](https://github.com/kojix2/deepl-cli/releases)
 - Binaries for Linux are statically linked.
-- For macOS, we recommend using homebrew.
 
 ### Homebrew
 
