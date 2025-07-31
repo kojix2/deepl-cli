@@ -15,13 +15,15 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            target: linux-x86_64
+            target: x86_64-unknown-linux-musl
           - os: macos-13
-            target: macos-x86_64
+            target: x86_64-apple-darwin
           - os: macos-latest
-            target: macos-arm64
+            target: aarch64-apple-darwin
           - os: windows-latest
-            target: windows-x86_64
+            target: x86_64-pc-windows-msvc
+          - os: windows-latest
+            target: x86_64-pc-windows-gnu
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
@@ -30,9 +32,21 @@ jobs:
           submodules: true
 
       - name: Install Crystal
+        if: matrix.target != 'x86_64-pc-windows-gnu'
         uses: crystal-lang/install-crystal@v1
         with:
           crystal: latest
+
+      - name: Install Crystal (MinGW64)
+        if: matrix.target == 'x86_64-pc-windows-gnu'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-crystal
+            mingw-w64-x86_64-shards
+            zip
 
       - name: Set version variables
         shell: bash
@@ -46,13 +60,31 @@ jobs:
           echo "BIN=deepl" >> $GITHUB_ENV
 
       - name: Install dependencies
+        if: matrix.target != 'x86_64-pc-windows-gnu'
+        run: shards install --without-development
+
+      - name: Install dependencies (MinGW64)
+        if: matrix.target == 'x86_64-pc-windows-gnu'
+        shell: msys2 {0}
         run: shards install --without-development
 
       - name: Run tests
-        run: crystal spec
+        if: matrix.target != 'x86_64-pc-windows-gnu'
+        run: |
+          crystal build src/cli.cr -o test_deepl
+          ./test_deepl --help
+          crystal spec
+
+      - name: Run tests (MinGW64)
+        if: matrix.target == 'x86_64-pc-windows-gnu'
+        shell: msys2 {0}
+        run: |
+          crystal build src/cli.cr -o test_deepl
+          ./test_deepl --help
+          crystal spec
 
       - name: Build on Linux
-        if: matrix.target == 'linux-x86_64'
+        if: matrix.target == 'x86_64-unknown-linux-musl'
         shell: bash
         run: |
           mkdir -p bin
@@ -73,7 +105,7 @@ jobs:
           tar czf $PKG.tar.gz $PKG
 
       - name: Build on macOS
-        if: startsWith(matrix.target, 'macos-')
+        if: startsWith(matrix.target, 'x86_64-apple-darwin') || startsWith(matrix.target, 'aarch64-apple-darwin')
         shell: bash
         run: |
           shards install --without-development --release
@@ -91,6 +123,11 @@ jobs:
           shards build --link-flags="$STATIC_LIBS" --release
           chmod +x bin/$BIN
           otool -L bin/$BIN
+          if otool -L bin/$BIN | grep homebrew; then
+            echo "Error: Homebrew dependencies detected!"
+            exit 1
+          fi
+          echo "Static linking successful"
           file bin/$BIN
           bin/$BIN --help
           bin/$BIN --version
@@ -101,20 +138,36 @@ jobs:
           cp README.md $PKG/
           tar czf $PKG.tar.gz $PKG
 
-      - name: Build on Windows
-        if: matrix.target == 'windows-x86_64'
+      - name: Build on Windows (MSVC)
+        if: matrix.target == 'x86_64-pc-windows-msvc'
         shell: pwsh
         run: |
           shards install --without-development --release
           shards build --release --static
           bin/deepl --help
           bin/deepl --version
-          $pkg = "deepl-$env:VERSION-windows-x86_64"
+          $pkg = "deepl-$env:VERSION-${{ matrix.target }}"
           mkdir $pkg
           Copy-Item "bin/$env:BIN.exe" "$pkg/"
           Copy-Item "LICENSE.txt" "$pkg/LICENSE"
           Copy-Item "README.md" "$pkg/"
           Compress-Archive -Path "$pkg/*" -DestinationPath "$pkg.zip"
+
+      - name: Build on Windows (MinGW64)
+        if: matrix.target == 'x86_64-pc-windows-gnu'
+        shell: msys2 {0}
+        run: |
+          shards install --without-development --release
+          shards build --release --static
+          file bin/$BIN.exe
+          bin/$BIN --help
+          bin/$BIN --version
+          PKG=deepl-${VERSION}-${{ matrix.target }}
+          mkdir -p $PKG
+          cp bin/$BIN.exe $PKG/
+          cp LICENSE.txt $PKG/LICENSE
+          cp README.md $PKG/
+          zip -r $PKG.zip $PKG
 
       - name: Upload artifacts (non-release)
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
