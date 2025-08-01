@@ -216,7 +216,7 @@ module DeepL
       document_key = option.document_key.not_nil!
       document_handle = DocumentHandle.new(document_id, document_key)
       status = translator.translate_document_get_status(document_handle)
-      puts status
+      puts status.summary
     end
 
     def download_translated_document
