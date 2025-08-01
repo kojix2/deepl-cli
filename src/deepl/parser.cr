@@ -244,7 +244,7 @@ module DeepL
         on("view", "View glossaries") do
           _set_action_(Action::OutputGlossaryEntriesByName, "Usage: deepl glossary view <names>")
 
-          on("-i", "--id ID", "Delete glossary by ids instead of names") do
+          on("-i", "--id", "View glossary by ids instead of names") do
             opt.action = Action::OutputGlossaryEntriesById
           end
 
