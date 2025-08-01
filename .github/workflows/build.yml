@@ -51,8 +51,7 @@ jobs:
         run: shards install --without-development
 
       - name: Run tests
-        run: |
-          crystal spec
+        run: crystal spec
 
       - name: Build on Linux (musl)
         if: matrix.target == 'x86_64-unknown-linux-musl'
@@ -143,7 +142,6 @@ jobs:
           Copy-Item "LICENSE" "$pkg/LICENSE"
           Copy-Item "README.md" "$pkg/"
           Compress-Archive -Path "$pkg/*" -DestinationPath "$pkg.zip"
-
 
       - name: Upload artifacts (non-release)
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
