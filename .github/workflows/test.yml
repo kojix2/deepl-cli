@@ -110,7 +110,16 @@ jobs:
       - name: Run executable (translate document)
         run: |
           set -eux
-          bin/deepl doc spec/fixtures/proton_beams.txt -t DE && cat spec/fixtures/proton_beams_DE.txt
+          bin/deepl doc spec/fixtures/proton_beams.txt -t DE
+          cat spec/fixtures/proton_beams_DE.txt
+
+          output=$(bin/deepl doc spec/fixtures/proton_beams.txt -U -t DE 2>&1)
+          echo "$output"
+
+          id=$(echo "$output" | grep 'Document ID:'  | awk '{print $4}')
+          key=$(echo "$output" | grep 'Document Key:' | awk '{print $4}')
+
+          bin/deepl doc status -i "$id" -k "$key"
 
       - name: Stop deepl-mock server
         if: always()
