@@ -196,15 +196,15 @@ module DeepL
         on("create", "Create a glossary") do |name|
           _set_action_(Action::CreateGlossary, "Usage: deepl glossary create [options] <tsv|csv>")
 
-          on("-n", "--name NAME", "Glossary name") do |name|
+          on("-n", "--name NAME", "Glossary name (required)") do |name|
             opt.glossary_name = name
           end
 
-          on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
+          on("-f", "--from LANG", "Source language (required)") do |from|
             opt.source_lang = from.upcase
           end
 
-          on("-t", "--to [LANG]", "Target language [#{opt.target_lang}]") do |to_|
+          on("-t", "--to LANG", "Target language [#{opt.target_lang}]") do |to_|
             opt.target_lang = to_.upcase
           end
 
