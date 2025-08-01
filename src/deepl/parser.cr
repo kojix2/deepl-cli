@@ -30,7 +30,7 @@ module DeepL
       opt.action = {{action}}
       @handlers.clear
       @flags.clear
-      self.banner = "\n{{banner.id}}}\n"
+      self.banner = "\n{{banner.id}}\n"
     end
 
     def initialize
