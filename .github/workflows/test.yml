@@ -120,6 +120,8 @@ jobs:
           key=$(echo "$output" | grep 'Document Key:' | awk '{print $4}')
 
           bin/deepl doc status -i "$id" -k "$key"
+          bin/deepl doc download -i "$id" -k "$key" -o downloaded_proton_beams_DE.txt
+          cat downloaded_proton_beams_DE.txt
 
       - name: Stop deepl-mock server
         if: always()
