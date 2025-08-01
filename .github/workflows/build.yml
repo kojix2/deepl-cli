@@ -102,7 +102,7 @@ jobs:
           PKG=deepl-${VERSION}-${{ matrix.target }}
           mkdir -p $PKG
           cp bin/$BIN $PKG/
-          cp LICENSE.txt $PKG/LICENSE
+          cp LICENSE $PKG/LICENSE
           cp README.md $PKG/
           tar czf $PKG.tar.gz $PKG
 
@@ -120,7 +120,7 @@ jobs:
           PKG=deepl-${VERSION}-${{ matrix.target }}
           mkdir -p $PKG
           cp bin/$BIN $PKG/
-          cp LICENSE.txt $PKG/LICENSE
+          cp LICENSE $PKG/LICENSE
           cp README.md $PKG/
           tar czf $PKG.tar.gz $PKG
 
@@ -154,7 +154,7 @@ jobs:
           PKG=deepl-${VERSION}-${{ matrix.target }}
           mkdir -p $PKG
           cp bin/$BIN $PKG/
-          cp LICENSE.txt $PKG/LICENSE
+          cp LICENSE $PKG/LICENSE
           cp README.md $PKG/
           tar czf $PKG.tar.gz $PKG
 
@@ -169,7 +169,7 @@ jobs:
           $pkg = "deepl-$env:VERSION-${{ matrix.target }}"
           mkdir $pkg
           Copy-Item "bin/$env:BIN.exe" "$pkg/"
-          Copy-Item "LICENSE.txt" "$pkg/LICENSE"
+          Copy-Item "LICENSE" "$pkg/LICENSE"
           Copy-Item "README.md" "$pkg/"
           Compress-Archive -Path "$pkg/*" -DestinationPath "$pkg.zip"
 
@@ -185,7 +185,7 @@ jobs:
           PKG=deepl-${VERSION}-${{ matrix.target }}
           mkdir -p $PKG
           cp bin/$BIN.exe $PKG/
-          cp LICENSE.txt $PKG/LICENSE
+          cp LICENSE $PKG/LICENSE
           cp README.md $PKG/
           zip -r $PKG.zip $PKG
 
