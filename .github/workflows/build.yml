@@ -49,6 +49,7 @@ jobs:
             mingw-w64-x86_64-crystal
             mingw-w64-x86_64-shards
             zip
+            git
 
       - name: Set version variables
         shell: bash
