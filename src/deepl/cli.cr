@@ -174,7 +174,37 @@ module DeepL
     end
 
     def upload_document_to_translate
-      raise NotImplementedError.new("This action is not implemented yet")
+      raise "Invalid option: -i --input" unless option.input_text.empty?
+      raise "Input file is not specified" if ARGV.empty?
+      option.input_path = Path[ARGV.shift]
+
+      case ARGV.size
+      when 1
+        STDERR.puts "[deepl-cli] File #{ARGV[0]} is ignored"
+      when 2..
+        STDERR.puts "[deepl-cli] Files #{ARGV.join(", ")} are ignored"
+      end
+
+      translator = DeepL::Translator.new
+
+      document_handle = uninitialized DocumentHandle
+
+      with_spinner do
+        document_handle = translator.translate_document_upload(
+          path: option.input_path,
+          target_lang: option.target_lang,
+          source_lang: option.source_lang,
+          formality: option.formality,
+          glossary_name: option.glossary_name,
+          output_format: option.output_format
+        )
+      end
+
+      STDERR.puts "[deepl-cli] Document uploaded successfully"
+      STDERR.puts "[deepl-cli] File: #{option.input_path}"
+      STDERR.puts "[deepl-cli] Document ID: #{document_handle.id}"
+      STDERR.puts "[deepl-cli] Document Key: #{document_handle.key}"
+      STDERR.puts "[deepl-cli] Use these values with 'deepl doc status' and 'deepl doc download'"
     end
 
     def check_document_translation_status

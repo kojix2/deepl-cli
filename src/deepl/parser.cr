@@ -173,6 +173,10 @@ module DeepL
           opt.interval = sec.to_f32
         end
 
+        on("-U", "--upload-only", "Upload file only") do
+          opt.action = Action::TranslateDocumentUpload
+        end
+
         _on_debug_
 
         _on_help_
