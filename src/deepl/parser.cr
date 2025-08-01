@@ -224,8 +224,8 @@ module DeepL
         on("edit", "Edit glossaries") do
           _set_action_(Action::EditGlossaryByName, "Usage: deepl glossary edit <names>")
 
-          on("-i", "--id", "Delete glossary by ids instead of names") do
-            opt.action = Action::DeleteGlossaryById
+          on("-i", "--id", "Edit glossary by ids instead of names") do
+            opt.action = Action::EditGlossaryById
           end
 
           on("-e", "--editor EDITOR", "Editor command [ENV[\"EDITOR\"]]") do |editor|
