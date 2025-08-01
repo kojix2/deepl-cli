@@ -1,6 +1,6 @@
 module DeepL
   class Config
-    def self.target_lang : String
+    def self.default_target_lang : String
       tl = ENV["DEEPL_TARGET_LANG"]?
       return tl if tl
       # The language of the current locale

@@ -7,7 +7,7 @@ module DeepL
     property input_text : String = ""
     property input_path : Path = Path.new
     property output_file : Path? = nil
-    property target_lang : String = Config.target_lang
+    property target_lang : String = Config.default_target_lang
     property source_lang : String? = nil
     property detect_source_language : Bool = false
     property show_billed_characters : Bool = false
