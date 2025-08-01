@@ -134,7 +134,7 @@ module DeepL
             opt.document_key = key
           end
 
-          on("-o", "--output FILE", "Output file") do |file|
+          on("-o", "--output FILE", "Output file (required)") do |file|
             opt.output_file = Path[file]
           end
 
