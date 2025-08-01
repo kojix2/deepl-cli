@@ -117,7 +117,7 @@ jobs:
             echo "Error: Homebrew dependencies detected!"
             exit 1
           fi
-          echo "Static linking successful"
+            echo "Homebrew dependencies not detected. Build is portable."
           file bin/$BIN
           bin/$BIN --help
           bin/$BIN --version
