@@ -123,6 +123,11 @@ jobs:
           bin/deepl doc download -i "$id" -k "$key" -o downloaded_proton_beams_DE.txt
           cat downloaded_proton_beams_DE.txt
 
+      - name: Run executable (rephrase)
+        run: |
+          set -eux
+          bin/deepl rephrase -i "any input text" -D
+
       - name: Stop deepl-mock server
         if: always()
         run: docker stop deepl-mock || true
