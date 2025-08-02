@@ -2,6 +2,7 @@ module DeepL
   enum Action : UInt8
     TranslateText
     # TranslateXML
+    RephraseText
     TranslateDocument
     TranslateDocumentUpload
     TranslateDocumentStatus

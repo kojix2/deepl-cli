@@ -20,6 +20,8 @@ module DeepL
       case option.action
       when Action::TranslateText
         translate_text
+      when Action::RephraseText
+        rephrase_text
       when Action::TranslateDocument
         translate_document
       when Action::TranslateDocumentUpload
@@ -140,6 +142,41 @@ module DeepL
       if output_file = option.output_file
         File.open(output_file, "w") { |f| output.to_s(f) }
         STDERR.puts "[deepl-cli] Translated text is written to #{output_file}"
+      end
+    end
+
+    def rephrase_text
+      if option.input_text.empty?
+        option.input_text = ARGF.gets_to_end
+      end
+
+      # Remove ANSI escape codes from the input text
+      option.input_text = remove_ansi_escape_codes(option.input_text)
+
+      result = [] of DeepL::RephraseResult
+      translator = DeepL::Translator.new
+
+      with_spinner do
+        result = translator.rephrase_text(
+          text: option.input_text,
+          target_lang: option.target_lang,
+          writing_style: option.writing_style,
+          tone: option.tone
+        )
+      end
+
+      output = option.output_file ? IO::Memory.new : STDOUT
+
+      result.each do |r|
+        if option.detect_source_language
+          STDERR.puts "[deepl-cli] Detected source language: #{r.detected_source_language}"
+        end
+        output.puts r.text
+      end
+
+      if output_file = option.output_file
+        File.open(output_file, "w") { |f| output.to_s(f) }
+        STDERR.puts "[deepl-cli] Rephrased text is written to #{output_file}"
       end
     end
 

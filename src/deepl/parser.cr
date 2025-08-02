@@ -104,6 +104,54 @@ module DeepL
         _on_help_
       end
 
+      on("rephrase", "Rephrase text") do
+        _set_action_(Action::RephraseText, "Usage: deepl rephrase [options] <text>")
+
+        on("-i", "--input TEXT", "Input text") do |text|
+          opt.input_text = text
+        end
+
+        on("-w", "--writing-style STYLE", "Writing style (academic, business, casual, default, simple)") do |style|
+          opt.writing_style = style
+        end
+
+        on("-T", "--tone TONE", "Writing tone (confident, diplomatic, enthusiastic, friendly)") do |tone|
+          opt.tone = tone
+        end
+
+        opt.target_lang = nil # AUTO
+
+        on("-t", "--to [LANG]", "Target language [AUTO]") do |to_|
+          opt.target_lang = to_.upcase
+        end
+
+        on("-D", "--detect-language", "Output detected source language") do
+          opt.detect_source_language = true
+        end
+
+        on("-o", "--output FILE", "Output file") do |file|
+          opt.output_file = Path[file]
+        end
+
+        on("-p", "--paste", "Input text from clipboard") do
+          text = EasyClip.paste
+          if text.empty?
+            STDERR.puts "[deepl-cli] ERROR: Clipboard is empty."
+            exit(1)
+          end
+          STDERR.puts "[deepl-cli] Input text from clipboard: \n#{text}\n\n"
+          opt.input_text = text
+        end
+
+        on("-A", "--ansi", "Do not remove ANSI escape codes") do
+          opt.no_ansi = false
+        end
+
+        _on_debug_
+
+        _on_help_
+      end
+
       on("doc", "Translate document") do
         _set_action_(Action::TranslateDocument, "Usage: deepl doc [options] <file>")
 

@@ -31,5 +31,8 @@ module DeepL
     # # model type
     property model_type : String? = nil
     # property show_model_type : Bool = false
+    # # rephrase options
+    property writing_style : String? = nil
+    property tone : String? = nil
   end
 end
