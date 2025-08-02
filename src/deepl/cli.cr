@@ -1,5 +1,5 @@
 require "../ext/crest"
-require "deepl/translator"
+require "deepl"
 require "term-prompt"
 require "term-spinner"
 require "./parser"
