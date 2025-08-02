@@ -99,8 +99,10 @@ module DeepL
         option.input_text = ARGF.gets_to_end
       end
 
-      # Remove ANSI escape codes from the input text
-      option.input_text = remove_ansi_escape_codes(option.input_text)
+      # Remove ANSI escape codes from the input text (only if no_ansi is true)
+      if option.no_ansi
+        option.input_text = remove_ansi_escape_codes(option.input_text)
+      end
 
       result = [] of DeepL::TextResult
       translator = DeepL::Translator.new
@@ -150,8 +152,10 @@ module DeepL
         option.input_text = ARGF.gets_to_end
       end
 
-      # Remove ANSI escape codes from the input text
-      option.input_text = remove_ansi_escape_codes(option.input_text)
+      # Remove ANSI escape codes from the input text (only if no_ansi is true)
+      if option.no_ansi
+        option.input_text = remove_ansi_escape_codes(option.input_text)
+      end
 
       result = [] of DeepL::RephraseResult
       translator = DeepL::Translator.new
