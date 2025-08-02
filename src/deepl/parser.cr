@@ -280,11 +280,11 @@ module DeepL
           opt.input_text = text
         end
 
-        on("-w", "--writing-style STYLE", "(academic business casual default simple)") do |style|
+        on("-s", "--writing-style STYLE", "(academic business casual default simple)") do |style|
           opt.writing_style = style
         end
 
-        on("-T", "--tone TONE", "(confident diplomatic enthusiastic friendly)") do |tone|
+        on("-t", "--tone TONE", "(confident diplomatic enthusiastic friendly)") do |tone|
           opt.tone = tone
         end
 
