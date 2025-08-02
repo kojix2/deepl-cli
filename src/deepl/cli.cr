@@ -159,7 +159,7 @@ module DeepL
       with_spinner do
         result = translator.rephrase_text(
           text: option.input_text,
-          target_lang: option.target_lang,
+          target_lang: option.source_lang, # source_lang is correct here.
           writing_style: option.writing_style,
           tone: option.tone
         )
