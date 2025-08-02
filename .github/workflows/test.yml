@@ -126,7 +126,7 @@ jobs:
       - name: Run executable (rephrase)
         run: |
           set -eux
-          bin/deepl rephrase -i "any input text" -D
+          bin/deepl rephrase -i "any input text"
 
       - name: Stop deepl-mock server
         if: always()
