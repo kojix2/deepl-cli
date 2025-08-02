@@ -217,7 +217,7 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
-</a>Manage Glossaries</h3>
+</a>Manage glossaries</h3>
 <p>For glossary management, use the <code>glossary</code> subcommand:</p>
 <pre><code class="language-sh">deepl glossary [options]</code></pre>
 <p>Options for glossary management:</p>
@@ -228,6 +228,17 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
     view                             View glossaries
     -l, --list                       List glossaries
     -p, --language-pairs             List language pairs</code></pre>
+<h3><a id="improve-text-rephrase" class="anchor" href="#improve-text-rephrase">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Improve text (Rephrase)</h3>
+<p>Use the <code>rephrase</code> subcommand to rewrite text in different styles or tones.</p>
+<pre><code class="language-sh">Usage: deepl rephrase [options] &lt;file&gt;</code></pre>
+<p>Options for rephrase:</p>
+<pre><code class="language-txt">    -i, --input TEXT                 Input text
+    -s, --writing-style STYLE        academic business casual default simple
+    -t, --tone TONE                  confident diplomatic enthusiastic friendly</code></pre>
 <h2><a id="examples" class="anchor" href="#examples">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -238,7 +249,7 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
-</a>Translate Text</h3>
+</a>Translate text</h3>
 <p>To translate the text &quot;Hola mundo&quot; from Spanish (ES) to English (EN):</p>
 <pre><code class="language-sh">deepl -i &quot;Hola mundo&quot; -t en        # Translation: Hello world</code></pre>
 <p>Or, using standard input:</p>
@@ -268,7 +279,7 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
-</a>Translate documents</h3>
+</a>Translate Documents</h3>
 <p>You can directly translate documents:</p>
 <pre><code class="language-sh">deepl doc your.pdf -t pt
 # The translated document will be saved as your_PT.pdf</code></pre>
@@ -285,7 +296,8 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
     <use href="#octicon-link"/>
   </svg>
 </a>Glossaries</h3>
-<p>The DeepL API supports glossaries. See <a href="https://developers.deepl.com/docs/api-reference/glossaries#formats">here</a> for the format of the glossary file.</p>
+<p>The DeepL API supports glossaries. See <a href="https://developers.deepl.com/docs/api-reference/glossaries#formats">here</a> for the format of the glossary file.
+The glossary API is v2. It does not yet support v3.</p>
 <p>To create a glossary:</p>
 <pre><code class="language-sh">deepl glossary create -n mydic -f en -t pt mydict.tsv</code></pre>
 <p>To list glossaries:</p>
@@ -300,6 +312,17 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 <pre><code class="language-sh">deepl glossary view mydict</code></pre>
 <p>To list the languages in which glossaries can be created:</p>
 <pre><code class="language-sh">deepl glossary -p</code></pre>
+<h3><a id="rephrase" class="anchor" href="#rephrase">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Rephrase</h3>
+<p>Change writing style:</p>
+<pre><code class="language-sh">bin/deepl rephrase -i &quot;Thanks&quot; -s academic
+# Expressions of gratitude are extended.</code></pre>
+<p>Change tone:</p>
+<pre><code class="language-sh">bin/deepl rephrase -i &quot;Thanks&quot; -t friendly
+# Thank you so much! I really appreciate it.</code></pre>
 <h3><a id="information" class="anchor" href="#information">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
