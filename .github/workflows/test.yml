@@ -128,6 +128,8 @@ jobs:
           set -eux
           bin/deepl rephrase -f EN -i "any input text"
           bin/deepl rephrase -f EN -i "any input text" -D
+          cat spec/fixtures/proton_beams.txt | bin/deepl rephrase -f EN -o rephrased_proton_beam.txt
+          cat rephrased_proton_beam.txt
 
       - name: Stop deepl-mock server
         if: always()
