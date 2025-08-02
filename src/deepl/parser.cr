@@ -274,7 +274,7 @@ module DeepL
       end
 
       on("rephrase", "Rephrase text") do
-        _set_action_(Action::RephraseText, "Usage: deepl rephrase [options] <text>")
+        _set_action_(Action::RephraseText, "Usage: deepl rephrase [options] <file>")
 
         on("-i", "--input TEXT", "Input text") do |text|
           opt.input_text = text
