@@ -96,7 +96,7 @@ Supported file formats.
 - `txt` - Plain Text Document
 - `xlf` / `xliff` - XLIFF Document, version 2.1
 
-### Manage Glossaries
+### Manage glossaries
 
 For glossary management, use the `glossary` subcommand:
 
@@ -116,11 +116,27 @@ Options for glossary management:
     -p, --language-pairs             List language pairs
 ```
 
+### Improve text (Rephrase)
+
+Use the `rephrase` subcommand to rewrite text in different styles or tones.
+
+```sh
+Usage: deepl rephrase [options] <file>
+```
+
+Options for rephrase:
+
+```txt
+    -i, --input TEXT                 Input text
+    -s, --writing-style STYLE        academic business casual default simple
+    -t, --tone TONE                  confident diplomatic enthusiastic friendly
+```
+
 ## Examples
 
 Below are examples for translating text, translating documents, and working with glossaries.
 
-### Translate Text
+### Translate text
 
 To translate the text "Hola mundo" from Spanish (ES) to English (EN):
 
@@ -191,7 +207,7 @@ To refer to the original text, you can use `tee dev/stderr`:
 fortune | tee /dev/stderr | deepl
 ```
 
-### Translate documents
+### Translate Documents
 
 You can directly translate documents:
 
@@ -229,6 +245,7 @@ fd -e pdf -e docx -x deepl doc -t zh
 ### Glossaries
 
 The DeepL API supports glossaries. See [here](https://developers.deepl.com/docs/api-reference/glossaries#formats) for the format of the glossary file.
+The glossary API is v2. It does not yet support v3.
 
 To create a glossary:
 
@@ -270,6 +287,22 @@ To list the languages in which glossaries can be created:
 
 ```sh
 deepl glossary -p
+```
+
+### Rephrase
+
+Change writing style:
+
+```sh
+bin/deepl rephrase -i "Thanks" -s academic
+# Expressions of gratitude are extended.
+```
+
+Change tone:
+
+```sh
+bin/deepl rephrase -i "Thanks" -t friendly
+# Thank you so much! I really appreciate it.
 ```
 
 ### Information
