@@ -250,11 +250,8 @@ module DeepL
 
     def check_document_translation_status
       translator = DeepL::Translator.new
-      if option.document_id.nil? || option.document_key.nil?
-        raise "Document ID or key is not specified"
-      end
-      document_id = option.document_id.not_nil!
-      document_key = option.document_key.not_nil!
+      document_id = option.document_id || raise "Document ID is not specified"
+      document_key = option.document_key || raise "Document key is not specified"
       document_handle = DocumentHandle.new(document_id, document_key)
       status = translator.translate_document_get_status(document_handle)
       puts status.summary
@@ -262,15 +259,9 @@ module DeepL
 
     def download_translated_document
       translator = DeepL::Translator.new
-      if option.document_id.nil? || option.document_key.nil?
-        raise "Document ID or key is not specified"
-      end
-      if option.output_file.nil?
-        raise "Output file is not specified"
-      end
-      document_id = option.document_id.not_nil!
-      document_key = option.document_key.not_nil!
-      output_file = option.output_file.not_nil!
+      document_id = option.document_id || raise "Document ID is not specified"
+      document_key = option.document_key || raise "Document key is not specified"
+      output_file = option.output_file || raise "Output file is not specified"
       document_handle = DocumentHandle.new(document_id, document_key)
       translator.translate_document_download(document_handle, output_file)
     end
