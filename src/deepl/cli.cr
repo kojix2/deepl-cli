@@ -269,8 +269,8 @@ module DeepL
     def print_glossary_language_pairs
       translator = DeepL::Translator.new
       previous_source_lang = ""
-      pairs = translator.get_glossary_language_pairs
-      puts "Supported glossary language pairs"
+      pairs = translator.get_multilingual_glossary_language_pairs
+      puts "Supported multilingual glossary language pairs"
       pairs.each do |pair|
         source_lang = pair.source_lang
         target_lang = pair.target_lang
@@ -301,12 +301,15 @@ module DeepL
       option.input_text = ARGF.gets_to_end
 
       translator = DeepL::Translator.new
-      translator.create_glossary(
-        name: option.glossary_name,
-        source_lang: option.source_lang,
-        target_lang: option.target_lang,
-        entries: option.input_text,
-        entry_format: entry_format
+      dict = DeepL::GlossaryDictionary.new(
+        option.source_lang || raise("Source language is required (-f)"),
+        option.target_lang,
+        option.input_text,
+        entry_format
+      )
+      translator.create_multilingual_glossary(
+        name: option.glossary_name || raise("Glossary name is required (-n)"),
+        dictionaries: [dict]
       )
 
       STDERR.puts "[deepl-cli] Glossary #{option.glossary_name} is created"
@@ -333,7 +336,7 @@ module DeepL
     def select_name_from_glossary_list : String?
       prompt = Term::Prompt.new
       translator = DeepL::Translator.new
-      glossary_list = translator.list_glossaries
+      glossary_list = translator.list_multilingual_glossaries
       return if glossary_list.empty?
       glossary_names = glossary_list.map { |g| g.name }
       glossary_name = prompt.select("Select glossary", glossary_names)
@@ -342,14 +345,14 @@ module DeepL
     def select_id_from_glossary_list_long : String?
       prompt = Term::Prompt.new
       translator = DeepL::Translator.new
-      glossary_list = translator.list_glossaries
+      glossary_list = translator.list_multilingual_glossaries
       return if glossary_list.empty?
       max = glossary_list.map { |g| g.name.size }.max.not_nil!
       glossary_str_list = glossary_list.map do |glossary|
+        langs = glossary.dictionaries.map { |d| "#{d.source_lang} -> #{d.target_lang}" }.join(", ")
         [
           glossary.name.rjust(max + 1),
-          "#{glossary.source_lang} -> #{glossary.target_lang}",
-          glossary.entry_count,
+          langs,
           glossary.creation_time,
           glossary.glossary_id,
         ].join("\t")
@@ -362,7 +365,8 @@ module DeepL
       glossary_names = argv_or_select_name_from_glossary_list
       translator = DeepL::Translator.new
       glossary_names.each do |glossary_name|
-        translator.delete_glossary_by_name(glossary_name)
+        info = translator.find_multilingual_glossary_by_name(glossary_name)
+        translator.delete_multilingual_glossary(info.glossary_id)
         STDERR.puts "[deepl-cli] Glossary #{glossary_name} is deleted"
       end
     end
@@ -371,8 +375,8 @@ module DeepL
       glossary_ids = argv_or_select_id_from_glossary_list_long
       translator = DeepL::Translator.new
       glossary_ids.each do |glossary_id|
-        info = translator.get_glossary_info(glossary_id)
-        translator.delete_glossary(glossary_id)
+        info = translator.get_multilingual_glossary(glossary_id)
+        translator.delete_multilingual_glossary(glossary_id)
         STDERR.puts "[deepl-cli] Glossary #{info.name} is deleted"
       end
     end
@@ -381,7 +385,7 @@ module DeepL
       glossary_names = argv_or_select_name_from_glossary_list
       translator = DeepL::Translator.new
       glossary_names.each do |glossary_name|
-        glossary_info_list = translator.get_glossary_info_by_name(glossary_name)
+        glossary_info_list = translator.get_multilingual_glossaries_by_name(glossary_name)
         # FIXME
         case glossary_info_list.size
         when 2..
@@ -406,15 +410,19 @@ module DeepL
       glossary_ids = argv_or_select_id_from_glossary_list_long
       translator = DeepL::Translator.new
       glossary_ids.each do |glossary_id|
-        glossary_info = translator.get_glossary_info(glossary_id)
+        glossary_info = translator.get_multilingual_glossary(glossary_id)
         edit_glossary_core(translator, glossary_info)
       end
     end
 
     def edit_glossary_core(translator, glossary_info)
+      # Choose language pair
+      src, tgt = resolve_or_select_language_pair(glossary_info)
+
       original_entries_text = ""
       with_spinner do
-        original_entries_text = translator.get_glossary_entries(glossary_info.glossary_id)
+        dict = translator.get_multilingual_glossary_entries(glossary_info.glossary_id, src, tgt)
+        original_entries_text = dict.entries.to_s
       end
 
       edited_entries_text = Utils.edit_text(original_entries_text)
@@ -422,21 +430,17 @@ module DeepL
       # If the glossary is not changed, return
       return if original_entries_text.chomp == edited_entries_text.chomp
 
-      # validate glossary
-      # validate_glossary(entries_text)
-
-      # upload the edited glossary
+      # upload the edited dictionary for the selected language pair
       with_spinner do
-        translator.create_glossary(
-          name: glossary_info.name,
-          source_lang: glossary_info.source_lang,
-          target_lang: glossary_info.target_lang,
+        translator.put_multilingual_glossary_dictionary(
+          glossary_id: glossary_info.glossary_id,
+          source_lang: src,
+          target_lang: tgt,
           entries: edited_entries_text,
-          entry_format: "tsv"
+          entries_format: "tsv"
         )
-        translator.delete_glossary(glossary_info.glossary_id)
       end
-      STDERR.puts("[deepl-cli] Glossary #{glossary_info.name} is updated")
+      STDERR.puts("[deepl-cli] Glossary #{glossary_info.name} (#{src}->#{tgt}) is updated")
     end
 
     def output_glossary_entries_by_name
@@ -445,7 +449,10 @@ module DeepL
       output_file = option.output_file
       File.delete(output_file) if output_file && File.exists?(output_file)
       glossary_names.each do |glossary_name|
-        entries_text = translator.get_glossary_entries_by_name(glossary_name)
+        info = translator.find_multilingual_glossary_by_name(glossary_name)
+        src, tgt = resolve_or_select_language_pair(info)
+        dict = translator.get_multilingual_glossary_entries(info.glossary_id, src, tgt)
+        entries_text = dict.entries.to_s
         if output_file
           File.write(output_file, entries_text, mode: "a")
           STDERR.puts "[deepl-cli] Glossary entries of #{glossary_name} are written to #{output_file}"
@@ -461,7 +468,10 @@ module DeepL
       output_file = option.output_file
       File.delete(output_file) if output_file && File.exists?(output_file)
       glossary_ids.each do |glossary_id|
-        entries_text = translator.get_glossary_entries(glossary_id)
+        info = translator.get_multilingual_glossary(glossary_id)
+        src, tgt = resolve_or_select_language_pair(info)
+        dict = translator.get_multilingual_glossary_entries(glossary_id, src, tgt)
+        entries_text = dict.entries.to_s
         if output_file
           File.write(output_file, entries_text, mode: "a")
           STDERR.puts "[deepl-cli] Glossary entries of #{glossary_id} are written to #{output_file}"
@@ -473,7 +483,7 @@ module DeepL
 
     def print_glossary_list
       translator = DeepL::Translator.new
-      glossary_list = translator.list_glossaries
+      glossary_list = translator.list_multilingual_glossaries
       return if glossary_list.empty?
       glossary_list.each do |glossary|
         puts glossary.name
@@ -482,18 +492,33 @@ module DeepL
 
     def print_glossary_list_long
       translator = DeepL::Translator.new
-      glossary_list = translator.list_glossaries
+      glossary_list = translator.list_multilingual_glossaries
       return if glossary_list.empty?
       max = glossary_list.map { |g| g.name.size }.max.not_nil!
       glossary_list.each do |glossary|
+        langs = glossary.dictionaries.map { |d| "#{d.source_lang} -> #{d.target_lang}" }.join(", ")
         puts [
           glossary.name.rjust(max + 1),
-          "#{glossary.source_lang} -> #{glossary.target_lang}",
-          glossary.entry_count,
+          langs,
           glossary.creation_time,
           glossary.glossary_id,
         ].join("\t")
       end
+    end
+
+    # Resolve language pair from options or interactively select from glossary dictionaries
+    private def resolve_or_select_language_pair(glossary_info)
+      src = option.source_lang
+      tgt = option.target_lang
+      if src && tgt
+        return {src, tgt}
+      end
+      prompt = Term::Prompt.new
+      pairs = glossary_info.dictionaries.map { |d| "#{d.source_lang} -> #{d.target_lang}" }
+      selected = prompt.select("Select language pair", pairs)
+      raise "Selection cancelled" if selected.nil?
+      parts = selected.not_nil!.split(" -> ")
+      {parts[0], parts[1]}
     end
 
     def print_source_languages
