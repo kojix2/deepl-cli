@@ -19,10 +19,10 @@ dependencies:
     github: kojix2/easyclip
     version: "0.1.1"
   term-spinner:
-    github: kojix2/spinner2
-    version: "0.2.0"
+    github: crystal-term/spinner
+    tag: "0.3.0"
   term-prompt:
     github: crystal-term/prompt
-    version: "0.2.0"
+    tag: "0.3.0"
 
 license: MIT
