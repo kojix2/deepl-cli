@@ -2,6 +2,7 @@ require "../ext/crest"
 require "deepl"
 require "term-prompt"
 require "term-spinner"
+require "../ext/term-reader"
 require "./parser"
 require "./utils"
 

@@ -1,0 +1,46 @@
+version: 2.0
+shards:
+  crest:
+    git: https://github.com/mamantoha/crest.git
+    version: 1.5.1
+
+  deepl:
+    git: https://github.com/kojix2/deepl.cr.git
+    version: 0.1.0
+
+  easyclip:
+    git: https://github.com/kojix2/easyclip.git
+    version: 0.1.1
+
+  http-client-digest_auth:
+    git: https://github.com/mamantoha/http-client-digest_auth.git
+    version: 0.6.0
+
+  http_proxy:
+    git: https://github.com/mamantoha/http_proxy.git
+    version: 0.13.1
+
+  term-color:
+    git: https://github.com/crystal-term/color.git
+    version: 0.4.1
+
+  term-cursor:
+    git: https://github.com/crystal-term/cursor.git
+    version: 0.3.1
+
+  term-prompt:
+    git: https://github.com/crystal-term/prompt.git
+    version: 0.3.2+git.commit.4f536764bc091940f2a6f7e9b9aeca94921ab13e
+
+  term-reader:
+    git: https://github.com/crystal-term/reader.git
+    version: 0.3.2
+
+  term-screen:
+    git: https://github.com/crystal-term/screen.git
+    version: 0.3.1
+
+  term-spinner:
+    git: https://github.com/crystal-term/spinner.git
+    version: 0.3.2
+
