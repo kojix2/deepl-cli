@@ -16,8 +16,6 @@ jobs:
         include:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-musl
-          - os: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
           - os: macos-13
             target: x86_64-apple-darwin
           - os: macos-latest
@@ -63,26 +61,6 @@ jobs:
           docker exec alpine shards install --without-development --release --static
           docker exec alpine shards build --release --static
           docker exec alpine chmod +x bin/$BIN
-          ldd bin/$BIN || echo "Static binary (no dynamic dependencies)"
-          file bin/$BIN
-          bin/$BIN --help
-          bin/$BIN --version
-          PKG=deepl-${VERSION}-${{ matrix.target }}
-          mkdir -p $PKG
-          cp bin/$BIN $PKG/
-          cp LICENSE $PKG/LICENSE
-          cp README.md $PKG/
-          tar czf $PKG.tar.gz $PKG
-
-      - name: Build on Linux (gnu)
-        if: matrix.target == 'x86_64-unknown-linux-gnu'
-        shell: bash
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libreadline-dev libncurses-dev
-          shards install --without-development --release
-          shards build --release --static
-          chmod +x bin/$BIN
           ldd bin/$BIN || echo "Static binary (no dynamic dependencies)"
           file bin/$BIN
           bin/$BIN --help
