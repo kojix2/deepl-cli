@@ -1,6 +1,7 @@
 require "../ext/crest"
 require "deepl"
 require "term-prompt"
+require "../ext/term-reader" # Workaround
 require "term-spinner"
 require "./parser"
 require "./utils"
