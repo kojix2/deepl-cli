@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../js/doc.js"></script>
 
   <meta name="repository-name" content="deepl-cli">
-  <title>DeepL::Utils - deepl-cli main</title>
+  <title>Term::Reader - deepl-cli main</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -72,7 +72,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="deepl-cli/DeepL" data-name="deepl">
+  <li class="parent " data-id="deepl-cli/DeepL" data-name="deepl">
       <a href="../DeepL.html">DeepL</a>
       
         <ul>
@@ -102,7 +102,7 @@
       
     </li>
   
-  <li class=" current" data-id="deepl-cli/DeepL/Utils" data-name="deepl::utils">
+  <li class=" " data-id="deepl-cli/DeepL/Utils" data-name="deepl::utils">
       <a href="../DeepL/Utils.html">Utils</a>
       
     </li>
@@ -112,12 +112,12 @@
       
     </li>
   
-  <li class="parent " data-id="deepl-cli/Term" data-name="term">
+  <li class="parent open current" data-id="deepl-cli/Term" data-name="term">
       <a href="../Term.html">Term</a>
       
         <ul>
   
-  <li class=" " data-id="deepl-cli/Term/Reader" data-name="term::reader">
+  <li class=" current" data-id="deepl-cli/Term/Reader" data-name="term::reader">
       <a href="../Term/Reader.html">Reader</a>
       
     </li>
@@ -137,11 +137,13 @@
 <h1 class="type-name">
 
   <span class="kind">
-    module
-  </span> DeepL::<wbr>Utils
+    class
+  </span> Term::<wbr>Reader
 
 </h1>
 
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Term/Reader.html">Term::Reader</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -171,8 +173,64 @@
   </h2>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/196a593d31663582485a35e3082cf84db2d75803/src/deepl/utils.cr#L2" target="_blank">
-        deepl/utils.cr
+      <a href="https://github.com/kojix2/deepl-cli/blob/196a593d31663582485a35e3082cf84db2d75803/lib/term-reader/src/reader/console.cr#L5" target="_blank">
+        lib/term-reader/src/reader/console.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/kojix2/deepl-cli/blob/196a593d31663582485a35e3082cf84db2d75803/lib/term-reader/src/reader/history.cr#L2" target="_blank">
+        lib/term-reader/src/reader/history.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/kojix2/deepl-cli/blob/196a593d31663582485a35e3082cf84db2d75803/lib/term-reader/src/reader/key_event.cr#L4" target="_blank">
+        lib/term-reader/src/reader/key_event.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/kojix2/deepl-cli/blob/196a593d31663582485a35e3082cf84db2d75803/lib/term-reader/src/reader/keys.cr#L2" target="_blank">
+        lib/term-reader/src/reader/keys.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/kojix2/deepl-cli/blob/196a593d31663582485a35e3082cf84db2d75803/lib/term-reader/src/reader/line.cr#L2" target="_blank">
+        lib/term-reader/src/reader/line.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/kojix2/deepl-cli/blob/196a593d31663582485a35e3082cf84db2d75803/lib/term-reader/src/reader/mode.cr#L2" target="_blank">
+        lib/term-reader/src/reader/mode.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/kojix2/deepl-cli/blob/196a593d31663582485a35e3082cf84db2d75803/lib/term-reader/src/reader/version.cr#L2" target="_blank">
+        lib/term-reader/src/reader/version.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/kojix2/deepl-cli/blob/196a593d31663582485a35e3082cf84db2d75803/lib/term-reader/src/term-reader.cr#L11" target="_blank">
+        lib/term-reader/src/term-reader.cr
+      </a>
+    
+    <br/>
+  
+    
+      <a href="https://github.com/kojix2/deepl-cli/blob/196a593d31663582485a35e3082cf84db2d75803/src/ext/term-reader.cr#L10" target="_blank">
+        ext/term-reader.cr
       </a>
     
     <br/>
@@ -185,87 +243,99 @@
   
 
   
+
+  
+
+  
   <h2>
-    <a id="class-method-summary" class="anchor" href="#class-method-summary">
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Class Method Summary
+    Instance Method Summary
   </h2>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#edit_text%28text%29-class-method" class="signature"><strong>.edit_text</strong>(text)</a>
+        <a href="#unbuffered%28%26%29-instance-method" class="signature"><strong>#unbuffered</strong>(&)</a>
         
-      </li>
-    
-      <li class="entry-summary">
-        <a href="#open_texteditor%28path%29-class-method" class="signature"><strong>.open_texteditor</strong>(path)</a>
+          <div class="summary"><p>Get input in unbuffered mode.</p></div>
         
       </li>
     
   </ul>
 
 
-  
-
-  
-
 
   <div class="methods-inherited">
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+
+    
+      
+
+
+      
+
+
+      
+
+
+      
+
+
     
   </div>
 
   
 
   
+
+  
+
+  
   <h2>
-    <a id="class-method-detail" class="anchor" href="#class-method-detail">
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Class Method Detail
+    Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="edit_text(text)-class-method">
+    <div class="entry-detail" id="unbuffered(&amp;)-instance-method">
       <div class="signature">
         
-        def self.<strong>edit_text</strong>(text)
+        def <strong>unbuffered</strong>(&)
 
-        <a class="method-permalink" href="#edit_text%28text%29-class-method">#</a>
+        <a class="method-permalink" href="#unbuffered%28%26%29-instance-method">#</a>
       </div>
+      
+        <div class="doc">
+          
+          <p>Get input in unbuffered mode.</p>
+        </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/196a593d31663582485a35e3082cf84db2d75803/src/deepl/utils.cr#L17" target="_blank">View source</a>]
-        
-      </div>
-    </div>
-  
-    <div class="entry-detail" id="open_texteditor(path)-class-method">
-      <div class="signature">
-        
-        def self.<strong>open_texteditor</strong>(path)
-
-        <a class="method-permalink" href="#open_texteditor%28path%29-class-method">#</a>
-      </div>
-      
-      <br/>
-      <div>
-        
-          [<a href="https://github.com/kojix2/deepl-cli/blob/196a593d31663582485a35e3082cf84db2d75803/src/deepl/utils.cr#L3" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/196a593d31663582485a35e3082cf84db2d75803/src/ext/term-reader.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
   
 
-
-  
-
-  
 
 
 </div>
