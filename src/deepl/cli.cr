@@ -31,8 +31,6 @@ module DeepL
         check_document_translation_status
       when Action::TranslateDocumentDownload
         download_translated_document
-      when Action::ListGlossaryLanguagePairs
-        print_glossary_language_pairs
       when Action::CreateGlossary
         create_glossary
       when Action::DeleteGlossaryByName
@@ -265,24 +263,6 @@ module DeepL
       output_file = option.output_file || raise "Output file is not specified"
       document_handle = DocumentHandle.new(document_id, document_key)
       translator.translate_document_download(document_handle, output_file)
-    end
-
-    def print_glossary_language_pairs
-      translator = DeepL::Translator.new
-      previous_source_lang = ""
-      pairs = translator.get_multilingual_glossary_language_pairs
-      puts "Supported multilingual glossary language pairs"
-      pairs.each do |pair|
-        source_lang = pair.source_lang
-        target_lang = pair.target_lang
-        if source_lang != previous_source_lang
-          puts if previous_source_lang != ""
-          print "- #{source_lang} :\t"
-          previous_source_lang = source_lang
-        end
-        print " #{target_lang}"
-      end
-      puts
     end
 
     def create_glossary

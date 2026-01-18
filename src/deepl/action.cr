@@ -7,7 +7,6 @@ module DeepL
     TranslateDocumentUpload
     TranslateDocumentStatus
     TranslateDocumentDownload
-    ListGlossaryLanguagePairs
     CreateGlossary
     DeleteGlossaryByName
     DeleteGlossaryById

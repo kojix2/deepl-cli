@@ -264,10 +264,6 @@ module DeepL
           # FIXME: short form
         end
 
-        on("-p", "--language-pairs", "List language pairs") do
-          opt.action = Action::ListGlossaryLanguagePairs
-        end
-
         _on_debug_
 
         _on_help_

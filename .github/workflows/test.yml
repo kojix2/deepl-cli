@@ -98,7 +98,6 @@ jobs:
           bin/deepl glossary view "Test Glossary"
           bin/deepl glossary delete "Test Glossary"
           bin/deepl glossary -l
-          bin/deepl glossary -p
           bin/deepl glossary -h
           bin/deepl glossary list -h
           bin/deepl glossary create -h

@@ -113,7 +113,6 @@ Options for glossary management:
     edit                             Edit glossaries
     view                             View glossaries
     -l, --list                       List glossaries
-    -p, --language-pairs             List language pairs
 ```
 
 ### Improve text (Rephrase)
@@ -281,12 +280,6 @@ To display the contents of the glossary:
 
 ```sh
 deepl glossary view mydict
-```
-
-To list the languages in which glossaries can be created:
-
-```sh
-deepl glossary -p
 ```
 
 ### Rephrase
