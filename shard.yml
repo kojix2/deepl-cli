@@ -23,6 +23,6 @@ dependencies:
     version: "0.3.2"
   term-prompt:
     github: crystal-term/prompt
-    commit: "4f536764bc091940f2a6f7e9b9aeca94921ab13e"
+    version: "0.3.3"
 
 license: MIT
