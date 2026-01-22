@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../js/doc.js"></script>
 
   <meta name="repository-name" content="deepl-cli">
-  <title>DeepL::Config - deepl-cli main</title>
+  <title>Term::Spinner - deepl-cli main</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -72,7 +72,7 @@
       
     </li>
   
-  <li class="parent open current" data-id="deepl-cli/DeepL" data-name="deepl">
+  <li class="parent " data-id="deepl-cli/DeepL" data-name="deepl">
       <a href="../DeepL.html">DeepL</a>
       
         <ul>
@@ -87,7 +87,7 @@
       
     </li>
   
-  <li class=" current" data-id="deepl-cli/DeepL/Config" data-name="deepl::config">
+  <li class=" " data-id="deepl-cli/DeepL/Config" data-name="deepl::config">
       <a href="../DeepL/Config.html">Config</a>
       
     </li>
@@ -112,7 +112,7 @@
       
     </li>
   
-  <li class="parent " data-id="deepl-cli/Term" data-name="term">
+  <li class="parent open current" data-id="deepl-cli/Term" data-name="term">
       <a href="../Term.html">Term</a>
       
         <ul>
@@ -122,7 +122,7 @@
       
     </li>
   
-  <li class=" " data-id="deepl-cli/Term/Spinner" data-name="term::spinner">
+  <li class=" current" data-id="deepl-cli/Term/Spinner" data-name="term::spinner">
       <a href="../Term/Spinner.html">Spinner</a>
       
     </li>
@@ -143,12 +143,12 @@
 
   <span class="kind">
     class
-  </span> DeepL::<wbr>Config
+  </span> Term::<wbr>Spinner
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../DeepL/Config.html">DeepL::Config</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Term/Spinner.html">Term::Spinner</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -178,8 +178,8 @@
   </h2>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b13612ff90f9aa51cf08cbfa9641752cc1b19ca1/src/deepl/config.cr#L2" target="_blank">
-        deepl/config.cr
+      <a href="https://github.com/kojix2/deepl-cli/blob/b13612ff90f9aa51cf08cbfa9641752cc1b19ca1/src/deepl/term_spinner.cr#L6" target="_blank">
+        deepl/term_spinner.cr
       </a>
     
     <br/>
@@ -199,8 +199,8 @@
   
   <dl>
     
-      <dt class="entry-const" id="DEFAULT_TARGET_LANG">
-        <strong>DEFAULT_TARGET_LANG</strong> = <code><span class="s">&quot;EN&quot;</span></code>
+      <dt class="entry-const" id="DEFAULT_FRAMES">
+        <strong>DEFAULT_FRAMES</strong> = <code>[<span class="s">&quot;|&quot;</span>, <span class="s">&quot;/&quot;</span>, <span class="s">&quot;-&quot;</span>, <span class="s">&quot;\\&quot;</span>] <span class="k">of</span> <span class="t">String</span></code>
       </dt>
       
     
@@ -209,20 +209,18 @@
 
 
   
-
-  
   <h2>
-    <a id="class-method-summary" class="anchor" href="#class-method-summary">
+    <a id="constructors" class="anchor" href="#constructors">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Class Method Summary
+    Constructors
   </h2>
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#default_target_lang%3AString-class-method" class="signature"><strong>.default_target_lang</strong> : String</a>
+        <a href="#new%28clear%3ABool%3Dfalse%2Cframes%3AArray%28String%29%3DDEFAULT_FRAMES%2Cinterval%3AFloat64%3D0.1%29-class-method" class="signature"><strong>.new</strong>(clear : Bool = <span class="n">false</span>, frames : Array(String) = <span class="t">DEFAULT_FRAMES</span>, interval : Float64 = <span class="n">0.1</span>)</a>
         
       </li>
     
@@ -232,6 +230,25 @@
   
 
   
+
+  
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#run%28%26%29-instance-method" class="signature"><strong>#run</strong>(&)</a>
+        
+      </li>
+    
+  </ul>
+
 
 
   <div class="methods-inherited">
@@ -265,29 +282,27 @@
   </div>
 
   
-
-  
   <h2>
-    <a id="class-method-detail" class="anchor" href="#class-method-detail">
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>
-    Class Method Detail
+    Constructor Detail
   </h2>
   
-    <div class="entry-detail" id="default_target_lang:String-class-method">
+    <div class="entry-detail" id="new(clear:Bool=false,frames:Array(String)=DEFAULT_FRAMES,interval:Float64=0.1)-class-method">
       <div class="signature">
         
-        def self.<strong>default_target_lang</strong> : String
+        def self.<strong>new</strong>(clear : Bool = <span class="n">false</span>, frames : Array(String) = <span class="t">DEFAULT_FRAMES</span>, interval : Float64 = <span class="n">0.1</span>)
 
-        <a class="method-permalink" href="#default_target_lang%3AString-class-method">#</a>
+        <a class="method-permalink" href="#new%28clear%3ABool%3Dfalse%2Cframes%3AArray%28String%29%3DDEFAULT_FRAMES%2Cinterval%3AFloat64%3D0.1%29-class-method">#</a>
       </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/b13612ff90f9aa51cf08cbfa9641752cc1b19ca1/src/deepl/config.cr#L5" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/b13612ff90f9aa51cf08cbfa9641752cc1b19ca1/src/deepl/term_spinner.cr#L14" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -297,6 +312,34 @@
   
 
   
+
+  
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="run(&amp;)-instance-method">
+      <div class="signature">
+        
+        def <strong>run</strong>(&)
+
+        <a class="method-permalink" href="#run%28%26%29-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/b13612ff90f9aa51cf08cbfa9641752cc1b19ca1/src/deepl/term_spinner.cr#L18" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
 
 
 </div>
