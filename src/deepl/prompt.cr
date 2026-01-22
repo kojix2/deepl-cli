@@ -1,25 +1,43 @@
 module Term
   class Prompt
+    def initialize(@input : IO = STDIN, @output : IO = STDERR)
+    end
+
     def select(label : String, items : Array(String)) : String?
       return nil if items.empty?
-      return items.first? unless STDIN.tty? && STDERR.tty?
+      return items.first? unless @input.tty? && @output.tty?
 
-      STDERR.puts label
+      @output.puts label
+
+      if items.size == 1
+        @output.puts items[0]
+        return items[0]
+      end
+
       items.each_with_index do |item, index|
-        STDERR.puts "#{index + 1}) #{item}"
+        @output.puts "#{index + 1}) #{item}"
       end
 
       loop do
-        STDERR.print "Select [1-#{items.size}]> "
-        input = STDIN.gets
+        @output.print "Select [1-#{items.size}] (Enter=1, q=cancel)> "
+        input = @input.gets
         return nil if input.nil?
         value = input.strip
-        next if value.empty?
-        idx = value.to_i
-        if idx >= 1 && idx <= items.size
-          return items[idx - 1]
+        return items[0] if value.empty?
+
+        case value.downcase
+        when "q", "quit", "exit"
+          return nil
         end
-        STDERR.puts "Invalid selection. Please enter a number between 1 and #{items.size}."
+
+        if value =~ /^\d+$/
+          idx = value.to_i
+          if idx >= 1 && idx <= items.size
+            return items[idx - 1]
+          end
+        end
+
+        @output.puts "Invalid selection. Enter 1-#{items.size}, Enter for 1, or q to cancel."
       end
     end
 
