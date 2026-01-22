@@ -18,9 +18,6 @@ dependencies:
   easyclip:
     github: kojix2/easyclip
     version: "0.1.1"
-  term-spinner:
-    github: crystal-term/spinner
-    version: "0.3.2"
   term-prompt:
     github: crystal-term/prompt
     version: "0.3.3"
