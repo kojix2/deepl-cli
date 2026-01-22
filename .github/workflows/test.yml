@@ -95,7 +95,7 @@ jobs:
           crystal eval 'puts "sourceEntry1\ttargetEntry1\nsourceEntry2\ttargetEntry2"' > glossary.tsv
           bin/deepl glossary create -n "Test Glossary" -f EN -t DE glossary.tsv
           bin/deepl glossary list
-          bin/deepl glossary view "Test Glossary"
+          bin/deepl glossary view "Test Glossary" -f EN -t DE
           bin/deepl glossary delete "Test Glossary"
           bin/deepl glossary -l
           bin/deepl glossary -h

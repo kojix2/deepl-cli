@@ -248,6 +248,14 @@ module DeepL
             opt.action = Action::OutputGlossaryEntriesById
           end
 
+          on("-f", "--from LANG", "Source language") do |from|
+            opt.source_lang = from.upcase
+          end
+
+          on("-t", "--to LANG", "Target language [#{opt.target_lang}]") do |to_|
+            opt.target_lang = to_.upcase
+          end
+
           on("-o", "--output FILE", "Output file") do |file|
             opt.output_file = Path[file]
           end
