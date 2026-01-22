@@ -18,8 +18,5 @@ dependencies:
   easyclip:
     github: kojix2/easyclip
     version: "0.1.1"
-  term-prompt:
-    github: crystal-term/prompt
-    version: "0.3.3"
 
 license: MIT
