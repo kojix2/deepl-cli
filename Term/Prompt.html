@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../js/doc.js"></script>
 
   <meta name="repository-name" content="deepl-cli">
-  <title>Term::Reader - deepl-cli main</title>
+  <title>Term::Prompt - deepl-cli main</title>
   <script type="text/javascript">
     CrystalDocs.base_path = "../";
   </script>
@@ -117,8 +117,8 @@
       
         <ul>
   
-  <li class=" current" data-id="deepl-cli/Term/Reader" data-name="term::reader">
-      <a href="../Term/Reader.html">Reader</a>
+  <li class=" current" data-id="deepl-cli/Term/Prompt" data-name="term::prompt">
+      <a href="../Term/Prompt.html">Prompt</a>
       
     </li>
   
@@ -143,12 +143,12 @@
 
   <span class="kind">
     class
-  </span> Term::<wbr>Reader
+  </span> Term::<wbr>Prompt
 
 </h1>
 
 
-  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Term/Reader.html">Term::Reader</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../Term/Prompt.html">Term::Prompt</a></li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
 
 
 
@@ -178,64 +178,8 @@
   </h2>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b13612ff90f9aa51cf08cbfa9641752cc1b19ca1/lib/term-reader/src/reader/console.cr#L5" target="_blank">
-        lib/term-reader/src/reader/console.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/kojix2/deepl-cli/blob/b13612ff90f9aa51cf08cbfa9641752cc1b19ca1/lib/term-reader/src/reader/history.cr#L2" target="_blank">
-        lib/term-reader/src/reader/history.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/kojix2/deepl-cli/blob/b13612ff90f9aa51cf08cbfa9641752cc1b19ca1/lib/term-reader/src/reader/key_event.cr#L4" target="_blank">
-        lib/term-reader/src/reader/key_event.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/kojix2/deepl-cli/blob/b13612ff90f9aa51cf08cbfa9641752cc1b19ca1/lib/term-reader/src/reader/keys.cr#L2" target="_blank">
-        lib/term-reader/src/reader/keys.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/kojix2/deepl-cli/blob/b13612ff90f9aa51cf08cbfa9641752cc1b19ca1/lib/term-reader/src/reader/line.cr#L2" target="_blank">
-        lib/term-reader/src/reader/line.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/kojix2/deepl-cli/blob/b13612ff90f9aa51cf08cbfa9641752cc1b19ca1/lib/term-reader/src/reader/mode.cr#L2" target="_blank">
-        lib/term-reader/src/reader/mode.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/kojix2/deepl-cli/blob/b13612ff90f9aa51cf08cbfa9641752cc1b19ca1/lib/term-reader/src/reader/version.cr#L2" target="_blank">
-        lib/term-reader/src/reader/version.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/kojix2/deepl-cli/blob/b13612ff90f9aa51cf08cbfa9641752cc1b19ca1/lib/term-reader/src/term-reader.cr#L11" target="_blank">
-        lib/term-reader/src/term-reader.cr
-      </a>
-    
-    <br/>
-  
-    
-      <a href="https://github.com/kojix2/deepl-cli/blob/b13612ff90f9aa51cf08cbfa9641752cc1b19ca1/src/ext/term-reader.cr#L10" target="_blank">
-        ext/term-reader.cr
+      <a href="https://github.com/kojix2/deepl-cli/blob/4037c43fd3d1866d415a226dd9c4a2828d57d9a1/src/deepl/prompt.cr#L2" target="_blank">
+        deepl/prompt.cr
       </a>
     
     <br/>
@@ -263,9 +207,14 @@
   <ul class="list-summary">
     
       <li class="entry-summary">
-        <a href="#unbuffered%28%26%29-instance-method" class="signature"><strong>#unbuffered</strong>(&)</a>
+        <a href="#select%28label%3AString%2Citems%3AArray%28String%29%29%3AString%7CNil-instance-method" class="signature"><strong>#select</strong>(label : String, items : Array(String)) : String | Nil</a>
         
-          <div class="summary"><p>Get input in unbuffered mode.</p></div>
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#select%28label%3AString%2Citems%3AArray%28T%29%29%3AString%7CNilforallT-instance-method" class="signature"><strong>#select</strong>(label : String, items : Array(T)) : String | Nil forall T</a>
+        
+          <div class="summary"><p>Overload for arrays of any type convertible to String</p></div>
         
       </li>
     
@@ -319,23 +268,39 @@
     Instance Method Detail
   </h2>
   
-    <div class="entry-detail" id="unbuffered(&amp;)-instance-method">
+    <div class="entry-detail" id="select(label:String,items:Array(String)):String|Nil-instance-method">
       <div class="signature">
         
-        def <strong>unbuffered</strong>(&)
+        def <strong>select</strong>(label : String, items : Array(String)) : String | Nil
 
-        <a class="method-permalink" href="#unbuffered%28%26%29-instance-method">#</a>
+        <a class="method-permalink" href="#select%28label%3AString%2Citems%3AArray%28String%29%29%3AString%7CNil-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/4037c43fd3d1866d415a226dd9c4a2828d57d9a1/src/deepl/prompt.cr#L3" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="select(label:String,items:Array(T)):String|NilforallT-instance-method">
+      <div class="signature">
+        
+        def <strong>select</strong>(label : String, items : Array(T)) : String | Nil forall T
+
+        <a class="method-permalink" href="#select%28label%3AString%2Citems%3AArray%28T%29%29%3AString%7CNilforallT-instance-method">#</a>
       </div>
       
         <div class="doc">
           
-          <p>Get input in unbuffered mode.</p>
+          <p>Overload for arrays of any type convertible to String</p>
         </div>
       
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/b13612ff90f9aa51cf08cbfa9641752cc1b19ca1/src/ext/term-reader.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/4037c43fd3d1866d415a226dd9c4a2828d57d9a1/src/deepl/prompt.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
