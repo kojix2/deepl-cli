@@ -11,7 +11,9 @@ module DeepL
           "nano"
         {% end %}
       end
-      system("#{editor} #{path}")
+      # Pass args separately to avoid shell injection (e.g., "code --wait" → ["code", "--wait"]).
+      parts = editor.split
+      Process.run(parts[0], args: parts[1..] + [path.to_s], input: STDIN, output: STDOUT, error: STDERR)
     end
 
     def self.edit_text(text)
