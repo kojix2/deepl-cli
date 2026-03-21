@@ -17,6 +17,6 @@ dependencies:
     version: "~> 1.3"
   easyclip:
     github: kojix2/easyclip
-    version: "0.1.1"
+    version: "0.1.3"
 
 license: MIT
