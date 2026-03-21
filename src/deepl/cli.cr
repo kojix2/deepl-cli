@@ -307,7 +307,7 @@ module DeepL
     def argv_or_select_id_from_glossary_list_long
       if ARGV.size == 0
         glossary_id = select_id_from_glossary_list_long.not_nil!
-        glossary_ids = [glossary_id]
+        [glossary_id]
       else
         ARGV
       end
@@ -318,8 +318,8 @@ module DeepL
       translator = DeepL::Translator.new
       glossary_list = translator.list_multilingual_glossaries
       return if glossary_list.empty?
-      glossary_names = glossary_list.map { |g| g.name }
-      glossary_name = prompt.select("Select glossary", glossary_names)
+      glossary_names = glossary_list.map(&.name)
+      prompt.select("Select glossary", glossary_names)
     end
 
     def select_id_from_glossary_list_long : String?
@@ -369,7 +369,7 @@ module DeepL
         # FIXME
         case glossary_info_list.size
         when 2..
-          creation_times = glossary_info_list.map { |g| g.creation_time.to_local.to_s }
+          creation_times = glossary_info_list.map(&.creation_time.to_local.to_s)
           prompt = Term::Prompt.new
           tm = prompt.select("Select creation date", creation_times)
           glossary_info = glossary_info_list.find { |g| g.creation_time.to_local.to_s == tm }
@@ -522,11 +522,11 @@ module DeepL
         abbrev = info.language
         name = info.name
         formality = info.supports_formality
-        row = String.build { |s|
+        row = String.build do |s|
           s << ((default && (default == abbrev)) ? "+ " : "- ")
           s << "#{abbrev.ljust(7)}#{name.ljust(24)}"
           s << "supports formality" if formality
-        }
+        end
         puts row
       end
     end

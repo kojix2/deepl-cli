@@ -27,10 +27,10 @@ module DeepL
     end
 
     macro _set_action_(action, banner)
-      opt.action = {{action}}
+      opt.action = {{ action }}
       @handlers.clear
       @flags.clear
-      self.banner = "\n{{banner.id}}\n"
+      self.banner = "\n{{ banner.id }}\n"
     end
 
     def initialize
@@ -59,7 +59,7 @@ module DeepL
 
         BANNER
 
-        @handlers.reject! %w(-h --help -d --debug -v --version -u --usage)
+        @handlers.reject! %w[-h --help -d --debug -v --version -u --usage]
         @flags.pop(4)
 
         on("-s", "--split-sentences OPT", "Split sentences") do |v|
