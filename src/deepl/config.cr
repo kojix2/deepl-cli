@@ -29,7 +29,11 @@ module DeepL
       return unless lang_env
 
       lang_parts = lang_env.split("_")
-      lang_parts.first?.try(&.upcase)
+      code = lang_parts.first?.try(&.upcase)
+      # "C", "POSIX", "C.UTF-8" etc. are not valid DeepL language codes
+      return if code.nil? || code == "C" || code == "POSIX" || code.starts_with?("C.")
+
+      code
     end
 
     private def self.detect_windows_language : String?
