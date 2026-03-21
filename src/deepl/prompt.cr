@@ -4,7 +4,7 @@ module Term
     end
 
     def select(label : String, items : Array(String)) : String?
-      return nil if items.empty?
+      return if items.empty?
       return items.first? unless @input.tty? && @output.tty?
 
       @output.puts label
@@ -21,13 +21,13 @@ module Term
       loop do
         @output.print "Select [1-#{items.size}] (Enter=1, q=cancel)> "
         input = @input.gets
-        return nil if input.nil?
+        return if input.nil?
         value = input.strip
         return items[0] if value.empty?
 
         case value.downcase
         when "q", "quit", "exit"
-          return nil
+          return
         end
 
         if value =~ /^\d+$/
@@ -43,7 +43,7 @@ module Term
 
     # Overload for arrays of any type convertible to String
     def select(label : String, items : Array(T)) : String? forall T
-      return nil if items.empty?
+      return if items.empty?
       self.select(label, items.map(&.to_s))
     end
   end

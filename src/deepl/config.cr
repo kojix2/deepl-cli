@@ -26,7 +26,7 @@ module DeepL
       # Extract language code from LANG environment variable
       # Example: "de_DE.UTF-8" -> "DE"
       lang_env = ENV["LANG"]?
-      return nil unless lang_env
+      return unless lang_env
 
       lang_parts = lang_env.split("_")
       lang_parts.first?.try(&.upcase)
@@ -35,7 +35,7 @@ module DeepL
     private def self.detect_windows_language : String?
       # Use PowerShell to get current culture language
       command_result = `powershell -Command "[System.Globalization.CultureInfo]::CurrentCulture.TwoLetterISOLanguageName"`
-      return nil if command_result.empty?
+      return if command_result.empty?
 
       command_result.strip.upcase
     end

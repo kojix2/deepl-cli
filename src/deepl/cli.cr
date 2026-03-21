@@ -75,7 +75,7 @@ module DeepL
       spinner.run do
         result = block.call
       end
-      return result
+      result
     end
 
     private def remove_ansi_escape_codes(text)
