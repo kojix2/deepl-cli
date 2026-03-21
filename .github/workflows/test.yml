@@ -35,10 +35,10 @@ jobs:
       - name: Build deepl-mock Docker image
         run: |
           cd deepl-mock
-          docker build -t deepl-mock .
+          docker build -t deepl/deepl-mock .
 
       - name: Start deepl-mock server
-        run: docker run -d --rm --name deepl-mock -p3000:3000 -p3001:3001 deepl-mock
+        run: docker run -d --rm --name deepl-mock -p3000:3000 -p3001:3001 deepl/deepl-mock
 
       - name: Wait for deepl-mock to be ready
         run: |
@@ -50,6 +50,8 @@ jobs:
             echo "Waiting for deepl-mock server to be ready..."
             sleep 1
           done
+          curl --silent --output /dev/null http://localhost:3000/v2/translate || \
+            (echo "deepl-mock server did not start in time" && exit 1)
 
       - name: Test deepl-mock server with curl
         run: |
