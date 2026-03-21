@@ -15,7 +15,7 @@ module Term
       @frames = @frames.to_a
     end
 
-    def run(&)
+    def run(&block : -> T) : T forall T
       return yield unless tty?
 
       @running = true
@@ -29,12 +29,16 @@ module Term
         end
       end
 
+      result = uninitialized T
+
       begin
-        yield
+        result = yield
       ensure
         @running = false
         clear_line if @clear
       end
+
+      result
     end
 
     private def clear_line

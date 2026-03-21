@@ -69,13 +69,11 @@ module DeepL
       exit(1)
     end
 
-    private def with_spinner(&block)
-      result = nil
+    private def with_spinner(&block : -> T) : T forall T
       spinner = Term::Spinner.new(clear: true)
       spinner.run do
-        result = block.call
+        block.call
       end
-      result
     end
 
     private def remove_ansi_escape_codes(text)
@@ -102,11 +100,10 @@ module DeepL
         option.input_text = remove_ansi_escape_codes(option.input_text)
       end
 
-      result = [] of DeepL::TextResult
       translator = DeepL::Translator.new
 
-      with_spinner do
-        result = translator.translate_text(
+      result = with_spinner do
+        translator.translate_text(
           text: option.input_text,
           target_lang: option.target_lang,
           source_lang: option.source_lang,
@@ -155,11 +152,10 @@ module DeepL
         option.input_text = remove_ansi_escape_codes(option.input_text)
       end
 
-      result = [] of DeepL::RephraseResult
       translator = DeepL::Translator.new
 
-      with_spinner do
-        result = translator.rephrase_text(
+      result = with_spinner do
+        translator.rephrase_text(
           text: option.input_text,
           target_lang: option.source_lang, # source_lang is correct here.
           writing_style: option.writing_style,
@@ -226,10 +222,8 @@ module DeepL
 
       translator = DeepL::Translator.new
 
-      document_handle = uninitialized DocumentHandle
-
-      with_spinner do
-        document_handle = translator.translate_document_upload(
+      document_handle = with_spinner do
+        translator.translate_document_upload(
           path: option.input_path,
           target_lang: option.target_lang,
           source_lang: option.source_lang,
@@ -297,8 +291,11 @@ module DeepL
 
     def argv_or_select_name_from_glossary_list
       if ARGV.size == 0
-        glossary_name = select_name_from_glossary_list.not_nil!
-        [glossary_name]
+        if glossary_name = select_name_from_glossary_list
+          [glossary_name]
+        else
+          [] of String
+        end
       else
         ARGV
       end
@@ -306,8 +303,11 @@ module DeepL
 
     def argv_or_select_id_from_glossary_list_long
       if ARGV.size == 0
-        glossary_id = select_id_from_glossary_list_long.not_nil!
-        [glossary_id]
+        if glossary_id = select_id_from_glossary_list_long
+          [glossary_id]
+        else
+          [] of String
+        end
       else
         ARGV
       end
@@ -382,6 +382,7 @@ module DeepL
           glossary_info = glossary_info_list.first
           edit_glossary_core(translator, glossary_info)
         when 0
+          STDERR.puts "[deepl-cli] Glossary '#{glossary_name}' is not found"
         end
       end
     end
@@ -399,10 +400,9 @@ module DeepL
       # Choose language pair
       src, tgt = resolve_or_select_language_pair(glossary_info)
 
-      original_entries_text = ""
-      with_spinner do
+      original_entries_text = with_spinner do
         dict = translator.get_multilingual_glossary_entries(glossary_info.glossary_id, src, tgt)
-        original_entries_text = dict.entries.to_s
+        dict.entries.to_s
       end
 
       edited_entries_text = Utils.edit_text(original_entries_text)
@@ -550,7 +550,7 @@ module DeepL
 
     private def avoid_spinner(str)
       return str unless STDERR.tty?
-      "#{"\e[2K\r" if STDERR.tty?}" + str
+      "\e[2K\r" + str
     end
   end
 end
