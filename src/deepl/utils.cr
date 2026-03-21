@@ -15,7 +15,7 @@ module DeepL
     end
 
     def self.edit_text(text)
-      tmp_file = File.tempfile { |f| f.puts(text) }
+      tmp_file = File.tempfile(&.puts(text))
       open_texteditor(tmp_file.path)
       File.read(tmp_file.path)
     ensure
