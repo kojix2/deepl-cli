@@ -56,7 +56,7 @@ jobs:
         run: |
           mkdir -p bin
           docker run -d --name alpine -v $(pwd):/workspace -w /workspace crystallang/crystal:latest-alpine tail -f /dev/null
-          docker exec alpine apk add readline-dev readline-static ncurses-dev ncurses-static ncurses-libs
+          docker exec alpine apk add ncurses-dev ncurses-static ncurses-libs
           docker exec alpine shards install --without-development --release --static
           docker exec alpine shards build --release --static
           docker exec alpine chmod +x bin/$BIN
@@ -76,7 +76,7 @@ jobs:
         shell: bash
         run: |
           shards install --without-development --release
-          brew install libgc pcre2 openssl@3 readline ncurses
+          brew install libgc pcre2 openssl@3 ncurses
           echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH"
           unset PKG_CONFIG_PATH
           echo "cleared PKG_CONFIG_PATH to avoid openSSL conflicts"
@@ -84,9 +84,8 @@ jobs:
           ln -s $(brew ls pcre2 | grep libpcre2-8.a) .
           ln -s $(brew ls openssl@3 | grep libssl.a) .
           ln -s $(brew ls openssl@3 | grep libcrypto.a) .
-          ln -s $(brew ls readline | grep libreadline.a) .
           ln -s $(brew ls ncurses | grep libncurses.a) .
-          STATIC_LIBS="-L $(pwd) $(pwd)/libgc.a $(pwd)/libpcre2-8.a $(pwd)/libssl.a $(pwd)/libcrypto.a $(pwd)/libreadline.a $(pwd)/libncurses.a -Wl,-search_paths_first"
+          STATIC_LIBS="-L $(pwd) $(pwd)/libgc.a $(pwd)/libpcre2-8.a $(pwd)/libssl.a $(pwd)/libcrypto.a $(pwd)/libncurses.a -Wl,-search_paths_first"
           shards build --link-flags="$STATIC_LIBS" --release
           chmod +x bin/$BIN
           otool -L bin/$BIN
