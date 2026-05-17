@@ -120,7 +120,7 @@ module DeepL
           ignore_tags: option.ignore_tags,
           glossary_name: option.glossary_name, # original option of deepl.cr
           context: option.context,
-          show_billed_characters: option.show_billed_characters,
+          show_billed_characters: option.show_billed_characters?,
           model_type: option.model_type
         )
       end
