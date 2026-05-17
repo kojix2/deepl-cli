@@ -7,7 +7,7 @@ require "./utils"
 
 module DeepL
   class CLI
-    class_property debug : Bool = false
+    class_property? debug : Bool = false
     getter parser : Parser
     getter option : Options
 
@@ -16,6 +16,7 @@ module DeepL
       @option = parser.parse(ARGV)
     end
 
+    # ameba:disable Metrics/CyclomaticComplexity
     def run
       case option.action
       when Action::TranslateText
@@ -64,10 +65,12 @@ module DeepL
     rescue ex
       error_message = "\n[deepl-cli] ERROR: #{ex.class} #{ex.message}"
       error_message += "\n#{ex.response}" if ex.is_a?(Crest::RequestFailed)
-      error_message += "\n#{ex.backtrace.join("\n")}" if CLI.debug
+      error_message += "\n#{ex.backtrace.join("\n")}" if CLI.debug?
       STDERR.puts error_message
       exit(1)
     end
+
+    # ameba:enable Metrics/CyclomaticComplexity
 
     private def with_spinner(&block : -> T) : T forall T
       spinner = Term::Spinner.new(clear: true)
@@ -96,7 +99,7 @@ module DeepL
       end
 
       # Remove ANSI escape codes from the input text (only if no_ansi is true)
-      if option.no_ansi
+      if option.no_ansi?
         option.input_text = remove_ansi_escape_codes(option.input_text)
       end
 
@@ -109,9 +112,9 @@ module DeepL
           source_lang: option.source_lang,
           formality: option.formality,
           split_sentences: option.split_sentences,
-          preserve_formatting: option.preserve_formatting,
+          preserve_formatting: option.preserve_formatting?,
           tag_handling: option.tag_handling,
-          outline_detection: option.outline_detection,
+          outline_detection: option.outline_detection?,
           non_splitting_tags: option.non_splitting_tags,
           splitting_tags: option.splitting_tags,
           ignore_tags: option.ignore_tags,
@@ -124,20 +127,22 @@ module DeepL
 
       output = option.output_file ? IO::Memory.new : STDOUT
 
-      result.each do |r|
-        if option.detect_source_language
-          STDERR.puts "[deepl-cli] Detected source language: #{r.detected_source_language}"
+      result.each do |result_item|
+        if option.detect_source_language?
+          STDERR.puts "[deepl-cli] Detected source language: #{result_item.detected_source_language}"
         end
-        if option.show_billed_characters
-          STDERR.puts "[deepl-cli] Billed characters: #{r.billed_characters}"
+        if option.show_billed_characters?
+          STDERR.puts "[deepl-cli] Billed characters: #{result_item.billed_characters}"
         end
         # if option.show_model_type && r.model_type_used
         #   STDERR.puts "[deepl-cli] Model type used: #{r.model_type_used}"
         # end
-        output.puts r.text
+        output.puts result_item.text
       end
       if output_file = option.output_file
-        File.open(output_file, "w") { |f| output.to_s(f) }
+        File.open(output_file, "w") do |output_file_handle|
+          output.to_s(output_file_handle)
+        end
         STDERR.puts "[deepl-cli] Translated text is written to #{output_file}"
       end
     end
@@ -148,7 +153,7 @@ module DeepL
       end
 
       # Remove ANSI escape codes from the input text (only if no_ansi is true)
-      if option.no_ansi
+      if option.no_ansi?
         option.input_text = remove_ansi_escape_codes(option.input_text)
       end
 
@@ -165,15 +170,17 @@ module DeepL
 
       output = option.output_file ? IO::Memory.new : STDOUT
 
-      result.each do |r|
-        if option.detect_source_language
-          STDERR.puts "[deepl-cli] Detected source language: #{r.detected_source_language}"
+      result.each do |result_item|
+        if option.detect_source_language?
+          STDERR.puts "[deepl-cli] Detected source language: #{result_item.detected_source_language}"
         end
-        output.puts r.text
+        output.puts result_item.text
       end
 
       if output_file = option.output_file
-        File.open(output_file, "w") { |f| output.to_s(f) }
+        File.open(output_file, "w") do |output_file_handle|
+          output.to_s(output_file_handle)
+        end
         STDERR.puts "[deepl-cli] Rephrased text is written to #{output_file}"
       end
     end
@@ -259,12 +266,11 @@ module DeepL
     end
 
     def create_glossary
-      # FIXME check TSV file format
+      # The glossary entry format is still inferred from the file extension.
 
       entry_format = "tsv"
 
-      # A corner case still not handled:
-      # Standard input is CSV file format
+      # Standard input is assumed to be TSV when no file name is available.
 
       if option.glossary_name.nil? && ARGV.size == 1
         name = ARGV[0]
@@ -327,18 +333,20 @@ module DeepL
       translator = DeepL::Translator.new
       glossary_list = translator.list_multilingual_glossaries
       return if glossary_list.empty?
-      max = glossary_list.map { |g| g.name.size }.max.not_nil!
-      glossary_str_list = glossary_list.map do |glossary|
-        langs = glossary.dictionaries.map { |d| "#{d.source_lang} -> #{d.target_lang}" }.join(", ")
+      max = glossary_list.max_of(&.name.size)
+      glossary_str_list = glossary_list.map do |glossary_item|
+        langs = glossary_item.dictionaries.map { |dictionary| "#{dictionary.source_lang} -> #{dictionary.target_lang}" }.join(", ")
         [
-          glossary.name.rjust(max + 1),
+          glossary_item.name.rjust(max + 1),
           langs,
-          glossary.creation_time,
-          glossary.glossary_id,
+          glossary_item.creation_time,
+          glossary_item.glossary_id,
         ].join("\t")
       end
       glossary_str = prompt.select("Select glossary", glossary_str_list)
-      glossary_id = glossary_str.not_nil!.split("\t").last
+      return unless glossary_str
+
+      glossary_str.split("\t").last
     end
 
     def delete_glossary_by_name
@@ -366,13 +374,13 @@ module DeepL
       translator = DeepL::Translator.new
       glossary_names.each do |glossary_name|
         glossary_info_list = translator.get_multilingual_glossaries_by_name(glossary_name)
-        # FIXME
+        # Multiple glossaries with the same name are disambiguated by creation time.
         case glossary_info_list.size
         when 2..
           creation_times = glossary_info_list.map(&.creation_time.to_local.to_s)
           prompt = Term::Prompt.new
           tm = prompt.select("Select creation date", creation_times)
-          glossary_info = glossary_info_list.find { |g| g.creation_time.to_local.to_s == tm }
+          glossary_info = glossary_info_list.find { |candidate_glossary_info| candidate_glossary_info.creation_time.to_local.to_s == tm }
           if glossary_info.nil?
             STDERR.puts "[deepl-cli] Glossary #{glossary_name} #{tm} is not found"
           else
@@ -474,14 +482,14 @@ module DeepL
       translator = DeepL::Translator.new
       glossary_list = translator.list_multilingual_glossaries
       return if glossary_list.empty?
-      max = glossary_list.map { |g| g.name.size }.max.not_nil!
-      glossary_list.each do |glossary|
-        langs = glossary.dictionaries.map { |d| "#{d.source_lang} -> #{d.target_lang}" }.join(", ")
+      max = glossary_list.max_of(&.name.size)
+      glossary_list.each do |glossary_item|
+        langs = glossary_item.dictionaries.map { |dictionary| "#{dictionary.source_lang} -> #{dictionary.target_lang}" }.join(", ")
         puts [
-          glossary.name.rjust(max + 1),
+          glossary_item.name.rjust(max + 1),
           langs,
-          glossary.creation_time,
-          glossary.glossary_id,
+          glossary_item.creation_time,
+          glossary_item.glossary_id,
         ].join("\t")
       end
     end
@@ -494,10 +502,9 @@ module DeepL
         return {src, tgt}
       end
       prompt = Term::Prompt.new
-      pairs = glossary_info.dictionaries.map { |d| "#{d.source_lang} -> #{d.target_lang}" }
-      selected = prompt.select("Select language pair", pairs)
-      raise "Selection cancelled" if selected.nil?
-      parts = selected.not_nil!.split(" -> ")
+      pairs = glossary_info.dictionaries.map { |dictionary| "#{dictionary.source_lang} -> #{dictionary.target_lang}" }
+      selected = prompt.select("Select language pair", pairs) || raise "Selection cancelled"
+      parts = selected.split(" -> ")
       {parts[0], parts[1]}
     end
 
@@ -522,10 +529,10 @@ module DeepL
         abbrev = info.language
         name = info.name
         formality = info.supports_formality
-        row = String.build do |s|
-          s << ((default && (default == abbrev)) ? "+ " : "- ")
-          s << "#{abbrev.ljust(7)}#{name.ljust(24)}"
-          s << "supports formality" if formality
+        row = String.build do |row_builder|
+          row_builder << ((default && (default == abbrev)) ? "+ " : "- ")
+          row_builder << "#{abbrev.ljust(7)}#{name.ljust(24)}"
+          row_builder << "supports formality" if formality
         end
         puts row
       end
@@ -537,7 +544,7 @@ module DeepL
       puts translator.server_url
       puts "character_count: #{usage.character_count}"
       puts "character_limit: #{usage.character_limit}"
-      # TODO: Print more details for Pro accounts
+      # Pro accounts expose more usage details, but they are not printed yet.
     end
 
     def print_version

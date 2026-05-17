@@ -15,7 +15,7 @@ module Term
       @frames = @frames.to_a
     end
 
-    def run(&block : -> T) : T forall T
+    def run(&) : T forall T
       return yield unless tty?
 
       @running = true

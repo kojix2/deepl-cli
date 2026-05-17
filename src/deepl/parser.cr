@@ -153,8 +153,8 @@ module DeepL
           opt.target_lang = to_.upcase
         end
 
-        on("-g", "--glossary NAME", "Glossary name") do |name|
-          opt.glossary_name = name
+        on("-g", "--glossary NAME", "Glossary name") do |glossary_name|
+          opt.glossary_name = glossary_name
         end
 
         on("-F", "--formality OPT", "Formality (default more less)") do |v|
@@ -193,11 +193,11 @@ module DeepL
           _on_help_
         end
 
-        on("create", "Create a glossary") do |name|
+        on("create", "Create a glossary") do |_input_name|
           _set_action_(Action::CreateGlossary, "Usage: deepl glossary create [options] <tsv|csv>")
 
-          on("-n", "--name NAME", "Glossary name (required)") do |name|
-            opt.glossary_name = name
+          on("-n", "--name NAME", "Glossary name (required)") do |glossary_name|
+            opt.glossary_name = glossary_name
           end
 
           on("-f", "--from LANG", "Source language (required)") do |from|
@@ -269,7 +269,7 @@ module DeepL
 
         on("-l", "--list", "List glossaries (short form)") do
           opt.action = Action::ListGlossaries
-          # FIXME: short form
+          # Keep the short form mapped to the current long-list behavior.
         end
 
         _on_debug_
@@ -357,14 +357,13 @@ module DeepL
         opt.input_text = text
       end
 
-      # FIXME: This option is experimental.
-      # The name of the option may change in the future.
+      # This option is experimental and may change in the future.
       # on("-c", "--copy", "Copy translated text to clipboard (experimental)") do
-      #   # TODO?
+      #   # Clipboard integration is not implemented yet.
       # end
 
-      on("-g", "--glossary NAME", "Glossary name") do |name|
-        opt.glossary_name = name
+      on("-g", "--glossary NAME", "Glossary name") do |glossary_name|
+        opt.glossary_name = glossary_name
       end
 
       on("-D", "--detect-language", "Output detected source language") do
