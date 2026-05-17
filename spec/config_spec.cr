@@ -15,7 +15,7 @@ describe DeepL::Config do
     end
   end
 
-  it "prefers LC_ALL over LANG on unix locales" do
+  it "prefers LC_ALL over LANG locales" do
     original_deepl_target_lang = ENV["DEEPL_TARGET_LANG"]?
     original_lc_all = ENV["LC_ALL"]?
     original_lc_messages = ENV["LC_MESSAGES"]?

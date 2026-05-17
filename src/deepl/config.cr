@@ -7,6 +7,9 @@ module DeepL
       env_lang = ENV["DEEPL_TARGET_LANG"]?
       return env_lang if env_lang
 
+      locale_lang = detect_locale_environment_language
+      return locale_lang if locale_lang
+
       # Detect system language from locale
       system_lang = detect_system_language
       system_lang || DEFAULT_TARGET_LANG
@@ -14,7 +17,7 @@ module DeepL
 
     private def self.detect_system_language : String?
       {% if flag?(:darwin) || flag?(:unix) %}
-        detect_unix_language
+        nil
       {% elsif flag?(:windows) %}
         detect_windows_language
       {% else %}
@@ -22,7 +25,7 @@ module DeepL
       {% end %}
     end
 
-    private def self.detect_unix_language : String?
+    private def self.detect_locale_environment_language : String?
       [ENV["LC_ALL"]?, ENV["LC_MESSAGES"]?, ENV["LANG"]?].each do |locale|
         if code = locale_to_language_code(locale)
           return code
