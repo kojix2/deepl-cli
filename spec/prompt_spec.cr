@@ -18,6 +18,28 @@ describe Term::Prompt do
     output.to_s.should_not contain("Select [1-1]")
   end
 
+  it "does not auto-select a multi-item list when not interactive" do
+    input = IO::Memory.new
+    output = IO::Memory.new
+    prompt = Term::Prompt.new(input, output)
+
+    selected = prompt.select("Select item", ["a", "b"])
+
+    selected.should be_nil
+    output.to_s.should be_empty
+  end
+
+  it "still returns a single item when not interactive" do
+    input = IO::Memory.new
+    output = IO::Memory.new
+    prompt = Term::Prompt.new(input, output)
+
+    selected = prompt.select("Select item", ["a"])
+
+    selected.should eq("a")
+    output.to_s.should be_empty
+  end
+
   it "selects default (1) on empty input" do
     input = TTYMemory.new("\n")
     output = TTYMemory.new

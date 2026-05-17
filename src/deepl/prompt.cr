@@ -5,7 +5,10 @@ module Term
 
     def select(label : String, items : Array(String)) : String?
       return if items.empty?
-      return items.first? unless @input.tty? && @output.tty?
+      unless @input.tty? && @output.tty?
+        return items.first? if items.size == 1
+        return
+      end
 
       @output.puts label
 
