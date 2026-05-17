@@ -23,14 +23,19 @@ module DeepL
     end
 
     private def self.detect_unix_language : String?
-      # Extract language code from LANG environment variable
-      # Example: "de_DE.UTF-8" -> "DE"
-      lang_env = ENV["LANG"]?
-      return unless lang_env
+      [ENV["LC_ALL"]?, ENV["LC_MESSAGES"]?, ENV["LANG"]?].each do |locale|
+        if code = locale_to_language_code(locale)
+          return code
+        end
+      end
 
-      lang_parts = lang_env.split("_")
-      code = lang_parts.first?.try(&.upcase)
-      # "C", "POSIX", "C.UTF-8" etc. are not valid DeepL language codes
+      nil
+    end
+
+    private def self.locale_to_language_code(locale : String?) : String?
+      return unless locale
+
+      code = locale.split(/[_.@]/).first?.try(&.upcase)
       return if code.nil? || code == "C" || code == "POSIX" || code.starts_with?("C.")
 
       code
