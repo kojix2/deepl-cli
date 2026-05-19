@@ -3,7 +3,7 @@
 [![build](https://github.com/kojix2/deepl-cli/actions/workflows/build.yml/badge.svg)](https://github.com/kojix2/deepl-cli/actions/workflows/build.yml)
 [![Lines of Code](https://img.shields.io/endpoint?url=https%3A%2F%2Ftokei.kojix2.net%2Fbadge%2Fgithub%2Fkojix2%2Fdeepl-cli%2Flines)](https://tokei.kojix2.net/github/kojix2/deepl-cli)
 
-DeepL CLI is a fast and lightweight command-line tool for the [DeepL API](https://www.deepl.com/pro-api/), written in [Crystal](https://github.com/crystal-lang/crystal).
+DeepL CLI is a fast and lightweight command-line tool for using [DeepL API](https://www.deepl.com/pro-api/) translation from the terminal.
 
 - Supports document translation `pdf`, `docx`, `txt`, etc.
 - Supports glossaries
@@ -384,6 +384,13 @@ deepl doc -d a.pdf
 ### DeepL API Library
 
 - [https://github.com/kojix2/deepl.cr/](https://github.com/kojix2/deepl.cr/)
+
+## Difference from the official DeepL CLI
+
+Built for a different audience.
+
+- The official [DeepL CLI](https://github.com/DeepLcom/deepl-cli) is mainly intended for developers working with the DeepL API.
+- This project is for people who want a lightweight translation tool they can use directly from the terminal.
 
 ## License
 
