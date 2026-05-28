@@ -10,9 +10,11 @@ module DeepL
     property help_message : String
 
     macro _on_debug_
-      on("-d", "--debug", "Show backtrace on error") do
-        CLI.debug = true
-      end
+      {% if flag?(:debug) %}
+        on("-d", "--debug", "Show backtrace on error") do
+          CLI.debug = true
+        end
+      {% end %}
     end
 
     macro _on_help_
@@ -60,7 +62,11 @@ module DeepL
         BANNER
 
         @handlers.reject! %w[-h --help -d --debug -v --version -u --usage]
-        @flags.pop(4)
+        {% if flag?(:debug) %}
+          @flags.pop(4)
+        {% else %}
+          @flags.pop(3)
+        {% end %}
 
         on("-s", "--split-sentences OPT", "Split sentences") do |v|
           opt.split_sentences = v

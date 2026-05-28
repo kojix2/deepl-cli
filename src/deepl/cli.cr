@@ -65,7 +65,9 @@ module DeepL
     rescue ex
       error_message = "\n[deepl-cli] ERROR: #{ex.class} #{ex.message}"
       error_message += "\n#{ex.response}" if ex.is_a?(Crest::RequestFailed)
-      error_message += "\n#{ex.backtrace.join("\n")}" if CLI.debug?
+      {% if flag?(:debug) %}
+        error_message += "\n#{ex.backtrace.join("\n")}" if CLI.debug?
+      {% end %}
       STDERR.puts error_message
       exit(1)
     end
