@@ -59,7 +59,7 @@ module DeepL
 
           Usage: deepl text [options] <text>
 
-        BANNER
+          BANNER
 
         @handlers.reject! %w[-h --help -d --debug -v --version -u --usage]
         {% if flag?(:debug) %}

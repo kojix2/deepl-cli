@@ -16,7 +16,6 @@ module DeepL
       @option = parser.parse(ARGV)
     end
 
-    # ameba:disable Metrics/CyclomaticComplexity
     def run
       case option.action
       when Action::TranslateText
@@ -71,8 +70,6 @@ module DeepL
       STDERR.puts error_message
       exit(1)
     end
-
-    # ameba:enable Metrics/CyclomaticComplexity
 
     private def with_spinner(&block : -> T) : T forall T
       spinner = Term::Spinner.new(clear: true)
