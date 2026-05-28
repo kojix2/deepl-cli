@@ -160,27 +160,10 @@
     Overview
   </h2>
 
-  <p>This module's static methods are the entry point for using the Crest client.</p>
-<p>Supported HTTP methods: <code>get</code>, <code>put</code>, <code>post</code>, <code>patch</code> <code>delete</code>, <code>options</code>, <code>head</code></p>
-<p>Examples:</p>
-<pre><code class="language-crystal"><span class="t">Crest</span>.get(
-  <span class="s">&quot;http://httpbin.org/get&quot;</span>,
-  headers: {<span class="s">&quot;Content-Type&quot;</span> <span class="o">=&gt;</span> <span class="s">&quot;image/jpg&quot;</span>},
-  params: {<span class="s">&quot;lang&quot;</span> <span class="o">=&gt;</span> <span class="s">&quot;en&quot;</span>}
-)
-
-<span class="t">Crest</span>.post(
-  <span class="s">&quot;http://httpbin.org/post&quot;</span>,
-  headers: {<span class="s">&quot;Access-Token&quot;</span> <span class="o">=&gt;</span> [<span class="s">&quot;secret1&quot;</span>, <span class="s">&quot;secret2&quot;</span>]},
-  form: {<span class="s">&quot;fizz&quot;</span> <span class="o">=&gt;</span> <span class="s">&quot;buz&quot;</span>},
-  logging: <span class="n">true</span>,
-)
-
-<span class="t">Crest</span>.get(<span class="s">&quot;http://httpbin.org/stream/5&quot;</span>) <span class="k">do</span> <span class="o">|</span>response<span class="o">|</span>
-  <span class="k">while</span> line <span class="o">=</span> response.body_io.gets
-    puts line
-  <span class="k">end</span>
-<span class="k">end</span></code></pre>
+  <p>Add *_proxy / NO_PROXY environment variable support to Crest.</p>
+<p>Crest already has an official proxy API via p_addr, p_port, p_user, and
+p_pass. This extension only fills those fields from the environment when the
+caller did not explicitly pass proxy settings.</p>
 
 
 
@@ -207,147 +190,147 @@
   </h2>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest.cr#L37" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest.cr#L37" target="_blank">
         lib/crest/src/crest.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/curlify.cr#L1" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/curlify.cr#L1" target="_blank">
         lib/crest/src/crest/curlify.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/exceptions.cr#L3" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/exceptions.cr#L3" target="_blank">
         lib/crest/src/crest/exceptions.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/form.cr#L1" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/form.cr#L1" target="_blank">
         lib/crest/src/crest/form.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/forms/data_form.cr#L3" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/forms/data_form.cr#L3" target="_blank">
         lib/crest/src/crest/forms/data_form.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/forms/json_form.cr#L3" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/forms/json_form.cr#L3" target="_blank">
         lib/crest/src/crest/forms/json_form.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/forms/stream_data_form.cr#L3" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/forms/stream_data_form.cr#L3" target="_blank">
         lib/crest/src/crest/forms/stream_data_form.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/forms/urlencoded_form.cr#L3" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/forms/urlencoded_form.cr#L3" target="_blank">
         lib/crest/src/crest/forms/urlencoded_form.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/logger.cr#L3" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/logger.cr#L3" target="_blank">
         lib/crest/src/crest/logger.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/loggers/common_logger.cr#L8" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/loggers/common_logger.cr#L8" target="_blank">
         lib/crest/src/crest/loggers/common_logger.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/params_decoder.cr#L1" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/params_decoder.cr#L1" target="_blank">
         lib/crest/src/crest/params_decoder.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/params_encoder.cr#L1" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/params_encoder.cr#L1" target="_blank">
         lib/crest/src/crest/params_encoder.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/params_encoders/enumerated_flat_params_encoder.cr#L1" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/params_encoders/enumerated_flat_params_encoder.cr#L1" target="_blank">
         lib/crest/src/crest/params_encoders/enumerated_flat_params_encoder.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/params_encoders/flat_params_encoder.cr#L1" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/params_encoders/flat_params_encoder.cr#L1" target="_blank">
         lib/crest/src/crest/params_encoders/flat_params_encoder.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/params_encoders/nested_params_encoder.cr#L1" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/params_encoders/nested_params_encoder.cr#L1" target="_blank">
         lib/crest/src/crest/params_encoders/nested_params_encoder.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/params_encoders/zero_enumerated_flat_params_encoder.cr#L1" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/params_encoders/zero_enumerated_flat_params_encoder.cr#L1" target="_blank">
         lib/crest/src/crest/params_encoders/zero_enumerated_flat_params_encoder.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/redirector.cr#L1" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/redirector.cr#L1" target="_blank">
         lib/crest/src/crest/redirector.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/request.cr#L3" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/request.cr#L3" target="_blank">
         lib/crest/src/crest/request.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/resource.cr#L3" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/resource.cr#L3" target="_blank">
         lib/crest/src/crest/resource.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/response.cr#L5" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/lib/crest/src/crest/response.cr#L5" target="_blank">
         lib/crest/src/crest/response.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/src/ext/crest.cr#L10" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/16c8df2aa39df56662658bbdf53a538f33a88e27/src/ext/crest.cr#L8" target="_blank">
         ext/crest.cr
       </a>
     
