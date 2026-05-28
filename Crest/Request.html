@@ -198,6 +198,7 @@ and a sequence of attribute–value pairs separated by a delimiter (&amp;).</li>
 <li><code>p_addr</code>, <code>p_port</code>, <code>p_user</code>, <code>p_pass</code> for proxy</li>
 <li><code>json</code> make a JSON request with the appropriate HTTP headers (default to <code>false</code>)</li>
 <li><code>multipart</code> make a multipart request with the appropriate HTTP headers even if not sending a file (default to <code>false</code>)</li>
+<li><code>stream_multipart</code> stream multipart request body to reduce memory usage (default to <code>false</code>)</li>
 <li><code>user_agent</code> set &quot;User-Agent&quot; HTTP header (default to <code>Crest::USER_AGENT</code>)</li>
 <li><code>max_redirects</code> maximum number of redirects (default to <code>10</code>)</li>
 <li><code>logging</code> enable logging (default to <code>false</code>)</li>
@@ -235,14 +236,14 @@ and a sequence of attribute–value pairs separated by a delimiter (&amp;).</li>
   </h2>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/3669fafce684ba7695130fa8e98f1e994ee48cf1/lib/crest/src/crest/request.cr#L57" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/lib/crest/src/crest/request.cr#L58" target="_blank">
         lib/crest/src/crest/request.cr
       </a>
     
     <br/>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/3669fafce684ba7695130fa8e98f1e994ee48cf1/src/ext/crest.cr#L11" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/src/ext/crest.cr#L11" target="_blank">
         ext/crest.cr
       </a>
     
@@ -337,7 +338,7 @@ and a sequence of attribute–value pairs separated by a delimiter (&amp;).</li>
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/3669fafce684ba7695130fa8e98f1e994ee48cf1/src/ext/crest.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/b8e77f37996e0177c0f33e0c962f5ff18c90bfde/src/ext/crest.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>
