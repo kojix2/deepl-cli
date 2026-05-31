@@ -4,6 +4,9 @@ require "./prompt"
 require "./term_spinner"
 require "./parser"
 require "./utils"
+{% if flag?(:sqlite_cache) %}
+  require "./cache"
+{% end %}
 
 module DeepL
   class CLI
@@ -103,8 +106,50 @@ module DeepL
       end
 
       translator = DeepL::Translator.new
+      result, cache_hit = translate_text_result(translator)
 
-      result = with_spinner do
+      output = option.output_file ? IO::Memory.new : STDOUT
+
+      result.each do |result_item|
+        if option.detect_source_language?
+          STDERR.puts "[deepl-cli] Detected source language: #{result_item.detected_source_language}"
+        end
+        if option.show_billed_characters?
+          billed_characters = cache_hit ? "0 (cache hit)" : result_item.billed_characters
+          STDERR.puts "[deepl-cli] Billed characters: #{billed_characters}"
+        end
+        # if option.show_model_type && r.model_type_used
+        #   STDERR.puts "[deepl-cli] Model type used: #{r.model_type_used}"
+        # end
+        output.puts result_item.text
+      end
+      if output_file = option.output_file
+        File.open(output_file, "w") do |output_file_handle|
+          output.to_s(output_file_handle)
+        end
+        STDERR.puts "[deepl-cli] Translated text is written to #{output_file}"
+      end
+    end
+
+    private def translate_text_result(translator) : Tuple(Array(TextResult), Bool)
+      {% if flag?(:sqlite_cache) %}
+        cache = Cache.new
+        cache_key = cache.key_for(option)
+        if cached_result = cache.lookup(cache_key)
+          STDERR.puts "[deepl-cli] Translation cache hit: #{cache.path}"
+          {cached_result, true}
+        else
+          api_result = translate_text_with_api(translator)
+          cache.store(cache_key, api_result)
+          {api_result, false}
+        end
+      {% else %}
+        {translate_text_with_api(translator), false}
+      {% end %}
+    end
+
+    private def translate_text_with_api(translator) : Array(TextResult)
+      with_spinner do
         translator.translate_text(
           text: option.input_text,
           target_lang: option.target_lang,
@@ -122,27 +167,6 @@ module DeepL
           show_billed_characters: option.show_billed_characters?,
           model_type: option.model_type
         )
-      end
-
-      output = option.output_file ? IO::Memory.new : STDOUT
-
-      result.each do |result_item|
-        if option.detect_source_language?
-          STDERR.puts "[deepl-cli] Detected source language: #{result_item.detected_source_language}"
-        end
-        if option.show_billed_characters?
-          STDERR.puts "[deepl-cli] Billed characters: #{result_item.billed_characters}"
-        end
-        # if option.show_model_type && r.model_type_used
-        #   STDERR.puts "[deepl-cli] Model type used: #{r.model_type_used}"
-        # end
-        output.puts result_item.text
-      end
-      if output_file = option.output_file
-        File.open(output_file, "w") do |output_file_handle|
-          output.to_s(output_file_handle)
-        end
-        STDERR.puts "[deepl-cli] Translated text is written to #{output_file}"
       end
     end
 
