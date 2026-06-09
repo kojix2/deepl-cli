@@ -15,6 +15,30 @@ module DeepL
       system_lang || DEFAULT_TARGET_LANG
     end
 
+    def self.cache_dir : Path
+      if dir = ENV["DEEPL_CLI_CACHE_DIR"]?
+        return Path[dir] unless dir.blank?
+      end
+
+      {% if flag?(:windows) %}
+        if localappdata = ENV["LOCALAPPDATA"]?
+          return Path[localappdata, "deepl-cli", "Cache"]
+        end
+        Path.home.join("AppData", "Local", "deepl-cli", "Cache")
+      {% elsif flag?(:darwin) %}
+        Path.home.join("Library", "Caches", "deepl-cli")
+      {% else %}
+        if xdg_cache_home = ENV["XDG_CACHE_HOME"]?
+          return Path[xdg_cache_home, "deepl-cli"] unless xdg_cache_home.blank?
+        end
+        Path.home.join(".cache", "deepl-cli")
+      {% end %}
+    end
+
+    def self.cache_file : Path
+      cache_dir.join("query_cache.json")
+    end
+
     private def self.detect_system_language : String?
       {% if flag?(:darwin) || flag?(:unix) %}
         nil

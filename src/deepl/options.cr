@@ -3,6 +3,8 @@ require "./action"
 
 module DeepL
   struct Options
+    DEFAULT_CACHE_SIZE = 10
+
     property action : Action = Action::TranslateText
     property input_text : String = ""
     property input_path : Path = Path.new
@@ -34,5 +36,8 @@ module DeepL
     # # rephrase options
     property writing_style : String? = nil
     property tone : String? = nil
+    property? cache_enabled : Bool = true
+    property? force_refresh : Bool = false
+    property cache_size : Int32 = DEFAULT_CACHE_SIZE
   end
 end

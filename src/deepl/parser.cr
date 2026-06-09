@@ -9,6 +9,15 @@ module DeepL
 
     property help_message : String
 
+    private def set_cache_size(value : String)
+      size = value.to_i
+      if size < 1
+        STDERR.puts "[deepl-cli] ERROR: --cache-size must be greater than 0"
+        exit(1)
+      end
+      opt.cache_size = size
+    end
+
     macro _on_debug_
       {% if flag?(:debug) %}
         on("-d", "--debug", "Show backtrace on error") do
@@ -98,6 +107,18 @@ module DeepL
 
         on("-M", "--model TYPE", "Model type") do |type|
           opt.model_type = type
+        end
+
+        on("--no-cache", "Disable query cache") do
+          opt.cache_enabled = false
+        end
+
+        on("--force-refresh", "Force API request and update cache") do
+          opt.force_refresh = true
+        end
+
+        on("--cache-size N", "Max number of cached queries [#{opt.cache_size}]") do |n|
+          set_cache_size(n)
         end
 
         # This option is useful for debugging.
@@ -325,6 +346,18 @@ module DeepL
           opt.no_ansi = false
         end
 
+        on("--no-cache", "Disable query cache") do
+          opt.cache_enabled = false
+        end
+
+        on("--force-refresh", "Force API request and update cache") do
+          opt.force_refresh = true
+        end
+
+        on("--cache-size N", "Max number of cached queries [#{opt.cache_size}]") do |n|
+          set_cache_size(n)
+        end
+
         _on_debug_
 
         _on_help_
@@ -390,6 +423,18 @@ module DeepL
 
       on("-A", "--ansi", "Do not remove ANSI escape codes") do
         opt.no_ansi = false
+      end
+
+      on("--no-cache", "Disable query cache") do
+        opt.cache_enabled = false
+      end
+
+      on("--force-refresh", "Force API request and update cache") do
+        opt.force_refresh = true
+      end
+
+      on("--cache-size N", "Max number of cached queries [#{opt.cache_size}]") do |n|
+        set_cache_size(n)
       end
 
       # Why is --output option is needed?

@@ -54,4 +54,18 @@ describe DeepL::Config do
       end
     end
   end
+
+  it "uses DEEPL_CLI_CACHE_DIR when set" do
+    original = ENV["DEEPL_CLI_CACHE_DIR"]?
+    begin
+      ENV["DEEPL_CLI_CACHE_DIR"] = "/tmp/deepl-cli-cache-spec"
+      DeepL::Config.cache_dir.to_s.should eq("/tmp/deepl-cli-cache-spec")
+    ensure
+      if original
+        ENV["DEEPL_CLI_CACHE_DIR"] = original
+      else
+        ENV.delete("DEEPL_CLI_CACHE_DIR")
+      end
+    end
+  end
 end

@@ -4,12 +4,14 @@ require "./prompt"
 require "./term_spinner"
 require "./parser"
 require "./utils"
+require "./cache"
 
 module DeepL
   class CLI
     class_property? debug : Bool = false
     getter parser : Parser
     getter option : Options
+    @cache : QueryCache?
 
     def initialize
       @parser = DeepL::Parser.new
@@ -102,8 +104,16 @@ module DeepL
         option.input_text = remove_ansi_escape_codes(option.input_text)
       end
 
-      translator = DeepL::Translator.new
+      cache_key = QueryCache.translate_key(option)
+      if !option.force_refresh?
+        if cached_result = cache.fetch_text(cache_key)
+          STDERR.puts "[deepl-cli] Cache hit"
+          output_text_result(cached_result)
+          return
+        end
+      end
 
+      translator = DeepL::Translator.new
       result = with_spinner do
         translator.translate_text(
           text: option.input_text,
@@ -124,26 +134,8 @@ module DeepL
         )
       end
 
-      output = option.output_file ? IO::Memory.new : STDOUT
-
-      result.each do |result_item|
-        if option.detect_source_language?
-          STDERR.puts "[deepl-cli] Detected source language: #{result_item.detected_source_language}"
-        end
-        if option.show_billed_characters?
-          STDERR.puts "[deepl-cli] Billed characters: #{result_item.billed_characters}"
-        end
-        # if option.show_model_type && r.model_type_used
-        #   STDERR.puts "[deepl-cli] Model type used: #{r.model_type_used}"
-        # end
-        output.puts result_item.text
-      end
-      if output_file = option.output_file
-        File.open(output_file, "w") do |output_file_handle|
-          output.to_s(output_file_handle)
-        end
-        STDERR.puts "[deepl-cli] Translated text is written to #{output_file}"
-      end
+      cache.store_text(cache_key, result)
+      output_text_result(result)
     end
 
     def rephrase_text
@@ -156,8 +148,16 @@ module DeepL
         option.input_text = remove_ansi_escape_codes(option.input_text)
       end
 
-      translator = DeepL::Translator.new
+      cache_key = QueryCache.rephrase_key(option)
+      if !option.force_refresh?
+        if cached_result = cache.fetch_rephrase(cache_key)
+          STDERR.puts "[deepl-cli] Cache hit"
+          output_rephrase_result(cached_result)
+          return
+        end
+      end
 
+      translator = DeepL::Translator.new
       result = with_spinner do
         translator.rephrase_text(
           text: option.input_text,
@@ -167,6 +167,36 @@ module DeepL
         )
       end
 
+      cache.store_rephrase(cache_key, result)
+      output_rephrase_result(result)
+    end
+
+    private def cache : QueryCache
+      @cache ||= QueryCache.new(max_entries: option.cache_size, enabled: option.cache_enabled?)
+    end
+
+    private def output_text_result(result : Array(DeepL::TextResult)) : Nil
+      output = option.output_file ? IO::Memory.new : STDOUT
+
+      result.each do |result_item|
+        if option.detect_source_language?
+          STDERR.puts "[deepl-cli] Detected source language: #{result_item.detected_source_language}"
+        end
+        if option.show_billed_characters?
+          STDERR.puts "[deepl-cli] Billed characters: #{result_item.billed_characters}"
+        end
+        output.puts result_item.text
+      end
+
+      if output_file = option.output_file
+        File.open(output_file, "w") do |output_file_handle|
+          output.to_s(output_file_handle)
+        end
+        STDERR.puts "[deepl-cli] Translated text is written to #{output_file}"
+      end
+    end
+
+    private def output_rephrase_result(result : Array(DeepL::RephraseResult)) : Nil
       output = option.output_file ? IO::Memory.new : STDOUT
 
       result.each do |result_item|
