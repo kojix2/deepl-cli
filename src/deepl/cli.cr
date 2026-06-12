@@ -260,9 +260,9 @@ module DeepL
         )
       end
 
-      STDERR.puts "[deepl-cli] Document uploaded successfully"
+      STDERR.puts "[deepl-cli] Document uploaded"
       STDERR.puts "[deepl-cli] File: #{option.input_path}"
-      STDERR.puts "[deepl-cli] Document ID: #{document_handle.id}"
+      STDERR.puts "[deepl-cli] ID: #{document_handle.id}"
       save_document_handle_file(document_handle, handle_file)
       STDERR.puts "[deepl-cli] Document handle: #{handle_file}"
       STDERR.puts "[deepl-cli] Use this file with 'deepl doc status --handle' and 'deepl doc download --handle'"
@@ -336,8 +336,8 @@ module DeepL
     private def write_document_handle_file(document_handle : DocumentHandle, handle_file : Path) : Nil
       # Write to a temporary file in the same directory, then atomically rename
       # it into place. This keeps the handle file (which holds the secret key)
-      # from ever being left truncated/partial, and avoids following a symlink
-      # or clobbering an existing file at the destination.
+      # from ever being left truncated/partial, and avoids writing through a
+      # symlink at the destination (rename replaces the symlink itself).
       tmp = File.tempfile("deepl-handle", ".json", dir: handle_file.dirname)
       begin
         tmp.chmod(0o600)
@@ -359,11 +359,19 @@ module DeepL
       end
     end
 
+    private def read_document_handle_file(handle_file : Path) : {String, String}
+      json = JSON.parse(File.read(handle_file))
+      {json["document_id"].as_s, json["document_key"].as_s}
+    rescue ex
+      raise "Failed to read document handle: #{handle_file}\n" \
+            "The file is missing or not a valid handle file.\n" \
+            "It should contain JSON with \"document_id\" and \"document_key\".\n" \
+            "#{ex.class}: #{ex.message}"
+    end
+
     private def document_handle_from_options : DocumentHandle
       if handle_file = option.document_handle_file
-        json = JSON.parse(File.read(handle_file))
-        document_id = json["document_id"].as_s
-        document_key = json["document_key"].as_s
+        document_id, document_key = read_document_handle_file(handle_file)
         DocumentHandle.new(document_id, document_key)
       else
         document_id = option.document_id || raise "Document ID is not specified"
