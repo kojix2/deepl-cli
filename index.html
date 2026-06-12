@@ -316,7 +316,7 @@ It is written with <code>0600</code> permissions by default.</p>
 deepl doc status --handle input.pdf.deepl-handle.json
 deepl doc download --handle input.pdf.deepl-handle.json -o output.pdf</code></pre>
 <p>To translate multiple files, use Unix commands such as <code>find</code>, <code>xargs</code>, <code>fd</code>:</p>
-<pre><code class="language-sh">find . -name &quot;*.pdf&quot; -exec deepl doc -t ja {} +</code></pre>
+<pre><code class="language-sh">find . -name &quot;*.pdf&quot; -exec deepl doc -t ja {} \;</code></pre>
 <pre><code class="language-sh">ls -1 *.docx | xargs -L1 deepl doc -t ko</code></pre>
 <pre><code class="language-sh">fd -e pdf -e docx -x deepl doc -t zh</code></pre>
 <h3><a id="glossaries" class="anchor" href="#glossaries">
