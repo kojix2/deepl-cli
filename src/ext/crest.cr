@@ -44,19 +44,26 @@ module Crest
     end
 
     private def proxy_uri_for_scheme(scheme : String) : URI?
-      proxy = ENV["#{scheme.downcase}_proxy"]? || ENV["#{scheme.upcase}_PROXY"]?
+      proxy_env = ENV.has_key?("#{scheme.downcase}_proxy") ? "#{scheme.downcase}_proxy" : "#{scheme.upcase}_PROXY"
+      proxy = ENV[proxy_env]?
       return unless proxy
 
       uri = URI.parse(proxy)
 
       # Be permissive for common values such as "proxy.example.com:8080".
-      if uri.host.nil? && !proxy.includes?("://")
+      if blank?(uri.host) && !proxy.includes?("://")
         uri = URI.parse("http://#{proxy}")
       end
 
-      uri.host ? uri : nil
+      return uri unless blank?(uri.host)
+
+      raise ArgumentError.new("Invalid #{proxy_env} URL")
     rescue URI::Error
-      nil
+      raise ArgumentError.new("Invalid #{proxy_env} URL")
+    end
+
+    private def blank?(value : String?) : Bool
+      value.nil? || value.empty?
     end
 
     private def no_proxy_matches?(no_proxy : String, host : String) : Bool
