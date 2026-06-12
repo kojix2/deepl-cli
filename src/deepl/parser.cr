@@ -1,4 +1,4 @@
-{% unless flag?(:no_clipboard) %}
+{% if flag?(:clipboard) %}
   require "easyclip"
 {% end %}
 require "option_parser"
@@ -31,7 +31,7 @@ module DeepL
     end
 
     macro _on_paste_
-      {% unless flag?(:no_clipboard) %}
+      {% if flag?(:clipboard) %}
         on("-p", "--paste", "Input text from clipboard") do
           text = EasyClip.paste
           if text.empty?
@@ -375,7 +375,7 @@ module DeepL
 
       _on_paste_
 
-      {% unless flag?(:no_clipboard) %}
+      {% if flag?(:clipboard) %}
         # This option is experimental and may change in the future.
         # on("-c", "--copy", "Copy translated text to clipboard (experimental)") do
         #   # Clipboard integration is not implemented yet.

@@ -10,10 +10,10 @@ module DeepL
         "deepl-cli #{VERSION}"
       end
     VERSION_STRING =
-      {% if flag?(:no_clipboard) %}
-        "#{BASE_VERSION_STRING} (clipboard disabled)"
-      {% else %}
+      {% if flag?(:clipboard) %}
         BASE_VERSION_STRING
+      {% else %}
+        "#{BASE_VERSION_STRING} (clipboard disabled)"
       {% end %}
   end
 end
