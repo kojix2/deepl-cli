@@ -409,7 +409,8 @@ shards build --release</code></pre>
 <p>A compiled binary file will be created in the <code>bin</code> directory. Installation is simply copying the generated binary.</p>
 <p>To build without clipboard support, pass the Crystal compile-time flag <code>no_clipboard</code>.
 This removes the <code>--paste</code> option and does not require EasyClip at compile time:</p>
-<pre><code class="language-sh">crystal build src/cli.cr -o bin/deepl --release -D no_clipboard</code></pre>
+<pre><code class="language-sh">crystal build src/cli.cr -o bin/deepl --release -D no_clipboard
+bin/deepl --version # deepl-cli 0.5.4 (clipboard disabled)</code></pre>
 <pre><code class="language-crystal">sudo cp bin<span class="o">/</span>deepl <span class="s">/usr/</span>local<span class="o">/</span>bin</code></pre>
 <p>If you encounter a bug, follow the command with the <code>-d</code> option and run it. You can view the backtrace.</p>
 <pre><code class="language-sh">deepl doc -d a.pdf</code></pre>
