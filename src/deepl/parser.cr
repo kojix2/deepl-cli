@@ -44,6 +44,16 @@ module DeepL
       {% end %}
     end
 
+    macro _on_source_lang_
+      on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
+        if from.empty?
+          opt.action = Action::ListFromLanguages
+        else
+          opt.source_lang = from.upcase
+        end
+      end
+    end
+
     macro _set_action_(action, banner)
       opt.action = {{ action }}
       @handlers.clear
@@ -175,9 +185,7 @@ module DeepL
 
         separator
 
-        on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
-          opt.source_lang = from.upcase
-        end
+        _on_source_lang_
 
         on("-t", "--to [LANG]", "Target language [#{opt.target_lang}]") do |to_|
           opt.target_lang = to_.upcase
@@ -326,10 +334,8 @@ module DeepL
           opt.tone = tone
         end
 
-        on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
-          # Source_lang is correct here. Not target_lang.
-          opt.source_lang = from.upcase
-        end
+        # Source_lang is correct here. Not target_lang.
+        _on_source_lang_
 
         on("-D", "--detect-language", "Output detected source language") do
           opt.detect_source_language = true
@@ -357,13 +363,7 @@ module DeepL
         opt.input_text = text
       end
 
-      on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
-        if from.empty?
-          opt.action = Action::ListFromLanguages
-        else
-          opt.source_lang = from.upcase
-        end
-      end
+      _on_source_lang_
 
       on("-t", "--to [LANG]", "Target language [#{opt.target_lang}]") do |to_|
         if to_.empty?

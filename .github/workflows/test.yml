@@ -123,6 +123,7 @@ jobs:
           bin/deepl doc status --handle "$handle"
           bin/deepl doc download --handle "$handle" -o downloaded_proton_beams_DE.txt
           cat downloaded_proton_beams_DE.txt
+          bin/deepl doc -f
 
       - name: Run executable (rephrase)
         run: |
@@ -131,6 +132,7 @@ jobs:
           bin/deepl rephrase -f EN -i "any input text" -D
           cat spec/fixtures/proton_beams.txt | bin/deepl rephrase -f EN -o rephrased_proton_beam.txt
           cat rephrased_proton_beam.txt
+          bin/deepl rephrase -f
 
       - name: Stop deepl-mock server
         if: always()
