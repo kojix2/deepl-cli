@@ -244,7 +244,7 @@ deepl doc download --handle input.pdf.deepl-handle.json -o output.pdf
 To translate multiple files, use Unix commands such as `find`, `xargs`, `fd`:
 
 ```sh
-find . -name "*.pdf" -exec deepl doc -t ja {} +
+find . -name "*.pdf" -exec deepl doc -t ja {} \;
 ```
 
 ```sh
