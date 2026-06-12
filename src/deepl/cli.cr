@@ -197,21 +197,39 @@ module DeepL
       end
 
       translator = DeepL::Translator.new
+      handle_file = option.document_handle_file || default_document_handle_file
+      remove_handle_file_after_download = option.document_handle_file.nil?
+      check_document_handle_file_writable(handle_file)
 
       with_spinner do
-        translator.translate_document(
+        document_handle = translator.translate_document_upload(
           path: option.input_path,
           target_lang: option.target_lang,
           source_lang: option.source_lang,
           formality: option.formality,
           glossary_name: option.glossary_name, # original option of deepl.cr
-          output_format: option.output_format,
-          output_file: option.output_file,
-          interval: option.interval,
-          message_prefix: "[deepl-cli] "
-        ) do |progress|
-          STDERR.puts avoid_spinner(progress)
+          output_format: option.output_format
+        )
+
+        save_document_handle_file(document_handle, handle_file)
+
+        STDERR.puts avoid_spinner("[deepl-cli] Document uploaded")
+        STDERR.puts avoid_spinner("[deepl-cli] File: #{option.input_path}")
+        STDERR.puts avoid_spinner("[deepl-cli] ID: #{document_handle.id}")
+        STDERR.puts avoid_spinner("[deepl-cli] Document handle: #{handle_file}")
+
+        translator.translate_document_wait_until_done(document_handle, option.interval) do |document_status|
+          STDERR.puts avoid_spinner("[deepl-cli] Status: #{document_status.status}")
+          STDERR.puts avoid_spinner("[deepl-cli] Seconds Remaining: #{document_status.seconds_remaining}") if document_status.seconds_remaining
+          STDERR.puts avoid_spinner("[deepl-cli] Billed Characters: #{document_status.billed_characters}") if document_status.billed_characters
+          STDERR.puts avoid_spinner("[deepl-cli] Error Message: #{document_status.error_message}") if document_status.error_message
         end
+
+        output_file = option.output_file || generate_document_output_file(option.input_path, option.target_lang, option.output_format)
+        STDERR.puts avoid_spinner("[deepl-cli] Downloading translated document to #{output_file}")
+        translator.translate_document_download(document_handle, output_file)
+        STDERR.puts avoid_spinner("[deepl-cli] Document saved as #{output_file}")
+        delete_document_handle_file(handle_file) if remove_handle_file_after_download
       end
     end
 
@@ -228,6 +246,8 @@ module DeepL
       end
 
       translator = DeepL::Translator.new
+      handle_file = option.document_handle_file || default_document_handle_file
+      check_document_handle_file_writable(handle_file)
 
       document_handle = with_spinner do
         translator.translate_document_upload(
@@ -243,8 +263,7 @@ module DeepL
       STDERR.puts "[deepl-cli] Document uploaded successfully"
       STDERR.puts "[deepl-cli] File: #{option.input_path}"
       STDERR.puts "[deepl-cli] Document ID: #{document_handle.id}"
-      handle_file = option.document_handle_file || default_document_handle_file
-      write_document_handle_file(document_handle, handle_file)
+      save_document_handle_file(document_handle, handle_file)
       STDERR.puts "[deepl-cli] Document handle: #{handle_file}"
       STDERR.puts "[deepl-cli] Use this file with 'deepl doc status --handle' and 'deepl doc download --handle'"
     end
@@ -265,6 +284,53 @@ module DeepL
 
     private def default_document_handle_file : Path
       Path["#{option.input_path}.deepl-handle.json"]
+    end
+
+    private def generate_document_output_file(source_path : Path, target_lang : String, output_format : String?) : Path
+      output_base_name = "#{source_path.stem}_#{target_lang}"
+      output_extension = output_format ? ".#{output_format.downcase}" : source_path.extension
+      ensure_unique_output_file(source_path.parent / (output_base_name + output_extension))
+    end
+
+    private def ensure_unique_output_file(output_file : Path) : Path
+      return output_file unless File.exists?(output_file)
+
+      output_base_name = "#{output_file.stem}_#{Time.utc.to_unix}"
+      output_file.parent / (output_base_name + output_file.extension)
+    end
+
+    private def check_document_handle_file_writable(handle_file : Path) : Nil
+      tmp = File.tempfile("deepl-handle", ".json", dir: handle_file.dirname)
+      tmp.chmod(0o600)
+    rescue ex
+      raise "Cannot write document handle before upload: #{handle_file}\n" \
+            "The document was not uploaded.\n" \
+            "Use --handle FILE to choose a writable location.\n" \
+            "#{ex.class}: #{ex.message}"
+    ensure
+      if tmp
+        tmp_path = tmp.path
+        tmp.close unless tmp.closed?
+        File.delete?(tmp_path)
+      end
+    end
+
+    private def save_document_handle_file(document_handle : DocumentHandle, handle_file : Path) : Nil
+      write_document_handle_file(document_handle, handle_file)
+    rescue ex
+      raise "Failed to write document handle: #{handle_file}\n" \
+            "The document was uploaded, but the key was not saved.\n" \
+            "Use --handle FILE to choose a writable location.\n" \
+            "#{ex.class}: #{ex.message}"
+    end
+
+    private def delete_document_handle_file(handle_file : Path) : Nil
+      File.delete(handle_file)
+    rescue ex
+      raise "Failed to delete document handle: #{handle_file}\n" \
+            "The translated document was downloaded, but the key file remains.\n" \
+            "Delete it manually if you no longer need it.\n" \
+            "#{ex.class}: #{ex.message}"
     end
 
     private def write_document_handle_file(document_handle : DocumentHandle, handle_file : Path) : Nil
