@@ -383,15 +383,13 @@ module DeepL
     def create_glossary
       # The glossary entry format is still inferred from the file extension.
 
-      entry_format = "tsv"
+      input_path = ARGV.size == 1 ? Path[ARGV[0]] : nil
+      entry_format = glossary_entry_format(input_path)
 
       # Standard input is assumed to be TSV when no file name is available.
 
-      if option.glossary_name.nil? && ARGV.size == 1
-        name = ARGV[0]
-        entry_format = File.extname(name).sub(".", "").downcase
-        name = File.basename(name, File.extname(name))
-        option.glossary_name = name
+      if option.glossary_name.nil? && input_path
+        option.glossary_name = input_path.stem
       end
       option.input_text = ARGF.gets_to_end
 
@@ -408,6 +406,17 @@ module DeepL
       )
 
       STDERR.puts "[deepl-cli] Glossary #{option.glossary_name} is created"
+    end
+
+    private def glossary_entry_format(input_path : Path?) : String
+      return "tsv" unless input_path
+
+      case input_path.extension.downcase
+      when ".csv"
+        "csv"
+      else
+        "tsv"
+      end
     end
 
     def argv_or_select_name_from_glossary_list

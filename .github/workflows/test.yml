@@ -96,6 +96,9 @@ jobs:
           bin/deepl glossary list
           bin/deepl glossary view "Test Glossary" -f EN -t DE
           bin/deepl glossary delete "Test Glossary"
+          crystal eval 'puts "sourceEntry1,targetEntry1\nsourceEntry2,targetEntry2"' > glossary.csv
+          bin/deepl glossary create -n "Test CSV Glossary" -f EN -t DE glossary.csv
+          bin/deepl glossary delete "Test CSV Glossary"
           bin/deepl glossary -l
           bin/deepl glossary -h
           bin/deepl glossary list -h
