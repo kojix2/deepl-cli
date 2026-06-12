@@ -1,5 +1,6 @@
 require "../ext/crest"
 require "deepl"
+require "json"
 require "./prompt"
 require "./term_spinner"
 require "./parser"
@@ -242,26 +243,67 @@ module DeepL
       STDERR.puts "[deepl-cli] Document uploaded successfully"
       STDERR.puts "[deepl-cli] File: #{option.input_path}"
       STDERR.puts "[deepl-cli] Document ID: #{document_handle.id}"
-      STDERR.puts "[deepl-cli] Document Key: #{document_handle.key}"
-      STDERR.puts "[deepl-cli] Use these values with 'deepl doc status' and 'deepl doc download'"
+      handle_file = option.document_handle_file || default_document_handle_file
+      write_document_handle_file(document_handle, handle_file)
+      STDERR.puts "[deepl-cli] Document handle: #{handle_file}"
+      STDERR.puts "[deepl-cli] Use this file with 'deepl doc status --handle' and 'deepl doc download --handle'"
     end
 
     def check_document_translation_status
       translator = DeepL::Translator.new
-      document_id = option.document_id || raise "Document ID is not specified"
-      document_key = option.document_key || raise "Document key is not specified"
-      document_handle = DocumentHandle.new(document_id, document_key)
+      document_handle = document_handle_from_options
       status = translator.translate_document_get_status(document_handle)
       puts status.summary
     end
 
     def download_translated_document
       translator = DeepL::Translator.new
-      document_id = option.document_id || raise "Document ID is not specified"
-      document_key = option.document_key || raise "Document key is not specified"
       output_file = option.output_file || raise "Output file is not specified"
-      document_handle = DocumentHandle.new(document_id, document_key)
+      document_handle = document_handle_from_options
       translator.translate_document_download(document_handle, output_file)
+    end
+
+    private def default_document_handle_file : Path
+      Path["#{option.input_path}.deepl-handle.json"]
+    end
+
+    private def write_document_handle_file(document_handle : DocumentHandle, handle_file : Path) : Nil
+      # Write to a temporary file in the same directory, then atomically rename
+      # it into place. This keeps the handle file (which holds the secret key)
+      # from ever being left truncated/partial, and avoids following a symlink
+      # or clobbering an existing file at the destination.
+      tmp = File.tempfile("deepl-handle", ".json", dir: handle_file.dirname)
+      begin
+        tmp.chmod(0o600)
+        JSON.build(tmp) do |json|
+          json.object do
+            json.field "document_id", document_handle.id
+            json.field "document_key", document_handle.key
+          end
+        end
+        tmp.puts
+        tmp.flush
+        tmp.close
+        File.rename(tmp.path, handle_file)
+      rescue ex
+        File.delete?(tmp.path)
+        raise ex
+      ensure
+        tmp.close unless tmp.closed?
+      end
+    end
+
+    private def document_handle_from_options : DocumentHandle
+      if handle_file = option.document_handle_file
+        json = JSON.parse(File.read(handle_file))
+        document_id = json["document_id"].as_s
+        document_key = json["document_key"].as_s
+        DocumentHandle.new(document_id, document_key)
+      else
+        document_id = option.document_id || raise "Document ID is not specified"
+        document_key = option.document_key || raise "Document key is not specified"
+        DocumentHandle.new(document_id, document_key)
+      end
     end
 
     def create_glossary

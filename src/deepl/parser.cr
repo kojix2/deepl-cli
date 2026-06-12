@@ -132,11 +132,15 @@ module DeepL
         on("status", "Check translation status") do
           _set_action_(Action::TranslateDocumentStatus, "Usage: deepl doc status [options]")
 
-          on("-i", "--id ID", "Document ID (required)") do |id|
+          on("--handle FILE", "Document handle file") do |file|
+            opt.document_handle_file = Path[file]
+          end
+
+          on("-i", "--id ID", "Document ID") do |id|
             opt.document_id = id
           end
 
-          on("-k", "--key KEY", "Document key (required)") do |key|
+          on("-k", "--key KEY", "Document key") do |key|
             opt.document_key = key
           end
 
@@ -148,11 +152,15 @@ module DeepL
         on("download", "Download translated document") do
           _set_action_(Action::TranslateDocumentDownload, "Usage: deepl doc download [options]")
 
-          on("-i", "--id ID", "Document ID (required)") do |id|
+          on("--handle FILE", "Document handle file") do |file|
+            opt.document_handle_file = Path[file]
+          end
+
+          on("-i", "--id ID", "Document ID") do |id|
             opt.document_id = id
           end
 
-          on("-k", "--key KEY", "Document key (required)") do |key|
+          on("-k", "--key KEY", "Document key") do |key|
             opt.document_key = key
           end
 
@@ -193,6 +201,10 @@ module DeepL
 
         on("-s", "--interval SEC", "Interval between requests") do |sec|
           opt.interval = sec.to_f32
+        end
+
+        on("--handle FILE", "Document handle file") do |file|
+          opt.document_handle_file = Path[file]
         end
 
         on("-U", "--upload-only", "Upload file only") do

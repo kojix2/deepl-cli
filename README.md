@@ -83,6 +83,8 @@ Options for document translation:
     -F, --formality OPT              Formality (default more less)
     -o, --output FILE                Output file
     -O, --output-format FORMAT       Output file format
+    -U, --upload-only                Upload file only
+        --handle FILE                Document handle file
 ```
 
 Supported file formats.
@@ -225,6 +227,17 @@ To translate a PDF document and save it in docx format:
 ```
 deepl doc input.pdf -O docx -o output.docx
 ```
+
+To upload a document and check or download it later:
+
+```sh
+deepl doc -U input.pdf
+deepl doc status --handle input.pdf.deepl-handle.json
+deepl doc download --handle input.pdf.deepl-handle.json -o output.pdf
+```
+
+The handle file contains the DeepL document key. Treat it as a secret.
+It is written with `0600` permissions by default.
 
 To translate multiple files, use Unix commands such as `find`, `xargs`, `fd`:
 
