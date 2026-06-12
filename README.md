@@ -376,6 +376,7 @@ This removes the `--paste` option and does not require EasyClip at compile time:
 
 ```sh
 crystal build src/cli.cr -o bin/deepl --release -D no_clipboard
+bin/deepl --version # deepl-cli 0.5.4 (clipboard disabled)
 ```
 
 ```
