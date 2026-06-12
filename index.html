@@ -307,12 +307,14 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 <pre><code class="language-sh">deepl doc -g myglossary -f pl</code></pre>
 <p>To translate a PDF document and save it in docx format:</p>
 <pre><code class="language-crystal">deepl doc input.pdf <span class="o">-</span><span class="t">O</span> docx <span class="o">-</span>o output.docx</code></pre>
+<p>Document translation temporarily writes a handle file such as <code>input.pdf.deepl-handle.json</code>
+and removes it after a successful download, unless <code>--handle FILE</code> is specified.
+The handle file contains the DeepL document key. Treat it as a secret.
+It is written with <code>0600</code> permissions by default.</p>
 <p>To upload a document and check or download it later:</p>
 <pre><code class="language-sh">deepl doc -U input.pdf
 deepl doc status --handle input.pdf.deepl-handle.json
 deepl doc download --handle input.pdf.deepl-handle.json -o output.pdf</code></pre>
-<p>The handle file contains the DeepL document key. Treat it as a secret.
-It is written with <code>0600</code> permissions by default.</p>
 <p>To translate multiple files, use Unix commands such as <code>find</code>, <code>xargs</code>, <code>fd</code>:</p>
 <pre><code class="language-sh">find . -name &quot;*.pdf&quot; -exec deepl doc -t ja {} +</code></pre>
 <pre><code class="language-sh">ls -1 *.docx | xargs -L1 deepl doc -t ko</code></pre>
