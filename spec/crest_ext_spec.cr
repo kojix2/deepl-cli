@@ -38,4 +38,36 @@ describe Crest::Request do
 
     Crest::Request.new(:get, "http://example.com")
   end
+
+  it "matches NO_PROXY entries with exact ports" do
+    ENV["http_proxy"] = "localhost:3001"
+    ENV["no_proxy"] = "example.com:80"
+
+    Crest::Request.new(:get, "http://example.com").proxy.should be_nil
+    Crest::Request.new(:get, "http://example.com:81").proxy.should_not be_nil
+  end
+
+  it "matches NO_PROXY suffix domains" do
+    ENV["http_proxy"] = "localhost:3001"
+    ENV["no_proxy"] = ".example.com"
+
+    Crest::Request.new(:get, "http://api.example.com").proxy.should be_nil
+    Crest::Request.new(:get, "http://example.net").proxy.should_not be_nil
+  end
+
+  it "matches NO_PROXY IPv4 CIDR ranges" do
+    ENV["http_proxy"] = "localhost:3001"
+    ENV["no_proxy"] = "10.0.0.0/8"
+
+    Crest::Request.new(:get, "http://10.1.2.3").proxy.should be_nil
+    Crest::Request.new(:get, "http://192.168.1.1").proxy.should_not be_nil
+  end
+
+  it "matches bracketed NO_PROXY IPv6 entries with ports" do
+    ENV["http_proxy"] = "localhost:3001"
+    ENV["no_proxy"] = "[::1]:80"
+
+    Crest::Request.new(:get, "http://[::1]").proxy.should be_nil
+    Crest::Request.new(:get, "http://[::1]:81").proxy.should_not be_nil
+  end
 end
