@@ -1,4 +1,6 @@
-require "easyclip"
+{% unless flag?(:no_clipboard) %}
+  require "easyclip"
+{% end %}
 require "option_parser"
 require "./options"
 require "./cli/version"
@@ -26,6 +28,20 @@ module DeepL
       # by `with_preserved_state`. This also initialises @flags.
       # @help_message is needed to store subcommand messages.
       @help_message = self.to_s
+    end
+
+    macro _on_paste_
+      {% unless flag?(:no_clipboard) %}
+        on("-p", "--paste", "Input text from clipboard") do
+          text = EasyClip.paste
+          if text.empty?
+            STDERR.puts "[deepl-cli] ERROR: Clipboard is empty."
+            exit(1)
+          end
+          STDERR.puts "[deepl-cli] Input text from clipboard: \n#{text}\n\n"
+          opt.input_text = text
+        end
+      {% end %}
     end
 
     macro _set_action_(action, banner)
@@ -311,15 +327,7 @@ module DeepL
           opt.output_file = Path[file]
         end
 
-        on("-p", "--paste", "Input text from clipboard") do
-          text = EasyClip.paste
-          if text.empty?
-            STDERR.puts "[deepl-cli] ERROR: Clipboard is empty."
-            exit(1)
-          end
-          STDERR.puts "[deepl-cli] Input text from clipboard: \n#{text}\n\n"
-          opt.input_text = text
-        end
+        _on_paste_
 
         on("-A", "--ansi", "Do not remove ANSI escape codes") do
           opt.no_ansi = false
@@ -353,20 +361,14 @@ module DeepL
         end
       end
 
-      on("-p", "--paste", "Input text from clipboard") do
-        text = EasyClip.paste
-        if text.empty?
-          STDERR.puts "[deepl-cli] ERROR: Clipboard is empty."
-          exit(1)
-        end
-        STDERR.puts "[deepl-cli] Input text from clipboard: \n#{text}\n\n"
-        opt.input_text = text
-      end
+      _on_paste_
 
-      # This option is experimental and may change in the future.
-      # on("-c", "--copy", "Copy translated text to clipboard (experimental)") do
-      #   # Clipboard integration is not implemented yet.
-      # end
+      {% unless flag?(:no_clipboard) %}
+        # This option is experimental and may change in the future.
+        # on("-c", "--copy", "Copy translated text to clipboard (experimental)") do
+        #   # Clipboard integration is not implemented yet.
+        # end
+      {% end %}
 
       on("-g", "--glossary NAME", "Glossary name") do |glossary_name|
         opt.glossary_name = glossary_name

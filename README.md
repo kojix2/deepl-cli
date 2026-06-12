@@ -371,6 +371,13 @@ shards build --release
 
 A compiled binary file will be created in the `bin` directory. Installation is simply copying the generated binary.
 
+To build without clipboard support, pass the Crystal compile-time flag `no_clipboard`.
+This removes the `--paste` option and does not require EasyClip at compile time:
+
+```sh
+crystal build src/cli.cr -o bin/deepl --release -D no_clipboard
+```
+
 ```
 sudo cp bin/deepl /usr/local/bin
 ```
