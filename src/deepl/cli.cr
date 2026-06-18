@@ -58,7 +58,11 @@ module DeepL
       when Action::Version
         print_version
       when Action::Help
-        print_help
+        if message = option.help_error_message
+          abort_with_help(message)
+        else
+          print_help
+        end
       else
         raise ArgumentError.new("Invalid action: #{option.action}")
       end
@@ -187,7 +191,7 @@ module DeepL
 
     def translate_document
       raise "Invalid option: -i --input" unless option.input_text.empty?
-      raise "Input file is not specified" if ARGV.empty?
+      abort_with_help("Input file is not specified") if ARGV.empty?
       option.input_path = Path[ARGV.shift]
       case ARGV.size
       when 1
@@ -235,7 +239,7 @@ module DeepL
 
     def upload_document_to_translate
       raise "Invalid option: -i --input" unless option.input_text.empty?
-      raise "Input file is not specified" if ARGV.empty?
+      abort_with_help("Input file is not specified") if ARGV.empty?
       option.input_path = Path[ARGV.shift]
 
       case ARGV.size
@@ -677,6 +681,12 @@ module DeepL
 
     def print_help
       puts parser.help_message
+    end
+
+    private def abort_with_help(message : String) : NoReturn
+      STDERR.puts "\n[deepl-cli] ERROR: #{message}"
+      STDERR.puts parser.help_message
+      exit(1)
     end
 
     private def avoid_spinner(str)

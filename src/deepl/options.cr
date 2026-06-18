@@ -4,6 +4,7 @@ require "./action"
 module DeepL
   struct Options
     property action : Action = Action::TranslateText
+    property help_error_message : String? = nil
     property input_text : String = ""
     property input_path : Path = Path.new
     property output_file : Path? = nil

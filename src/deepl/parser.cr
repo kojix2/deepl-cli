@@ -22,6 +22,7 @@ module DeepL
     macro _on_help_
       on("-h", "--help", "Show this help") do
         opt.action = Action::Help
+        opt.help_error_message = nil
       end
 
       # Crystal's OptionParser returns to its initial state after parsing
@@ -56,6 +57,7 @@ module DeepL
 
     macro _set_action_(action, banner)
       opt.action = {{ action }}
+      opt.help_error_message = nil
       @handlers.clear
       @flags.clear
       self.banner = "\n{{ banner.id }}\n"
@@ -226,6 +228,7 @@ module DeepL
 
       on("glossary", "Manage glossaries") do
         _set_action_(Action::Help, "Usage: deepl glossary [options] <subcommand>")
+        opt.help_error_message = "Subcommand is not specified"
 
         on("list", "List glossaries") do
           _set_action_(Action::ListGlossariesLong, "Usage: deepl glossary list [options]")
@@ -311,6 +314,7 @@ module DeepL
 
         on("-l", "--list", "List glossaries (short form)") do
           opt.action = Action::ListGlossaries
+          opt.help_error_message = nil
           # Keep the short form mapped to the current long-list behavior.
         end
 
