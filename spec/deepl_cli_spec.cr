@@ -54,6 +54,12 @@ describe DeepL do
 
     status.success?.should be_true
     stdout.to_s.should contain("Usage: deepl glossary [options] <subcommand>")
-    stderr.to_s.should eq("")
+    # FIXME: This is workaround for suppressing the ld: warning
+    # Remove this when the underlying issue is resolved.
+    # Currently, this warning is emitted only on macOS x86_64.
+    filtered_stderr = stderr.to_s.lines.reject do |line|
+      line.starts_with?("ld: warning:")
+    end.join
+    filtered_stderr.should eq("")
   end
 end
