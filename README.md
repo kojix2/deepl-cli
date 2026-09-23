@@ -67,6 +67,7 @@ Options:
         --style-id ID                Style Rule ID
         --translation-memory-id ID   Translation Memory ID
         --translation-memory-threshold PERCENT
+        --reporting-tag TAG          Reporting tag
     -F, --formality OPT              Formality (default more less)
     -C, --context TEXT               Context (experimental)
     -s, --split-sentences OPT        Split sentences
@@ -101,6 +102,7 @@ Options for document translation:
     -o, --output FILE                Output file
     -O, --output-format FORMAT       Output file format
         --poll-timeout SEC           Document polling timeout
+        --watermark                  Enable document watermark
     -U, --upload-only                Upload file only
         --handle FILE                Document handle file
 ```
@@ -134,16 +136,25 @@ Options for glossary management:
     -l, --list                       List glossaries
 ```
 
-### Inspect Translation Memories
+### Manage Translation Memories
 
-Translation Memory management remains read-only. Commands print JSON so the
-result can be consumed directly by tools such as `jq`.
+Translation Memory commands print job and resource data as JSON so the result
+can be consumed directly by tools such as `jq`.
 
 ```sh
 deepl memory list [--page NUMBER] [--page-size NUMBER]
 deepl memory view <id>
 deepl memory segments [--page-size NUMBER] [--cursor CURSOR] [--filter TEXT] [--case-sensitive] <id>
+deepl memory import [-n NAME] [--interval SEC] [--poll-timeout SEC] <file.tmx>
+deepl memory export -o FILE [--interval SEC] [--poll-timeout SEC] <id>
+deepl memory job <job-id>
+deepl memory delete [--force] <id>
 ```
+
+Importing a TMX file stores a Translation Memory in your DeepL account. It is
+not used automatically: pass its ID with `--translation-memory-id` when you
+want to use it. Deletion asks for confirmation on an interactive terminal;
+scripts must specify `--force`.
 
 ### Improve text (Rephrase)
 
@@ -264,8 +275,12 @@ deepl --from EN --to DE \
   --style-id style-id \
   --translation-memory-id memory-id \
   --translation-memory-threshold 75 \
+  --reporting-tag batch-42 \
   --input "Hello"
 ```
+
+`--reporting-tag` attaches a tag to the request for DeepL usage reporting. It
+does not change the translated text.
 
 To refer to the original text, you can use `tee dev/stderr`:
 
@@ -304,7 +319,17 @@ deepl doc --from EN --to DE \
   --style-id style-id \
   --translation-memory-id memory-id \
   --translation-memory-threshold 75 \
+  --watermark \
   --poll-timeout 600 input.pdf
+```
+
+Translation Memories can be imported from and exported to TMX files:
+
+```sh
+deepl memory import --name "Legal" legal.tmx
+deepl memory list | jq '.translation_memories[] | {name, translation_memory_id}'
+deepl memory export --output legal-export.tmx memory-id
+deepl memory delete memory-id
 ```
 
 Document translation temporarily writes a handle file such as `input.pdf.deepl-handle.json`
