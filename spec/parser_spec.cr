@@ -34,6 +34,7 @@ describe DeepL::Parser do
       "--translation-memory-threshold", "75",
       "--tag-handling", "xml",
       "--tag-handling-version", "v2",
+      "--reporting-tag", "batch-42",
     ])
 
     option.action.should eq(DeepL::Action::TranslateText)
@@ -43,6 +44,7 @@ describe DeepL::Parser do
     option.translation_memory_threshold.should eq(75)
     option.tag_handling.should eq("xml")
     option.tag_handling_version.should eq("v2")
+    option.reporting_tag.should eq("batch-42")
   end
 
   it "parses current document translation options" do
@@ -54,6 +56,7 @@ describe DeepL::Parser do
       "--translation-memory-id", "memory-1",
       "--translation-memory-threshold", "80",
       "--poll-timeout", "30",
+      "--watermark",
     ])
 
     option.action.should eq(DeepL::Action::TranslateDocument)
@@ -61,7 +64,8 @@ describe DeepL::Parser do
     option.style_id.should eq("style-1")
     option.translation_memory_id.should eq("memory-1")
     option.translation_memory_threshold.should eq(80)
-    option.document_timeout.should eq(30.seconds)
+    option.poll_timeout.should eq(30.seconds)
+    option.enable_watermark.should be_true
   end
 
   it "parses translation memory subcommands" do

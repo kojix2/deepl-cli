@@ -229,7 +229,11 @@ module DeepL
         end
 
         on("--poll-timeout SEC", "Document polling timeout") do |sec|
-          opt.document_timeout = sec.to_f.seconds
+          opt.poll_timeout = sec.to_f.seconds
+        end
+
+        on("--watermark", "Enable document watermark") do
+          opt.enable_watermark = true
         end
 
         on("--handle FILE", "Document handle file") do |file|
@@ -502,6 +506,10 @@ module DeepL
 
       on("--translation-memory-threshold PERCENT", "Translation Memory match threshold") do |threshold|
         opt.translation_memory_threshold = threshold.to_i
+      end
+
+      on("--reporting-tag TAG", "Reporting tag") do |tag|
+        opt.reporting_tag = tag
       end
 
       on("-D", "--detect-language", "Output detected source language") do

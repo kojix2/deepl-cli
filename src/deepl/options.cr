@@ -28,7 +28,7 @@ module DeepL
     property output_format : String? = nil
     property? no_ansi : Bool = true
     property interval : Float32 = 5.0
-    property document_timeout : Time::Span? = nil
+    property poll_timeout : Time::Span? = nil
     property document_id : String? = nil
     property document_key : String? = nil
     property document_handle_file : Path? = nil
@@ -36,6 +36,8 @@ module DeepL
     property style_id : String? = nil
     property translation_memory_id : String? = nil
     property translation_memory_threshold : Int32? = nil
+    property reporting_tag : String? = nil
+    property enable_watermark : Bool? = nil
     property page : Int32? = nil
     property page_size : Int32? = nil
     property page_cursor : String? = nil

@@ -138,6 +138,7 @@ module DeepL
           tag_handling_version: option.tag_handling_version,
           translation_memory_id: option.translation_memory_id,
           translation_memory_threshold: option.translation_memory_threshold,
+          reporting_tag: option.reporting_tag,
         )
       end
 
@@ -262,7 +263,7 @@ module DeepL
         translator.translate_document_wait_until_done(
           handle: document_handle,
           interval: option.interval,
-          timeout: option.document_timeout,
+          timeout: option.poll_timeout,
         ) do |document_status|
           STDERR.puts avoid_spinner("[deepl-cli] Status: #{document_status.status}")
           STDERR.puts avoid_spinner("[deepl-cli] Seconds Remaining: #{document_status.seconds_remaining}") if document_status.seconds_remaining
@@ -280,7 +281,7 @@ module DeepL
 
     private def validate_document_polling_options : Nil
       raise ArgumentError.new("Document polling interval must not be negative.") if option.interval < 0
-      if (timeout = option.document_timeout) && timeout < Time::Span.zero
+      if (timeout = option.poll_timeout) && timeout < Time::Span.zero
         raise ArgumentError.new("Document polling timeout must not be negative.")
       end
     end
@@ -327,6 +328,7 @@ module DeepL
         style_id: option.style_id,
         translation_memory_id: option.translation_memory_id,
         translation_memory_threshold: option.translation_memory_threshold,
+        enable_watermark: option.enable_watermark,
       )
     end
 

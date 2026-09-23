@@ -90,6 +90,7 @@ describe DeepL do
           "--translation-memory-threshold", "75",
           "--tag-handling", "xml",
           "--tag-handling-version", "v2",
+          "--reporting-tag", "batch-42",
         ],
         env: cli_test_env(server),
         output: stdout,
@@ -113,6 +114,7 @@ describe DeepL do
     body["translation_memory_threshold"].as_i.should eq(75)
     body["tag_handling"].as_s.should eq("xml")
     body["tag_handling_version"].as_s.should eq("v2")
+    server.requests.first.headers["X-DeepL-Reporting-Tag"].should eq("batch-42")
   end
 
   it "validates advanced translation options before sending a request" do
@@ -386,6 +388,7 @@ describe DeepL do
           "--style-id", "style-1",
           "--translation-memory-id", "memory-1",
           "--translation-memory-threshold", "75",
+          "--watermark",
           input_path.to_s,
         ],
         env: cli_test_env(server),
@@ -415,6 +418,8 @@ describe DeepL do
       request_body.should contain("memory-1")
       request_body.should contain("translation_memory_threshold")
       request_body.should contain("75")
+      request_body.should contain("enable_watermark")
+      request_body.should contain("true")
     ensure
       server.close
       File.delete?(input_path)
