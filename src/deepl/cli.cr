@@ -23,6 +23,8 @@ module DeepL
         translate_text
       when Action::RephraseText
         rephrase_text
+      when Action::CorrectText
+        correct_text
       when Action::TranslateDocument
         translate_document
       when Action::TranslateDocumentUpload
@@ -68,7 +70,13 @@ module DeepL
       end
     rescue ex
       error_message = "\n[deepl-cli] ERROR: #{ex.class} #{ex.message}"
-      error_message += "\n#{ex.response}" if ex.is_a?(Crest::RequestFailed)
+      if ex.is_a?(DeepL::DeepLError)
+        if ex.responds_to?(:trace_id) && (trace_id = ex.trace_id)
+          error_message += "\n[deepl-cli] Trace ID: #{trace_id}"
+        end
+      elsif ex.is_a?(Crest::RequestFailed)
+        error_message += "\n#{ex.response}"
+      end
       {% if flag?(:debug) %}
         error_message += "\n#{ex.backtrace.join("\n")}" if CLI.debug?
       {% end %}
@@ -122,6 +130,7 @@ module DeepL
           non_splitting_tags: option.non_splitting_tags,
           splitting_tags: option.splitting_tags,
           ignore_tags: option.ignore_tags,
+          glossary_id: option.glossary_id,
           glossary_name: option.glossary_name, # original option of deepl.cr
           context: option.context,
           show_billed_characters: option.show_billed_characters?,
@@ -189,6 +198,41 @@ module DeepL
       end
     end
 
+    def correct_text
+      if option.input_text.empty?
+        option.input_text = ARGF.gets_to_end
+      end
+
+      if option.no_ansi?
+        option.input_text = remove_ansi_escape_codes(option.input_text)
+      end
+
+      translator = DeepL::Translator.new
+
+      result = with_spinner do
+        translator.correct_text(
+          text: option.input_text,
+          target_lang: option.source_lang,
+        )
+      end
+
+      output = option.output_file ? IO::Memory.new : STDOUT
+
+      result.each do |result_item|
+        if option.detect_source_language?
+          STDERR.puts "[deepl-cli] Detected source language: #{result_item.detected_source_language}"
+        end
+        output.puts result_item.text
+      end
+
+      if output_file = option.output_file
+        File.open(output_file, "w") do |output_file_handle|
+          output.to_s(output_file_handle)
+        end
+        STDERR.puts "[deepl-cli] Corrected text is written to #{output_file}"
+      end
+    end
+
     def translate_document
       raise "Invalid option: -i --input" unless option.input_text.empty?
       abort_with_help("Input file is not specified") if ARGV.empty?
@@ -211,6 +255,7 @@ module DeepL
           target_lang: option.target_lang,
           source_lang: option.source_lang,
           formality: option.formality,
+          glossary_id: option.glossary_id,
           glossary_name: option.glossary_name, # original option of deepl.cr
           output_format: option.output_format
         )
@@ -259,6 +304,7 @@ module DeepL
           target_lang: option.target_lang,
           source_lang: option.source_lang,
           formality: option.formality,
+          glossary_id: option.glossary_id,
           glossary_name: option.glossary_name,
           output_format: option.output_format
         )
@@ -501,25 +547,8 @@ module DeepL
       glossary_names = argv_or_select_name_from_glossary_list
       translator = DeepL::Translator.new
       glossary_names.each do |glossary_name|
-        glossary_info_list = translator.get_multilingual_glossaries_by_name(glossary_name)
-        # Multiple glossaries with the same name are disambiguated by creation time.
-        case glossary_info_list.size
-        when 2..
-          creation_times = glossary_info_list.map(&.creation_time.to_local.to_s)
-          prompt = Term::Prompt.new
-          tm = prompt.select("Select creation date", creation_times)
-          glossary_info = glossary_info_list.find { |candidate_glossary_info| candidate_glossary_info.creation_time.to_local.to_s == tm }
-          if glossary_info.nil?
-            STDERR.puts "[deepl-cli] Glossary #{glossary_name} #{tm} is not found"
-          else
-            edit_glossary_core(translator, glossary_info)
-          end
-        when 1
-          glossary_info = glossary_info_list.first
-          edit_glossary_core(translator, glossary_info)
-        when 0
-          STDERR.puts "[deepl-cli] Glossary '#{glossary_name}' is not found"
-        end
+        glossary_info = translator.find_multilingual_glossary_by_name(glossary_name)
+        edit_glossary_core(translator, glossary_info)
       end
     end
 
@@ -670,9 +699,31 @@ module DeepL
       translator = DeepL::Translator.new
       usage = translator.get_usage
       puts translator.server_url
-      puts "character_count: #{usage.character_count}"
-      puts "character_limit: #{usage.character_limit}"
-      # Pro accounts expose more usage details, but they are not printed yet.
+      usage_values = JSON.parse(usage.to_json).as_h
+      usage_field_names.each do |field|
+        if value = usage_values[field]?
+          puts "#{field}: #{value}" unless value.raw.nil?
+        end
+      end
+    end
+
+    private def usage_field_names : Array(String)
+      [
+        "character_count",
+        "character_limit",
+        "api_key_character_count",
+        "api_key_character_limit",
+        "document_count",
+        "document_limit",
+        "team_document_count",
+        "team_document_limit",
+        "speech_to_text_minutes_count",
+        "speech_to_text_minutes_limit",
+        "speech_to_speech_minutes_count",
+        "speech_to_speech_minutes_limit",
+        "speech_to_text_milliseconds_count",
+        "speech_to_text_milliseconds_limit",
+      ]
     end
 
     def print_version

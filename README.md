@@ -58,6 +58,7 @@ Options:
     -t, --to [LANG]                  Target language [EN]
     -p, --paste                      Input text from clipboard
     -g, --glossary NAME              Glossary name
+        --glossary-id ID             Glossary ID
     -F, --formality OPT              Formality (default more less)
     -C, --context TEXT               Context (experimental)
     -S, --split-sentences OPT        Split sentences
@@ -80,6 +81,7 @@ Options for document translation:
     -f, --from [LANG]                Source language [AUTO]
     -t, --to [LANG]                  Target language [EN]
     -g, --glossary NAME              Glossary name
+        --glossary-id ID             Glossary ID
     -F, --formality OPT              Formality (default more less)
     -o, --output FILE                Output file
     -O, --output-format FORMAT       Output file format
@@ -130,6 +132,16 @@ Options for rephrase:
     -i, --input TEXT                 Input text
     -s, --writing-style STYLE        academic business casual default simple
     -t, --tone TONE                  confident diplomatic enthusiastic friendly
+```
+
+### Correct text
+
+Use `correct` to correct text while preserving its meaning. It accepts input
+from standard input or `--input` and writes the corrected text to standard
+output by default.
+
+```sh
+deepl correct --from EN --input "This sentence have an error."
 ```
 
 ## Examples
@@ -199,6 +211,12 @@ To use a glossary for translation:
 
 ```sh
 deepl -g myglossary -f ru
+```
+
+When a glossary name is not unique, use its explicit ID instead:
+
+```sh
+deepl --glossary-id 01234567-89ab-cdef-0123-456789abcdef -f ru
 ```
 
 To refer to the original text, you can use `tee dev/stderr`:
@@ -289,10 +307,21 @@ To use a glossary for document translation:
 deepl doc -g mydict -f en deep.pdf
 ```
 
+```sh
+deepl doc --glossary-id 01234567-89ab-cdef-0123-456789abcdef -f en deep.pdf
+```
+
 To display the contents of the glossary:
 
 ```sh
 deepl glossary view mydict
+```
+
+Glossary names must identify exactly one glossary. For delete, edit, or view
+operations on a duplicate name, use the existing ID mode instead:
+
+```sh
+deepl glossary delete --id 01234567-89ab-cdef-0123-456789abcdef
 ```
 
 ### Rephrase
@@ -334,6 +363,9 @@ deepl -u
 # character_count: 614842
 # character_limit: 1000000000000
 ```
+
+When an account reports them, document and speech usage categories are printed
+as well.
 
 ### Environment Variables
 

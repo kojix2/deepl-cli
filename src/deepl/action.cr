@@ -3,6 +3,7 @@ module DeepL
     TranslateText
     # TranslateXML
     RephraseText
+    CorrectText
     TranslateDocument
     TranslateDocumentUpload
     TranslateDocumentStatus

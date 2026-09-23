@@ -13,7 +13,7 @@ module DeepL
     property? detect_source_language : Bool = false
     property? show_billed_characters : Bool = false
     property formality : String? = nil
-    # property glossary_id : String? = nil
+    property glossary_id : String? = nil
     property glossary_name : String? = nil
     property context : String? = nil
     property split_sentences : String? = nil

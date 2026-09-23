@@ -62,4 +62,67 @@ describe DeepL do
     end.join
     filtered_stderr.should eq("")
   end
+
+  it "corrects --input text using the library command" do
+    stdout = IO::Memory.new
+    stderr = IO::Memory.new
+
+    status = Process.run(
+      "crystal",
+      ["run", "src/cli.cr", "--", "correct", "--input", "helo", "--from", "EN"],
+      env: {"DEEPL_AUTH_KEY" => "mock"},
+      output: stdout,
+      error: stderr
+    )
+
+    status.success?.should be_true
+    stdout.to_s.should eq("proton beam\n")
+    stderr.to_s.should_not contain("ERROR")
+  end
+
+  it "corrects standard input to standard output" do
+    stdout = IO::Memory.new
+    stderr = IO::Memory.new
+
+    status = Process.run(
+      "crystal",
+      ["run", "src/cli.cr", "--", "correct", "--from", "EN"],
+      env: {"DEEPL_AUTH_KEY" => "mock"},
+      input: IO::Memory.new("helo\n"),
+      output: stdout,
+      error: stderr
+    )
+
+    status.success?.should be_true
+    stdout.to_s.should eq("proton beam\n")
+    stderr.to_s.should_not contain("ERROR")
+  end
+
+  it "stores an uploaded document handle with owner-only permissions without printing its key" do
+    input = File.tempfile("deepl-cli-spec", ".txt")
+    input.print("hello")
+    input.close
+    input_path = Path[input.path]
+    handle_path = Path["#{input.path}.handle"]
+
+    begin
+      stdout = IO::Memory.new
+      stderr = IO::Memory.new
+      status = Process.run(
+        "crystal",
+        ["run", "src/cli.cr", "--", "doc", "--upload-only", "--handle", handle_path.to_s, input_path.to_s],
+        env: {"DEEPL_AUTH_KEY" => "mock"},
+        output: stdout,
+        error: stderr
+      )
+
+      status.success?.should be_true
+      File.info(handle_path).permissions.should eq(File::Permissions.new(0o600))
+      File.read(handle_path).should contain("mock-document-key")
+      stderr.to_s.should_not contain("mock-document-key")
+    ensure
+      File.delete?(input_path)
+      File.delete?(handle_path)
+    end
+  end
 end

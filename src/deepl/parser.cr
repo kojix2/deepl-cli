@@ -197,6 +197,10 @@ module DeepL
           opt.glossary_name = glossary_name
         end
 
+        on("--glossary-id ID", "Glossary ID") do |glossary_id|
+          opt.glossary_id = glossary_id
+        end
+
         on("-F", "--formality OPT", "Formality (default more less)") do |v|
           opt.formality = v
         end
@@ -360,6 +364,35 @@ module DeepL
         _on_help_
       end
 
+      on("correct", "Correct text") do
+        _set_action_(Action::CorrectText, "Usage: deepl correct [options] <file>")
+
+        on("-i", "--input TEXT", "Input text") do |text|
+          opt.input_text = text
+        end
+
+        # The Write API uses target_lang for the language of the input text.
+        _on_source_lang_
+
+        on("-D", "--detect-language", "Output detected source language") do
+          opt.detect_source_language = true
+        end
+
+        on("-o", "--output FILE", "Output file") do |file|
+          opt.output_file = Path[file]
+        end
+
+        _on_paste_
+
+        on("-A", "--ansi", "Do not remove ANSI escape codes") do
+          opt.no_ansi = false
+        end
+
+        _on_debug_
+
+        _on_help_
+      end
+
       separator
       separator "Options:"
 
@@ -388,6 +421,10 @@ module DeepL
 
       on("-g", "--glossary NAME", "Glossary name") do |glossary_name|
         opt.glossary_name = glossary_name
+      end
+
+      on("--glossary-id ID", "Glossary ID") do |glossary_id|
+        opt.glossary_id = glossary_id
       end
 
       on("-D", "--detect-language", "Output detected source language") do
