@@ -190,13 +190,15 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
     <use href="#octicon-link"/>
   </svg>
 </a>Usage</h2>
+<p>The default command translates text:</p>
 <pre><code class="language-sh">deepl [options] &lt;file&gt;</code></pre>
 <h3><a id="translate-text" class="anchor" href="#translate-text">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
 </a>Translate text</h3>
-<pre><code class="language-sh">deepl [options] &lt;file&gt;</code></pre>
+<p>For text-specific options, use the <code>text</code> subcommand:</p>
+<pre><code class="language-sh">deepl text [options] &lt;text&gt;</code></pre>
 <p>Options:</p>
 <pre><code class="language-txt">    -i, --input TEXT                 Input text
     -f, --from [LANG]                Source language [AUTO]
@@ -206,7 +208,7 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
         --glossary-id ID             Glossary ID
     -F, --formality OPT              Formality (default more less)
     -C, --context TEXT               Context (experimental)
-    -S, --split-sentences OPT        Split sentences
+    -s, --split-sentences OPT        Split sentences
     -A, --ansi                       Do not remove ANSI escape codes</code></pre>
 <p>Note: ANSI escape sequences are removed by default.</p>
 <h3><a id="translate-documents" class="anchor" href="#translate-documents">
@@ -242,7 +244,7 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
   </svg>
 </a>Manage glossaries</h3>
 <p>For glossary management, use the <code>glossary</code> subcommand:</p>
-<pre><code class="language-sh">deepl glossary [options]</code></pre>
+<pre><code class="language-sh">deepl glossary [options] &lt;subcommand&gt;</code></pre>
 <p>Options for glossary management:</p>
 <pre><code class="language-txt">    list                             List glossaries
     create                           Create a glossary
@@ -319,11 +321,11 @@ output by default.</p>
 <p>To use a glossary for translation:</p>
 <pre><code class="language-sh">deepl doc -g myglossary -f pl</code></pre>
 <p>To translate a PDF document and save it in docx format:</p>
-<pre><code class="language-crystal">deepl doc input.pdf <span class="o">-</span><span class="t">O</span> docx <span class="o">-</span>o output.docx</code></pre>
+<pre><code class="language-sh">deepl doc input.pdf -O docx -o output.docx</code></pre>
 <p>Document translation temporarily writes a handle file such as <code>input.pdf.deepl-handle.json</code>
 and removes it after a successful download, unless <code>--handle FILE</code> is specified.
 The handle file contains the DeepL document key. Treat it as a secret.
-It is written with <code>0600</code> permissions by default.</p>
+It is written with owner-only permissions on POSIX systems (mode <code>0600</code>).</p>
 <p>To upload a document and check or download it later:</p>
 <pre><code class="language-sh">deepl doc -U input.pdf
 deepl doc status --handle input.pdf.deepl-handle.json
@@ -337,7 +339,9 @@ deepl doc download --handle input.pdf.deepl-handle.json -o output.pdf</code></pr
     <use href="#octicon-link"/>
   </svg>
 </a>Glossaries</h3>
-<p>The DeepL API supports glossaries. See <a href="https://developers.deepl.com/docs/api-reference/glossaries#formats">here</a> for the format of the glossary file. The Glossary API has been migrated to version 3.</p>
+<p>The DeepL API supports glossaries. The CLI uses the multilingual glossary endpoint
+(<code>/v3/glossaries</code>). See <a href="https://developers.deepl.com/docs/api-reference/glossaries#formats">the API documentation</a>
+for the glossary file format.</p>
 <p>To create a glossary:</p>
 <pre><code class="language-sh">deepl glossary create -n mydic -f en -t pt mydict.tsv</code></pre>
 <p>To list glossaries:</p>
@@ -439,7 +443,7 @@ shards build --release -Dclipboard</code></pre>
 <p>Clipboard support is enabled only when the Crystal compile-time flag <code>clipboard</code> is set.
 Without this flag, the <code>--paste</code> option is not available and EasyClip is not required at compile time:</p>
 <pre><code class="language-sh">shards build --release
-bin/deepl --version # deepl-cli 0.5.4 (clipboard disabled)</code></pre>
+bin/deepl --version # deepl-cli &lt;version&gt; (clipboard disabled)</code></pre>
 <p>To build with clipboard support explicitly:</p>
 <pre><code class="language-sh">crystal build src/cli.cr -o bin/deepl --release -D clipboard
 # or with shards:
