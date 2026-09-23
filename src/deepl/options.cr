@@ -26,14 +26,10 @@ module DeepL
     property output_format : String? = nil
     property? no_ansi : Bool = true
     property interval : Float32 = 5.0
-    # # document handle
     property document_id : String? = nil
     property document_key : String? = nil
     property document_handle_file : Path? = nil
-    # # model type
     property model_type : String? = nil
-    # property show_model_type : Bool = false
-    # # rephrase options
     property writing_style : String? = nil
     property tone : String? = nil
   end

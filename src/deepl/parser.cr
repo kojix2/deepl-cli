@@ -128,11 +128,6 @@ module DeepL
           opt.model_type = type
         end
 
-        # This option is useful for debugging.
-        # on("--show-model-type", "Output model type used") do
-        #   opt.show_model_type = true
-        # end
-
         _on_debug_
 
         _on_help_
@@ -412,13 +407,6 @@ module DeepL
 
       _on_paste_
 
-      {% if flag?(:clipboard) %}
-        # This option is experimental and may change in the future.
-        # on("-c", "--copy", "Copy translated text to clipboard (experimental)") do
-        #   # Clipboard integration is not implemented yet.
-        # end
-      {% end %}
-
       on("-g", "--glossary NAME", "Glossary name") do |glossary_name|
         opt.glossary_name = glossary_name
       end
@@ -447,17 +435,12 @@ module DeepL
         opt.no_ansi = false
       end
 
-      # Why is --output option is needed?
-      # Because utf-8 is not fully supported in Windows console.
-
       on("-o", "--output FILE", "Output file") do |file|
         opt.output_file = Path[file]
       end
 
       on("-u", "--usage", "Check Usage and Limits") do
         opt.action = Action::RetrieveUsage
-        # @handlers.clear
-        # @flags.clear
       end
 
       _on_debug_

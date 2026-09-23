@@ -9,6 +9,11 @@ require "./utils"
 module DeepL
   class CLI
     class_property? debug : Bool = false
+
+    ANSI_ESCAPE_REGEX = Regex.new(
+      "(?:\x1B[@-Z\\-_]|[\\x80-\\x9A\\x9C-\\x9F]|(?:\x1B\\[|\\x9B)[0-?]*[ -/]*[@-~])"
+    )
+
     getter parser : Parser
     getter option : Options
 
@@ -91,35 +96,23 @@ module DeepL
       end
     end
 
-    private def remove_ansi_escape_codes(text)
-      # gsub(/\e\[[0-9;]*[mGKHF]/, "")
-      # The above regular expression used to be used.
-      # However, it is insufficient because it cannot remove bold and other characters.
-      #
-      # How can I remove the ANSI escape sequences from a string in python
-      # https://stackoverflow.com/questions/14693701
-      # Python regular expressions were converted for PCRE2 using ChatGPT.
-      ansi_escape_8bit = Regex.new(
-        "(?:\x1B[@-Z\\-_]|[\\x80-\\x9A\\x9C-\\x9F]|(?:\x1B\\[|\\x9B)[0-?]*[ -/]*[@-~])"
-      )
-      text.gsub(ansi_escape_8bit, "")
+    private def remove_ansi_escape_codes(text : String) : String
+      text.gsub(ANSI_ESCAPE_REGEX, "")
+    end
+
+    private def prepared_input_text : String
+      option.input_text = ARGF.gets_to_end if option.input_text.empty?
+      option.input_text = remove_ansi_escape_codes(option.input_text) if option.no_ansi?
+      option.input_text
     end
 
     def translate_text
-      if option.input_text.empty?
-        option.input_text = ARGF.gets_to_end
-      end
-
-      # Remove ANSI escape codes from the input text (only if no_ansi is true)
-      if option.no_ansi?
-        option.input_text = remove_ansi_escape_codes(option.input_text)
-      end
-
+      input_text = prepared_input_text
       translator = DeepL::Translator.new
 
       result = with_spinner do
         translator.translate_text(
-          text: option.input_text,
+          text: input_text,
           target_lang: option.target_lang,
           source_lang: option.source_lang,
           formality: option.formality,
@@ -131,7 +124,7 @@ module DeepL
           splitting_tags: option.splitting_tags,
           ignore_tags: option.ignore_tags,
           glossary_id: option.glossary_id,
-          glossary_name: option.glossary_name, # original option of deepl.cr
+          glossary_name: option.glossary_name,
           context: option.context,
           show_billed_characters: option.show_billed_characters?,
           model_type: option.model_type
@@ -147,9 +140,6 @@ module DeepL
         if option.show_billed_characters?
           STDERR.puts "[deepl-cli] Billed characters: #{result_item.billed_characters}"
         end
-        # if option.show_model_type && r.model_type_used
-        #   STDERR.puts "[deepl-cli] Model type used: #{r.model_type_used}"
-        # end
         output.puts result_item.text
       end
       if output_file = option.output_file
@@ -161,20 +151,12 @@ module DeepL
     end
 
     def rephrase_text
-      if option.input_text.empty?
-        option.input_text = ARGF.gets_to_end
-      end
-
-      # Remove ANSI escape codes from the input text (only if no_ansi is true)
-      if option.no_ansi?
-        option.input_text = remove_ansi_escape_codes(option.input_text)
-      end
-
+      input_text = prepared_input_text
       translator = DeepL::Translator.new
 
       result = with_spinner do
         translator.rephrase_text(
-          text: option.input_text,
+          text: input_text,
           target_lang: option.source_lang, # source_lang is correct here.
           writing_style: option.writing_style,
           tone: option.tone
@@ -199,19 +181,12 @@ module DeepL
     end
 
     def correct_text
-      if option.input_text.empty?
-        option.input_text = ARGF.gets_to_end
-      end
-
-      if option.no_ansi?
-        option.input_text = remove_ansi_escape_codes(option.input_text)
-      end
-
+      input_text = prepared_input_text
       translator = DeepL::Translator.new
 
       result = with_spinner do
         translator.correct_text(
-          text: option.input_text,
+          text: input_text,
           target_lang: option.source_lang,
         )
       end
@@ -256,7 +231,7 @@ module DeepL
           source_lang: option.source_lang,
           formality: option.formality,
           glossary_id: option.glossary_id,
-          glossary_name: option.glossary_name, # original option of deepl.cr
+          glossary_name: option.glossary_name,
           output_format: option.output_format
         )
 
@@ -592,7 +567,7 @@ module DeepL
       glossary_names = argv_or_select_name_from_glossary_list
       translator = DeepL::Translator.new
       output_file = option.output_file
-      File.delete(output_file) if output_file && File.exists?(output_file)
+      File.delete?(output_file) if output_file
       glossary_names.each do |glossary_name|
         info = translator.find_multilingual_glossary_by_name(glossary_name)
         src, tgt = resolve_or_select_language_pair(info)
@@ -611,7 +586,7 @@ module DeepL
       glossary_ids = argv_or_select_id_from_glossary_list_long
       translator = DeepL::Translator.new
       output_file = option.output_file
-      File.delete(output_file) if output_file && File.exists?(output_file)
+      File.delete?(output_file) if output_file
       glossary_ids.each do |glossary_id|
         info = translator.get_multilingual_glossary(glossary_id)
         src, tgt = resolve_or_select_language_pair(info)

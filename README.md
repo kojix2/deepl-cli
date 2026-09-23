@@ -40,14 +40,18 @@ export DEEPL_AUTH_KEY=your_api_key_here
 
 ## Usage
 
+The default command translates text:
+
 ```sh
 deepl [options] <file>
 ```
 
 ### Translate text
 
+For text-specific options, use the `text` subcommand:
+
 ```sh
-deepl [options] <file>
+deepl text [options] <text>
 ```
 
 Options:
@@ -61,7 +65,7 @@ Options:
         --glossary-id ID             Glossary ID
     -F, --formality OPT              Formality (default more less)
     -C, --context TEXT               Context (experimental)
-    -S, --split-sentences OPT        Split sentences
+    -s, --split-sentences OPT        Split sentences
     -A, --ansi                       Do not remove ANSI escape codes
 ```
 
@@ -104,7 +108,7 @@ Supported file formats.
 For glossary management, use the `glossary` subcommand:
 
 ```sh
-deepl glossary [options]
+deepl glossary [options] <subcommand>
 ```
 
 Options for glossary management:
@@ -242,14 +246,14 @@ deepl doc -g myglossary -f pl
 
 To translate a PDF document and save it in docx format:
 
-```
+```sh
 deepl doc input.pdf -O docx -o output.docx
 ```
 
 Document translation temporarily writes a handle file such as `input.pdf.deepl-handle.json`
 and removes it after a successful download, unless `--handle FILE` is specified.
 The handle file contains the DeepL document key. Treat it as a secret.
-It is written with `0600` permissions by default.
+It is written with owner-only permissions on POSIX systems (mode `0600`).
 
 To upload a document and check or download it later:
 
@@ -275,7 +279,9 @@ fd -e pdf -e docx -x deepl doc -t zh
 
 ### Glossaries
 
-The DeepL API supports glossaries. See [here](https://developers.deepl.com/docs/api-reference/glossaries#formats) for the format of the glossary file. The Glossary API has been migrated to version 3.
+The DeepL API supports glossaries. The CLI uses the multilingual glossary endpoint
+(`/v3/glossaries`). See [the API documentation](https://developers.deepl.com/docs/api-reference/glossaries#formats)
+for the glossary file format.
 
 To create a glossary:
 
@@ -423,7 +429,7 @@ Without this flag, the `--paste` option is not available and EasyClip is not req
 
 ```sh
 shards build --release
-bin/deepl --version # deepl-cli 0.5.4 (clipboard disabled)
+bin/deepl --version # deepl-cli <version> (clipboard disabled)
 ```
 
 To build with clipboard support explicitly:

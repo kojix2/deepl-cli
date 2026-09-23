@@ -54,13 +54,12 @@ describe DeepL do
 
     status.success?.should be_true
     stdout.to_s.should contain("Usage: deepl glossary [options] <subcommand>")
-    # FIXME: This is workaround for suppressing the ld: warning
-    # Remove this when the underlying issue is resolved.
-    # Currently, this warning is emitted only on macOS x86_64.
-    filtered_stderr = stderr.to_s.lines.reject do |line|
-      line.starts_with?("ld: warning:")
-    end.join
-    filtered_stderr.should eq("")
+    {% if flag?(:darwin) %}
+      # Crystal's macOS linker can emit a non-fatal warning.
+      stderr.to_s.lines.reject { |line| line.starts_with?("ld: warning:") }.join.should eq("")
+    {% else %}
+      stderr.to_s.should eq("")
+    {% end %}
   end
 
   it "corrects --input text using the library command" do
@@ -69,7 +68,7 @@ describe DeepL do
 
     status = Process.run(
       "crystal",
-      ["run", "src/cli.cr", "--", "correct", "--input", "helo", "--from", "EN"],
+      ["run", "-Ddeepl_mock", "src/cli.cr", "--", "correct", "--input", "helo", "--from", "EN"],
       env: {"DEEPL_AUTH_KEY" => "mock"},
       output: stdout,
       error: stderr
@@ -86,7 +85,7 @@ describe DeepL do
 
     status = Process.run(
       "crystal",
-      ["run", "src/cli.cr", "--", "correct", "--from", "EN"],
+      ["run", "-Ddeepl_mock", "src/cli.cr", "--", "correct", "--from", "EN"],
       env: {"DEEPL_AUTH_KEY" => "mock"},
       input: IO::Memory.new("helo\n"),
       output: stdout,
@@ -110,7 +109,7 @@ describe DeepL do
       stderr = IO::Memory.new
       status = Process.run(
         "crystal",
-        ["run", "src/cli.cr", "--", "doc", "--upload-only", "--handle", handle_path.to_s, input_path.to_s],
+        ["run", "-Ddeepl_mock", "src/cli.cr", "--", "doc", "--upload-only", "--handle", handle_path.to_s, input_path.to_s],
         env: {"DEEPL_AUTH_KEY" => "mock"},
         output: stdout,
         error: stderr

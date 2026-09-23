@@ -1,7 +1,6 @@
 module DeepL
   enum Action : UInt8
     TranslateText
-    # TranslateXML
     RephraseText
     CorrectText
     TranslateDocument
@@ -22,6 +21,5 @@ module DeepL
     RetrieveUsage
     Version
     Help
-    None
   end
 end
