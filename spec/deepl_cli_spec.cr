@@ -117,7 +117,13 @@ describe DeepL do
       )
 
       status.success?.should be_true
-      File.info(handle_path).permissions.should eq(File::Permissions.new(0o600))
+      # Windows exposes writable files as 0666: only OwnerWrite is effective
+      # there, so its filesystem cannot report POSIX's owner-only 0600 mode.
+      {% if flag?(:windows) %}
+        File.info(handle_path).permissions.should eq(File::Permissions.new(0o666))
+      {% else %}
+        File.info(handle_path).permissions.should eq(File::Permissions.new(0o600))
+      {% end %}
       File.read(handle_path).should contain("mock-document-key")
       stderr.to_s.should_not contain("mock-document-key")
     ensure
