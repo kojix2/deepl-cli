@@ -359,7 +359,7 @@ To output usage information:
 ```sh
 deepl -u
 
-# https://api.deepl.com/v2
+# https://api.deepl.com
 # character_count: 614842
 # character_limit: 1000000000000
 ```
