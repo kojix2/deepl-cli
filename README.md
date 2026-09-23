@@ -62,7 +62,7 @@ Options:
     -t, --to [LANG]                  Target language [EN]
     -p, --paste                      Input text from clipboard
     -g, --glossary NAME              Glossary name
-        --glossary-id IDS            Glossary ID (comma-separated or repeatable, up to 5)
+        --glossary-id IDS            Glossary IDs (max 5)
     -F, --formality OPT              Formality (default more less)
     -C, --context TEXT               Context (experimental)
     -s, --split-sentences OPT        Split sentences
@@ -85,7 +85,7 @@ Options for document translation:
     -f, --from [LANG]                Source language [AUTO]
     -t, --to [LANG]                  Target language [EN]
     -g, --glossary NAME              Glossary name
-        --glossary-id IDS            Glossary ID (comma-separated or repeatable, up to 5)
+        --glossary-id IDS            Glossary IDs (max 5)
     -F, --formality OPT              Formality (default more less)
     -o, --output FILE                Output file
     -O, --output-format FORMAT       Output file format

@@ -192,7 +192,7 @@ module DeepL
           opt.glossary_name = glossary_name
         end
 
-        on("--glossary-id IDS", "Glossary ID (comma-separated or repeatable, up to 5)") do |glossary_ids|
+        on("--glossary-id IDS", "Glossary IDs (max 5)") do |glossary_ids|
           add_glossary_ids(glossary_ids)
         end
 
@@ -415,7 +415,7 @@ module DeepL
         opt.glossary_name = glossary_name
       end
 
-      on("--glossary-id IDS", "Glossary ID (comma-separated or repeatable, up to 5)") do |glossary_ids|
+      on("--glossary-id IDS", "Glossary IDs (max 5)") do |glossary_ids|
         add_glossary_ids(glossary_ids)
       end
 
