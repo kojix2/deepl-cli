@@ -203,6 +203,7 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
     -t, --to [LANG]                  Target language [EN]
     -p, --paste                      Input text from clipboard
     -g, --glossary NAME              Glossary name
+        --glossary-id ID             Glossary ID
     -F, --formality OPT              Formality (default more less)
     -C, --context TEXT               Context (experimental)
     -S, --split-sentences OPT        Split sentences
@@ -219,6 +220,7 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 <pre><code class="language-txt">    -f, --from [LANG]                Source language [AUTO]
     -t, --to [LANG]                  Target language [EN]
     -g, --glossary NAME              Glossary name
+        --glossary-id ID             Glossary ID
     -F, --formality OPT              Formality (default more less)
     -o, --output FILE                Output file
     -O, --output-format FORMAT       Output file format
@@ -259,6 +261,15 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 <pre><code class="language-txt">    -i, --input TEXT                 Input text
     -s, --writing-style STYLE        academic business casual default simple
     -t, --tone TONE                  confident diplomatic enthusiastic friendly</code></pre>
+<h3><a id="correct-text" class="anchor" href="#correct-text">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Correct text</h3>
+<p>Use <code>correct</code> to correct text while preserving its meaning. It accepts input
+from standard input or <code>--input</code> and writes the corrected text to standard
+output by default.</p>
+<pre><code class="language-sh">deepl correct --from EN --input &quot;This sentence have an error.&quot;</code></pre>
 <h2><a id="examples" class="anchor" href="#examples">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -293,6 +304,8 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 <pre><code class="language-sh">bat --style header *.txt | deepl -t it</code></pre>
 <p>To use a glossary for translation:</p>
 <pre><code class="language-sh">deepl -g myglossary -f ru</code></pre>
+<p>When a glossary name is not unique, use its explicit ID instead:</p>
+<pre><code class="language-sh">deepl --glossary-id 01234567-89ab-cdef-0123-456789abcdef -f ru</code></pre>
 <p>To refer to the original text, you can use <code>tee dev/stderr</code>:</p>
 <pre><code class="language-sh">fortune | tee /dev/stderr | deepl</code></pre>
 <h3><a id="translate-documents-1" class="anchor" href="#translate-documents-1">
@@ -335,8 +348,12 @@ deepl doc download --handle input.pdf.deepl-handle.json -o output.pdf</code></pr
 <pre><code class="language-sh">deepl -g mydict -f en deep.txt</code></pre>
 <p>To use a glossary for document translation:</p>
 <pre><code class="language-sh">deepl doc -g mydict -f en deep.pdf</code></pre>
+<pre><code class="language-sh">deepl doc --glossary-id 01234567-89ab-cdef-0123-456789abcdef -f en deep.pdf</code></pre>
 <p>To display the contents of the glossary:</p>
 <pre><code class="language-sh">deepl glossary view mydict</code></pre>
+<p>Glossary names must identify exactly one glossary. For delete, edit, or view
+operations on a duplicate name, use the existing ID mode instead:</p>
+<pre><code class="language-sh">deepl glossary delete --id 01234567-89ab-cdef-0123-456789abcdef</code></pre>
 <h3><a id="rephrase" class="anchor" href="#rephrase">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -363,6 +380,8 @@ deepl doc download --handle input.pdf.deepl-handle.json -o output.pdf</code></pr
 # https://api.deepl.com/v2
 # character_count: 614842
 # character_limit: 1000000000000</code></pre>
+<p>When an account reports them, document and speech usage categories are printed
+as well.</p>
 <h3><a id="environment-variables" class="anchor" href="#environment-variables">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
