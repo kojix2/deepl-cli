@@ -52,6 +52,12 @@ module DeepL
         print_glossary_list
       when Action::ListGlossariesLong
         print_glossary_list_long
+      when Action::ListTranslationMemories
+        print_translation_memories
+      when Action::ShowTranslationMemory
+        print_translation_memory
+      when Action::ListTranslationMemorySegments
+        print_translation_memory_segments
       when Action::OutputGlossaryEntriesByName
         output_glossary_entries_by_name
       when Action::OutputGlossaryEntriesById
@@ -76,11 +82,9 @@ module DeepL
     rescue ex
       error_message = "\n[deepl-cli] ERROR: #{ex.class} #{ex.message}"
       if ex.is_a?(DeepL::DeepLError)
-        if ex.responds_to?(:trace_id) && (trace_id = ex.trace_id)
+        if trace_id = ex.trace_id
           error_message += "\n[deepl-cli] Trace ID: #{trace_id}"
         end
-      elsif ex.is_a?(Crest::RequestFailed)
-        error_message += "\n#{ex.response}"
       end
       {% if flag?(:debug) %}
         error_message += "\n#{ex.backtrace.join("\n")}" if CLI.debug?
@@ -107,6 +111,7 @@ module DeepL
     end
 
     def translate_text
+      validate_translation_options
       input_text = prepared_input_text
       translator = DeepL::Translator.new
 
@@ -124,10 +129,15 @@ module DeepL
           splitting_tags: option.splitting_tags,
           ignore_tags: option.ignore_tags,
           glossary_id: option.glossary_id,
+          glossary_ids: option.glossary_ids,
           glossary_name: option.glossary_name,
           context: option.context,
           show_billed_characters: option.show_billed_characters?,
-          model_type: option.model_type
+          model_type: option.model_type,
+          style_id: option.style_id,
+          tag_handling_version: option.tag_handling_version,
+          translation_memory_id: option.translation_memory_id,
+          translation_memory_threshold: option.translation_memory_threshold,
         )
       end
 
@@ -224,6 +234,8 @@ module DeepL
     def translate_document
       raise "Invalid option: -i --input" unless option.input_text.empty?
       abort_with_help("Input file is not specified") if ARGV.empty?
+      validate_translation_options
+      validate_document_polling_options
       option.input_path = Path[ARGV.shift]
       case ARGV.size
       when 1
@@ -238,15 +250,7 @@ module DeepL
       check_document_handle_file_writable(handle_file)
 
       with_spinner do
-        document_handle = translator.translate_document_upload(
-          path: option.input_path,
-          target_lang: option.target_lang,
-          source_lang: option.source_lang,
-          formality: option.formality,
-          glossary_id: option.glossary_id,
-          glossary_name: option.glossary_name,
-          output_format: option.output_format
-        )
+        document_handle = upload_document(translator)
 
         save_document_handle_file(document_handle, handle_file)
 
@@ -255,7 +259,11 @@ module DeepL
         STDERR.puts avoid_spinner("[deepl-cli] ID: #{document_handle.id}")
         STDERR.puts avoid_spinner("[deepl-cli] Document handle: #{handle_file}")
 
-        translator.translate_document_wait_until_done(document_handle, option.interval) do |document_status|
+        translator.translate_document_wait_until_done(
+          handle: document_handle,
+          interval: option.interval,
+          timeout: option.document_timeout,
+        ) do |document_status|
           STDERR.puts avoid_spinner("[deepl-cli] Status: #{document_status.status}")
           STDERR.puts avoid_spinner("[deepl-cli] Seconds Remaining: #{document_status.seconds_remaining}") if document_status.seconds_remaining
           STDERR.puts avoid_spinner("[deepl-cli] Billed Characters: #{document_status.billed_characters}") if document_status.billed_characters
@@ -270,9 +278,17 @@ module DeepL
       end
     end
 
+    private def validate_document_polling_options : Nil
+      raise ArgumentError.new("Document polling interval must not be negative.") if option.interval < 0
+      if (timeout = option.document_timeout) && timeout < Time::Span.zero
+        raise ArgumentError.new("Document polling timeout must not be negative.")
+      end
+    end
+
     def upload_document_to_translate
       raise "Invalid option: -i --input" unless option.input_text.empty?
       abort_with_help("Input file is not specified") if ARGV.empty?
+      validate_translation_options
       option.input_path = Path[ARGV.shift]
 
       case ARGV.size
@@ -287,15 +303,7 @@ module DeepL
       check_document_handle_file_writable(handle_file)
 
       document_handle = with_spinner do
-        translator.translate_document_upload(
-          path: option.input_path,
-          target_lang: option.target_lang,
-          source_lang: option.source_lang,
-          formality: option.formality,
-          glossary_id: option.glossary_id,
-          glossary_name: option.glossary_name,
-          output_format: option.output_format
-        )
+        upload_document(translator)
       end
 
       STDERR.puts "[deepl-cli] Document uploaded"
@@ -304,6 +312,61 @@ module DeepL
       save_document_handle_file(document_handle, handle_file)
       STDERR.puts "[deepl-cli] Document handle: #{handle_file}"
       STDERR.puts "[deepl-cli] Use this file with 'deepl doc status --handle' and 'deepl doc download --handle'"
+    end
+
+    private def upload_document(translator : Translator) : DocumentHandle
+      translator.translate_document_upload(
+        path: option.input_path,
+        target_lang: option.target_lang,
+        source_lang: option.source_lang,
+        formality: option.formality,
+        glossary_id: option.glossary_id,
+        glossary_name: option.glossary_name,
+        output_format: option.output_format,
+        glossary_ids: option.glossary_ids,
+        style_id: option.style_id,
+        translation_memory_id: option.translation_memory_id,
+        translation_memory_threshold: option.translation_memory_threshold,
+      )
+    end
+
+    private def validate_translation_options : Nil
+      validate_glossary_options
+      validate_translation_memory_options
+      validate_tag_handling_options
+    end
+
+    private def validate_glossary_options : Nil
+      if glossary_ids = option.glossary_ids
+        raise ArgumentError.new("--glossary-ids requires at least one glossary ID.") if glossary_ids.empty?
+        raise ArgumentError.new("--glossary-ids accepts at most 5 glossary IDs.") if glossary_ids.size > 5
+        raise ArgumentError.new("--from is required with --glossary-ids.") unless option.source_lang
+        if option.glossary_id || option.glossary_name
+          raise ArgumentError.new("--glossary-ids cannot be combined with --glossary-id or --glossary.")
+        end
+      end
+    end
+
+    private def validate_translation_memory_options : Nil
+      if threshold = option.translation_memory_threshold
+        unless option.translation_memory_id
+          raise ArgumentError.new("--translation-memory-threshold requires --translation-memory-id.")
+        end
+        unless (0..100).includes?(threshold)
+          raise ArgumentError.new("--translation-memory-threshold must be between 0 and 100.")
+        end
+      end
+    end
+
+    private def validate_tag_handling_options : Nil
+      if version = option.tag_handling_version
+        unless {"v1", "v2"}.includes?(version)
+          raise ArgumentError.new("--tag-handling-version must be v1 or v2.")
+        end
+        unless option.tag_handling
+          raise ArgumentError.new("--tag-handling-version requires --tag-handling.")
+        end
+      end
     end
 
     def check_document_translation_status
@@ -637,6 +700,34 @@ module DeepL
           glossary_item.glossary_id,
         ].join("\t")
       end
+    end
+
+    def print_translation_memories
+      translator = DeepL::Translator.new
+      memories = translator.list_translation_memories(
+        page: option.page,
+        page_size: option.page_size,
+      )
+      puts memories.to_pretty_json
+    end
+
+    def print_translation_memory
+      translator = DeepL::Translator.new
+      memory_id = ARGV.shift? || abort_with_help("Translation Memory ID is not specified")
+      puts translator.get_translation_memory(memory_id).to_pretty_json
+    end
+
+    def print_translation_memory_segments
+      translator = DeepL::Translator.new
+      memory_id = ARGV.shift? || abort_with_help("Translation Memory ID is not specified")
+      segments = translator.list_translation_memory_segments(
+        memory_id,
+        page_size: option.page_size,
+        page_cursor: option.page_cursor,
+        filter_text: option.filter_text,
+        filter_case_sensitive: option.filter_case_sensitive?,
+      )
+      puts segments.to_pretty_json
     end
 
     # Resolve language pair from options or interactively select from glossary dictionaries

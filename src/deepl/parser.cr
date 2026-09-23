@@ -128,6 +128,10 @@ module DeepL
           opt.model_type = type
         end
 
+        on("--tag-handling-version VERSION", "Tag handling version") do |version|
+          opt.tag_handling_version = version
+        end
+
         _on_debug_
 
         _on_help_
@@ -196,6 +200,22 @@ module DeepL
           opt.glossary_id = glossary_id
         end
 
+        on("--glossary-ids IDS", "Comma-separated glossary IDs (up to 5)") do |glossary_ids|
+          opt.glossary_ids = glossary_ids.split(',').map(&.strip).reject(&.empty?)
+        end
+
+        on("--style-id ID", "Style Rule ID") do |style_id|
+          opt.style_id = style_id
+        end
+
+        on("--translation-memory-id ID", "Translation Memory ID") do |memory_id|
+          opt.translation_memory_id = memory_id
+        end
+
+        on("--translation-memory-threshold PERCENT", "Translation Memory match threshold") do |threshold|
+          opt.translation_memory_threshold = threshold.to_i
+        end
+
         on("-F", "--formality OPT", "Formality (default more less)") do |v|
           opt.formality = v
         end
@@ -210,6 +230,10 @@ module DeepL
 
         on("-s", "--interval SEC", "Interval between requests") do |sec|
           opt.interval = sec.to_f32
+        end
+
+        on("--poll-timeout SEC", "Document polling timeout") do |sec|
+          opt.document_timeout = sec.to_f.seconds
         end
 
         on("--handle FILE", "Document handle file") do |file|
@@ -322,6 +346,63 @@ module DeepL
         _on_help_
       end
 
+      on("memory", "Inspect translation memories") do
+        _set_action_(Action::Help, "Usage: deepl memory <subcommand>")
+        opt.help_error_message = "Subcommand is not specified"
+
+        on("list", "List translation memories") do
+          _set_action_(Action::ListTranslationMemories, "Usage: deepl memory list [options]")
+
+          on("--page NUMBER", "Page number") do |page|
+            opt.page = page.to_i
+          end
+
+          on("--page-size NUMBER", "Results per page") do |page_size|
+            opt.page_size = page_size.to_i
+          end
+
+          _on_debug_
+
+          _on_help_
+        end
+
+        on("view", "Show a translation memory") do
+          _set_action_(Action::ShowTranslationMemory, "Usage: deepl memory view <id>")
+
+          _on_debug_
+
+          _on_help_
+        end
+
+        on("segments", "List translation memory segments") do
+          _set_action_(Action::ListTranslationMemorySegments, "Usage: deepl memory segments [options] <id>")
+
+          on("--page-size NUMBER", "Results per page") do |page_size|
+            opt.page_size = page_size.to_i
+          end
+
+          on("--cursor CURSOR", "Page cursor") do |cursor|
+            opt.page_cursor = cursor
+          end
+
+          on("--filter TEXT", "Filter source or target text") do |text|
+            opt.filter_text = text
+          end
+
+          on("--case-sensitive", "Use a case-sensitive filter") do
+            opt.filter_case_sensitive = true
+          end
+
+          _on_debug_
+
+          _on_help_
+        end
+
+        _on_debug_
+
+        _on_help_
+      end
+
       on("rephrase", "Rephrase text") do
         _set_action_(Action::RephraseText, "Usage: deepl rephrase [options] <file>")
 
@@ -413,6 +494,22 @@ module DeepL
 
       on("--glossary-id ID", "Glossary ID") do |glossary_id|
         opt.glossary_id = glossary_id
+      end
+
+      on("--glossary-ids IDS", "Comma-separated glossary IDs (up to 5)") do |glossary_ids|
+        opt.glossary_ids = glossary_ids.split(',').map(&.strip).reject(&.empty?)
+      end
+
+      on("--style-id ID", "Style Rule ID") do |style_id|
+        opt.style_id = style_id
+      end
+
+      on("--translation-memory-id ID", "Translation Memory ID") do |memory_id|
+        opt.translation_memory_id = memory_id
+      end
+
+      on("--translation-memory-threshold PERCENT", "Translation Memory match threshold") do |threshold|
+        opt.translation_memory_threshold = threshold.to_i
       end
 
       on("-D", "--detect-language", "Output detected source language") do

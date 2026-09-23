@@ -16,6 +16,9 @@ module DeepL
     OutputGlossaryEntriesById
     ListGlossaries
     ListGlossariesLong
+    ListTranslationMemories
+    ShowTranslationMemory
+    ListTranslationMemorySegments
     ListFromLanguages
     ListTargetLanguages
     RetrieveUsage

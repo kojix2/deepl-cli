@@ -15,6 +15,12 @@ private class WriteLanguageNormalizer < DeepL::CLI
   end
 end
 
+private class TranslationOptionValidator < DeepL::CLI
+  def validate : Nil
+    validate_translation_options
+  end
+end
+
 describe DeepL do
   it "has a version number" do
     DeepL::CLI::VERSION.should be_a(String)
@@ -58,6 +64,87 @@ describe DeepL do
     usage = DeepL::UsagePro.from_json(%({"character_count":0,"character_limit":1}))
 
     UsagePrinter.new.render_products(usage).should eq("")
+  end
+
+  it "forwards current text translation options" do
+    server = ScriptedServer.new([
+      ScriptedServer::Response.new(
+        200,
+        %({"translations":[{"detected_source_language":"EN","text":"Hallo"}]}),
+        {"Content-Type" => "application/json"},
+      ),
+    ])
+    stdout = IO::Memory.new
+    stderr = IO::Memory.new
+
+    begin
+      status = Process.run(
+        "crystal",
+        [
+          "run", "src/cli.cr", "--", "text",
+          "--input", "hello", "--from", "EN", "--to", "DE",
+          "--glossary-ids", "glossary-1,glossary-2",
+          "--style-id", "style-1",
+          "--translation-memory-id", "memory-1",
+          "--translation-memory-threshold", "75",
+          "--tag-handling", "xml",
+          "--tag-handling-version", "v2",
+        ],
+        env: cli_test_env(server),
+        output: stdout,
+        error: stderr
+      )
+    ensure
+      server.close
+    end
+
+    status.success?.should be_true
+    stdout.to_s.should eq("Hallo\n")
+    stderr.to_s.should_not contain("ERROR")
+    server.requests.map { |request| {request.method, request.resource} }.should eq([
+      {"POST", "/v2/translate"},
+    ])
+
+    body = JSON.parse(server.requests.first.body)
+    body["glossary_ids"].as_a.map(&.as_s).should eq(["glossary-1", "glossary-2"])
+    body["style_id"].as_s.should eq("style-1")
+    body["translation_memory_id"].as_s.should eq("memory-1")
+    body["translation_memory_threshold"].as_i.should eq(75)
+    body["tag_handling"].as_s.should eq("xml")
+    body["tag_handling_version"].as_s.should eq("v2")
+  end
+
+  it "validates advanced translation options before sending a request" do
+    validator = TranslationOptionValidator.new
+    validator.option.glossary_ids = ["glossary-1"]
+    expect_raises(ArgumentError, "--from is required with --glossary-ids.") do
+      validator.validate
+    end
+
+    validator = TranslationOptionValidator.new
+    validator.option.translation_memory_threshold = 101
+    validator.option.translation_memory_id = "memory-1"
+    expect_raises(ArgumentError, "--translation-memory-threshold must be between 0 and 100.") do
+      validator.validate
+    end
+
+    validator = TranslationOptionValidator.new
+    validator.option.translation_memory_threshold = 75
+    expect_raises(ArgumentError, "--translation-memory-threshold requires --translation-memory-id.") do
+      validator.validate
+    end
+
+    validator = TranslationOptionValidator.new
+    validator.option.tag_handling_version = "v3"
+    expect_raises(ArgumentError, "--tag-handling-version must be v1 or v2.") do
+      validator.validate
+    end
+
+    validator = TranslationOptionValidator.new
+    validator.option.tag_handling_version = "v2"
+    expect_raises(ArgumentError, "--tag-handling-version requires --tag-handling.") do
+      validator.validate
+    end
   end
 
   it "normalizes CLI language codes for the Write API" do
@@ -211,7 +298,16 @@ describe DeepL do
       stderr = IO::Memory.new
       status = Process.run(
         "crystal",
-        ["run", "src/cli.cr", "--", "doc", "--upload-only", "--handle", handle_path.to_s, input_path.to_s],
+        [
+          "run", "src/cli.cr", "--", "doc",
+          "--upload-only", "--handle", handle_path.to_s,
+          "--from", "EN",
+          "--glossary-ids", "glossary-1,glossary-2",
+          "--style-id", "style-1",
+          "--translation-memory-id", "memory-1",
+          "--translation-memory-threshold", "75",
+          input_path.to_s,
+        ],
         env: cli_test_env(server),
         output: stdout,
         error: stderr
@@ -230,6 +326,15 @@ describe DeepL do
       server.requests.map { |request| {request.method, request.resource} }.should eq([
         {"POST", "/v2/document"},
       ])
+      request_body = server.requests.first.body
+      request_body.should contain("glossary_ids")
+      request_body.should contain("glossary-1,glossary-2")
+      request_body.should contain("style_id")
+      request_body.should contain("style-1")
+      request_body.should contain("translation_memory_id")
+      request_body.should contain("memory-1")
+      request_body.should contain("translation_memory_threshold")
+      request_body.should contain("75")
     ensure
       server.close
       File.delete?(input_path)

@@ -7,6 +7,7 @@ DeepL CLI is a fast and lightweight command-line tool for using [DeepL API](http
 
 - Supports document translation `pdf`, `docx`, `txt`, etc.
 - Supports glossaries
+- Supports Translation Memory for translation and read-only inspection
 - Precompiled binaries available
 
 ## Installation
@@ -63,13 +64,21 @@ Options:
     -p, --paste                      Input text from clipboard
     -g, --glossary NAME              Glossary name
         --glossary-id ID             Glossary ID
+        --glossary-ids IDS           Comma-separated glossary IDs (up to 5)
+        --style-id ID                Style Rule ID
+        --translation-memory-id ID   Translation Memory ID
+        --translation-memory-threshold PERCENT
     -F, --formality OPT              Formality (default more less)
     -C, --context TEXT               Context (experimental)
     -s, --split-sentences OPT        Split sentences
+        --tag-handling-version VERSION
     -A, --ansi                       Do not remove ANSI escape codes
 ```
 
 Note: ANSI escape sequences are removed by default.
+
+`--tag-handling-version` accepts `v1` or `v2` and requires
+`--tag-handling xml` or `--tag-handling html`.
 
 ### Translate documents
 
@@ -86,9 +95,14 @@ Options for document translation:
     -t, --to [LANG]                  Target language [EN]
     -g, --glossary NAME              Glossary name
         --glossary-id ID             Glossary ID
+        --glossary-ids IDS           Comma-separated glossary IDs (up to 5)
+        --style-id ID                Style Rule ID
+        --translation-memory-id ID   Translation Memory ID
+        --translation-memory-threshold PERCENT
     -F, --formality OPT              Formality (default more less)
     -o, --output FILE                Output file
     -O, --output-format FORMAT       Output file format
+        --poll-timeout SEC           Document polling timeout
     -U, --upload-only                Upload file only
         --handle FILE                Document handle file
 ```
@@ -120,6 +134,17 @@ Options for glossary management:
     edit                             Edit glossaries
     view                             View glossaries
     -l, --list                       List glossaries
+```
+
+### Inspect Translation Memories
+
+Translation Memory management remains read-only. Commands print JSON so the
+result can be consumed directly by tools such as `jq`.
+
+```sh
+deepl memory list [--page NUMBER] [--page-size NUMBER]
+deepl memory view <id>
+deepl memory segments [--page-size NUMBER] [--cursor CURSOR] [--filter TEXT] [--case-sensitive] <id>
 ```
 
 ### Improve text (Rephrase)
@@ -223,6 +248,25 @@ When a glossary name is not unique, use its explicit ID instead:
 deepl --glossary-id 01234567-89ab-cdef-0123-456789abcdef -f ru
 ```
 
+Up to five glossary IDs can be supplied together. This requires an explicit
+source language and cannot be combined with `--glossary` or `--glossary-id`:
+
+```sh
+deepl --from EN --to DE --glossary-ids id-1,id-2 --input "Hello"
+```
+
+The following advanced options require the corresponding feature to be enabled
+for your DeepL account. A Translation Memory threshold must be between 0 and
+100 and can only be used together with its memory ID:
+
+```sh
+deepl --from EN --to DE \
+  --style-id style-id \
+  --translation-memory-id memory-id \
+  --translation-memory-threshold 75 \
+  --input "Hello"
+```
+
 To refer to the original text, you can use `tee dev/stderr`:
 
 ```sh
@@ -248,6 +292,19 @@ To translate a PDF document and save it in docx format:
 
 ```sh
 deepl doc input.pdf -O docx -o output.docx
+```
+
+The same glossary, Style Rule, and Translation Memory IDs can be used for
+document translation. Long-running jobs can also be bounded with
+`--poll-timeout`:
+
+```sh
+deepl doc --from EN --to DE \
+  --glossary-ids id-1,id-2 \
+  --style-id style-id \
+  --translation-memory-id memory-id \
+  --translation-memory-threshold 75 \
+  --poll-timeout 600 input.pdf
 ```
 
 Document translation temporarily writes a handle file such as `input.pdf.deepl-handle.json`
