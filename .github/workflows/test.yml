@@ -9,18 +9,16 @@ jobs:
   test:
     name: ubuntu
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
 
     env:
+      # deepl-mock package version 1.21.0. Update this revision to upgrade.
+      DEEPL_MOCK_REVISION: 6e14679feed9d4f87741727e31cb5fb9d64e0d34
       DEEPL_SERVER_URL: http://127.0.0.1:3000
       DEEPL_AUTH_KEY: cli-integration-${{ github.run_id }}
       NO_PROXY: 127.0.0.1,localhost
 
     steps:
       - uses: actions/checkout@v7
-        with:
-          submodules: true
 
       - uses: crystal-lang/install-crystal@v1
         with:
@@ -34,16 +32,10 @@ jobs:
         run: shards install --without-development
 
       - name: Install pinned deepl-mock
-        env:
-          DEEPL_MOCK_REVISION: 6e14679feed9d4f87741727e31cb5fb9d64e0d34
-          DEEPL_OPENAPI_REVISION: f56549b1826ca048244d91ea42c40dd4cfa8e5c6
         run: |
           git clone https://github.com/DeepLcom/deepl-mock.git "$RUNNER_TEMP/deepl-mock"
           git -C "$RUNNER_TEMP/deepl-mock" checkout --detach "$DEEPL_MOCK_REVISION"
           npm ci --prefix "$RUNNER_TEMP/deepl-mock"
-
-          git clone https://github.com/DeepLcom/openapi.git "$RUNNER_TEMP/deepl-openapi"
-          git -C "$RUNNER_TEMP/deepl-openapi" checkout --detach "$DEEPL_OPENAPI_REVISION"
 
       - name: Start deepl-mock
         run: |
@@ -53,7 +45,6 @@ jobs:
             exec env \
               DEEPL_MOCK_SERVER_PORT=3000 \
               VALIDATE_REQUESTS=1 \
-              DEEPL_MOCK_SPEC_PATH="$RUNNER_TEMP/deepl-openapi/openapi.yaml" \
               node index.js
           ) >"$mock_log" 2>&1 &
           echo "$!" > "$RUNNER_TEMP/deepl-mock.pid"
