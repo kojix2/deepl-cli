@@ -157,6 +157,40 @@ describe DeepL do
     normalizer.normalize(nil).should be_nil
   end
 
+  it "normalizes glossary language codes for the multilingual glossary API" do
+    server = ScriptedServer.new([
+      ScriptedServer::Response.new(
+        201,
+        %({"glossary_id":"glossary-1","name":"Test Glossary","dictionaries":[{"source_lang":"en","target_lang":"de"}],"creation_time":"2026-09-23T00:00:00Z"}),
+        {"Content-Type" => "application/json"},
+      ),
+    ])
+    input = File.tempfile("deepl-cli-glossary", ".tsv")
+    input.puts "source\ttarget"
+    input.close
+    stdout = IO::Memory.new
+    stderr = IO::Memory.new
+
+    begin
+      status = Process.run(
+        "crystal",
+        ["run", "src/cli.cr", "--", "glossary", "create", "-n", "Test Glossary", "-f", "EN", "-t", "DE", input.path],
+        env: cli_test_env(server),
+        output: stdout,
+        error: stderr,
+      )
+    ensure
+      server.close
+      File.delete?(input.path)
+    end
+
+    status.success?.should be_true
+    server.requests.map { |request| {request.method, request.resource} }.should eq([{"POST", "/v3/glossaries"}])
+    dictionary = JSON.parse(server.requests.first.body)["dictionaries"].as_a.first
+    dictionary["source_lang"].as_s.should eq("en")
+    dictionary["target_lang"].as_s.should eq("de")
+  end
+
   it "prints document command help to stderr when the input file is missing" do
     stdout = IO::Memory.new
     stderr = IO::Memory.new

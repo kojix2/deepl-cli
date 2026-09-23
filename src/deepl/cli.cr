@@ -496,8 +496,8 @@ module DeepL
 
       translator = DeepL::Translator.new
       dict = DeepL::GlossaryDictionary.new(
-        option.source_lang || raise("Source language is required (-f)"),
-        option.target_lang,
+        normalize_glossary_language(option.source_lang) || raise("Source language is required (-f)"),
+        normalize_glossary_language(option.target_lang),
         option.input_text,
         entry_format
       )
@@ -735,13 +735,22 @@ module DeepL
       src = option.source_lang
       tgt = option.target_lang
       if src && tgt
-        return {src, tgt}
+        return {normalize_glossary_language(src), normalize_glossary_language(tgt)}
       end
       prompt = Term::Prompt.new
       pairs = glossary_info.dictionaries.map { |dictionary| "#{dictionary.source_lang} -> #{dictionary.target_lang}" }
       selected = prompt.select("Select language pair", pairs) || raise "Selection cancelled"
       parts = selected.split(" -> ")
       {parts[0], parts[1]}
+    end
+
+    # The v3 multilingual glossary API accepts lowercase ISO language codes.
+    private def normalize_glossary_language(language : String) : String
+      language.downcase
+    end
+
+    private def normalize_glossary_language(language : Nil) : Nil
+      nil
     end
 
     def print_source_languages
