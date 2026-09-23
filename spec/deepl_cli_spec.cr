@@ -192,6 +192,51 @@ describe DeepL do
     dictionary["target_lang"].as_s.should eq("de")
   end
 
+  it "uses v3 language discovery for source and target lists" do
+    languages = <<-JSON
+      [
+        {"lang":"en","name":"English","usable_as_source":true,"usable_as_target":false,"status":"stable","features":{}},
+        {"lang":"de","name":"German","usable_as_source":true,"usable_as_target":true,"status":"stable","features":{"formality":{"status":"stable"}}}
+      ]
+      JSON
+    server = ScriptedServer.new([
+      ScriptedServer::Response.new(200, languages, {"Content-Type" => "application/json"}),
+      ScriptedServer::Response.new(200, languages, {"Content-Type" => "application/json"}),
+    ])
+
+    begin
+      source_output = IO::Memory.new
+      source_status = Process.run(
+        "crystal",
+        ["run", "src/cli.cr", "--", "--from"],
+        env: cli_test_env(server),
+        output: source_output,
+        error: IO::Memory.new,
+      )
+      target_output = IO::Memory.new
+      target_status = Process.run(
+        "crystal",
+        ["run", "src/cli.cr", "--", "--to"],
+        env: cli_test_env(server),
+        output: target_output,
+        error: IO::Memory.new,
+      )
+    ensure
+      server.close
+    end
+
+    source_status.success?.should be_true
+    target_status.success?.should be_true
+    source_output.to_s.should contain("EN     English")
+    source_output.to_s.should contain("DE     German")
+    target_output.to_s.should_not contain("English")
+    target_output.to_s.should contain("supports formality")
+    server.requests.map(&.resource).should eq([
+      "/v3/languages?resource=translate_text",
+      "/v3/languages?resource=translate_text",
+    ])
+  end
+
   it "prints document command help to stderr when the input file is missing" do
     stdout = IO::Memory.new
     stderr = IO::Memory.new

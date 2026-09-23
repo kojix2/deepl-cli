@@ -756,29 +756,28 @@ module DeepL
 
     def print_source_languages
       translator = DeepL::Translator.new
-      langinfo = translator.get_source_languages
-      print_langinfo(langinfo)
+      languages = translator.get_languages("translate_text").select(&.usable_as_source)
+      print_langinfo(languages)
     end
 
     def print_target_languages
       translator = DeepL::Translator.new
-      langinfo = translator.get_target_languages
+      languages = translator.get_languages("translate_text").select(&.usable_as_target)
       default_target_language = Config.default_target_lang
-      print_langinfo(langinfo, default: default_target_language)
+      print_langinfo(languages, default: default_target_language)
     end
 
     private def print_langinfo(
-      langinfo : Array(LanguageInfo),
+      languages : Array(ResourceLanguage),
       default : String? = nil,
     ) : Nil
-      langinfo.each do |info|
-        abbrev = info.language
+      languages.each do |info|
+        abbrev = info.lang.upcase
         name = info.name
-        formality = info.supports_formality
         row = String.build do |row_builder|
           row_builder << ((default && (default == abbrev)) ? "+ " : "- ")
           row_builder << "#{abbrev.ljust(7)}#{name.ljust(24)}"
-          row_builder << "supports formality" if formality
+          row_builder << "supports formality" if info.features.has_key?("formality")
         end
         puts row
       end
