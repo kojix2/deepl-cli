@@ -13,9 +13,9 @@ jobs:
       fail-fast: false
 
     env:
-      HTTP_PROXY: http://localhost:3001
-      DEEPL_SERVER_URL: http://localhost:3000
-      DEEPL_AUTH_KEY: mock
+      DEEPL_SERVER_URL: http://127.0.0.1:3000
+      DEEPL_AUTH_KEY: cli-integration-${{ github.run_id }}
+      NO_PROXY: 127.0.0.1,localhost
 
     steps:
       - uses: actions/checkout@v7
@@ -26,39 +26,50 @@ jobs:
         with:
           crystal: latest
 
-      - name: Clone deepl-mock repository
-        run: git clone --depth=1 https://github.com/DeepLcom/deepl-mock.git deepl-mock
-
-      - name: Build deepl-mock Docker image
-        run: |
-          cd deepl-mock
-          docker build -t deepl/deepl-mock .
-
-      - name: Start deepl-mock server
-        run: docker run -d --rm --name deepl-mock -p3000:3000 -p3001:3001 deepl/deepl-mock
-
-      - name: Wait for deepl-mock to be ready
-        run: |
-          for i in {1..30}; do
-            if curl --silent http://localhost:3000/v2/translate > /dev/null; then
-              echo "deepl-mock server is ready"
-              break
-            fi
-            echo "Waiting for deepl-mock server to be ready..."
-            sleep 1
-          done
-          curl --silent --output /dev/null http://localhost:3000/v2/translate || \
-            (echo "deepl-mock server did not start in time" && exit 1)
-
-      - name: Test deepl-mock server with curl
-        run: |
-          curl -X POST "${HTTP_PROXY}/v2/translate" \
-            --header "Authorization: DeepL-Auth-Key ${DEEPL_AUTH_KEY}" \
-            --header "Content-Type: application/json" \
-            --data '{"text":["proton beam"],"target_lang":"DE"}'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
       - name: Install dependencies
         run: shards install --without-development
+
+      - name: Install pinned deepl-mock
+        env:
+          DEEPL_MOCK_REVISION: 6e14679feed9d4f87741727e31cb5fb9d64e0d34
+          DEEPL_OPENAPI_REVISION: f56549b1826ca048244d91ea42c40dd4cfa8e5c6
+        run: |
+          git clone https://github.com/DeepLcom/deepl-mock.git "$RUNNER_TEMP/deepl-mock"
+          git -C "$RUNNER_TEMP/deepl-mock" checkout --detach "$DEEPL_MOCK_REVISION"
+          npm ci --prefix "$RUNNER_TEMP/deepl-mock"
+
+          git clone https://github.com/DeepLcom/openapi.git "$RUNNER_TEMP/deepl-openapi"
+          git -C "$RUNNER_TEMP/deepl-openapi" checkout --detach "$DEEPL_OPENAPI_REVISION"
+
+      - name: Start deepl-mock
+        run: |
+          mock_log="$RUNNER_TEMP/deepl-mock.log"
+          (
+            cd "$RUNNER_TEMP/deepl-mock"
+            exec env \
+              DEEPL_MOCK_SERVER_PORT=3000 \
+              VALIDATE_REQUESTS=1 \
+              DEEPL_MOCK_SPEC_PATH="$RUNNER_TEMP/deepl-openapi/openapi.yaml" \
+              node index.js
+          ) >"$mock_log" 2>&1 &
+          echo "$!" > "$RUNNER_TEMP/deepl-mock.pid"
+
+          ready=0
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:3000/healthz >/dev/null; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          if [ "$ready" -ne 1 ]; then
+            cat "$mock_log"
+            exit 1
+          fi
 
       - name: Run tests
         run: crystal spec
@@ -134,6 +145,19 @@ jobs:
           cat rephrased_proton_beam.txt
           bin/deepl rephrase -f
 
-      - name: Stop deepl-mock server
+      - name: Run executable (correct)
+        run: |
+          set -eux
+          bin/deepl correct -f EN -i "any input text"
+          bin/deepl correct -f EN-GB -i "any input text"
+
+      - name: Show deepl-mock log
+        if: failure()
+        run: cat "$RUNNER_TEMP/deepl-mock.log"
+
+      - name: Stop deepl-mock
         if: always()
-        run: docker stop deepl-mock || true
+        run: |
+          if [ -f "$RUNNER_TEMP/deepl-mock.pid" ]; then
+            kill "$(cat "$RUNNER_TEMP/deepl-mock.pid")" 2>/dev/null || true
+          fi
