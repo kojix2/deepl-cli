@@ -149,6 +149,7 @@
 <ul>
 <li>Supports document translation <code>pdf</code>, <code>docx</code>, <code>txt</code>, etc.</li>
 <li>Supports glossaries</li>
+<li>Supports Translation Memory for translation and read-only inspection</li>
 <li>Precompiled binaries available</li>
 </ul>
 <h2><a id="installation" class="anchor" href="#installation">
@@ -206,11 +207,18 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
     -p, --paste                      Input text from clipboard
     -g, --glossary NAME              Glossary name
         --glossary-id ID             Glossary ID
+        --glossary-ids IDS           Comma-separated glossary IDs (up to 5)
+        --style-id ID                Style Rule ID
+        --translation-memory-id ID   Translation Memory ID
+        --translation-memory-threshold PERCENT
     -F, --formality OPT              Formality (default more less)
     -C, --context TEXT               Context (experimental)
     -s, --split-sentences OPT        Split sentences
+        --tag-handling-version VERSION
     -A, --ansi                       Do not remove ANSI escape codes</code></pre>
 <p>Note: ANSI escape sequences are removed by default.</p>
+<p><code>--tag-handling-version</code> accepts <code>v1</code> or <code>v2</code> and requires
+<code>--tag-handling xml</code> or <code>--tag-handling html</code>.</p>
 <h3><a id="translate-documents" class="anchor" href="#translate-documents">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -223,9 +231,14 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
     -t, --to [LANG]                  Target language [EN]
     -g, --glossary NAME              Glossary name
         --glossary-id ID             Glossary ID
+        --glossary-ids IDS           Comma-separated glossary IDs (up to 5)
+        --style-id ID                Style Rule ID
+        --translation-memory-id ID   Translation Memory ID
+        --translation-memory-threshold PERCENT
     -F, --formality OPT              Formality (default more less)
     -o, --output FILE                Output file
     -O, --output-format FORMAT       Output file format
+        --poll-timeout SEC           Document polling timeout
     -U, --upload-only                Upload file only
         --handle FILE                Document handle file</code></pre>
 <p>Supported file formats.</p>
@@ -252,6 +265,16 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
     edit                             Edit glossaries
     view                             View glossaries
     -l, --list                       List glossaries</code></pre>
+<h3><a id="inspect-translation-memories" class="anchor" href="#inspect-translation-memories">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Inspect Translation Memories</h3>
+<p>Translation Memory management remains read-only. Commands print JSON so the
+result can be consumed directly by tools such as <code>jq</code>.</p>
+<pre><code class="language-sh">deepl memory list [--page NUMBER] [--page-size NUMBER]
+deepl memory view &lt;id&gt;
+deepl memory segments [--page-size NUMBER] [--cursor CURSOR] [--filter TEXT] [--case-sensitive] &lt;id&gt;</code></pre>
 <h3><a id="improve-text-rephrase" class="anchor" href="#improve-text-rephrase">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -308,6 +331,17 @@ output by default.</p>
 <pre><code class="language-sh">deepl -g myglossary -f ru</code></pre>
 <p>When a glossary name is not unique, use its explicit ID instead:</p>
 <pre><code class="language-sh">deepl --glossary-id 01234567-89ab-cdef-0123-456789abcdef -f ru</code></pre>
+<p>Up to five glossary IDs can be supplied together. This requires an explicit
+source language and cannot be combined with <code>--glossary</code> or <code>--glossary-id</code>:</p>
+<pre><code class="language-sh">deepl --from EN --to DE --glossary-ids id-1,id-2 --input &quot;Hello&quot;</code></pre>
+<p>The following advanced options require the corresponding feature to be enabled
+for your DeepL account. A Translation Memory threshold must be between 0 and
+100 and can only be used together with its memory ID:</p>
+<pre><code class="language-sh">deepl --from EN --to DE \
+  --style-id style-id \
+  --translation-memory-id memory-id \
+  --translation-memory-threshold 75 \
+  --input &quot;Hello&quot;</code></pre>
 <p>To refer to the original text, you can use <code>tee dev/stderr</code>:</p>
 <pre><code class="language-sh">fortune | tee /dev/stderr | deepl</code></pre>
 <h3><a id="translate-documents-1" class="anchor" href="#translate-documents-1">
@@ -322,6 +356,15 @@ output by default.</p>
 <pre><code class="language-sh">deepl doc -g myglossary -f pl</code></pre>
 <p>To translate a PDF document and save it in docx format:</p>
 <pre><code class="language-sh">deepl doc input.pdf -O docx -o output.docx</code></pre>
+<p>The same glossary, Style Rule, and Translation Memory IDs can be used for
+document translation. Long-running jobs can also be bounded with
+<code>--poll-timeout</code>:</p>
+<pre><code class="language-sh">deepl doc --from EN --to DE \
+  --glossary-ids id-1,id-2 \
+  --style-id style-id \
+  --translation-memory-id memory-id \
+  --translation-memory-threshold 75 \
+  --poll-timeout 600 input.pdf</code></pre>
 <p>Document translation temporarily writes a handle file such as <code>input.pdf.deepl-handle.json</code>
 and removes it after a successful download, unless <code>--handle FILE</code> is specified.
 The handle file contains the DeepL document key. Treat it as a secret.
