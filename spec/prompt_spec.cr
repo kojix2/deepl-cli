@@ -70,19 +70,4 @@ describe Term::Prompt do
     selected.should eq("b")
     output.to_s.should contain("Invalid selection")
   end
-
-  it "confirms destructive actions interactively" do
-    input = TTYMemory.new("maybe\nyes\n")
-    output = TTYMemory.new
-    prompt = Term::Prompt.new(input, output)
-
-    prompt.confirm("Delete item?").should be_true
-    output.to_s.should contain("Enter y or n.")
-  end
-
-  it "does not confirm destructive actions non-interactively" do
-    prompt = Term::Prompt.new(IO::Memory.new("yes\n"), IO::Memory.new)
-
-    prompt.confirm("Delete item?").should be_nil
-  end
 end

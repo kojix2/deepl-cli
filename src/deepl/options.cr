@@ -34,18 +34,9 @@ module DeepL
     property document_handle_file : Path? = nil
     property model_type : String? = nil
     property style_id : String? = nil
-    property translation_memory_id : String? = nil
-    property translation_memory_threshold : Int32? = nil
     property reporting_tag : String? = nil
     property enable_watermark : Bool? = nil
-    property page : Int32? = nil
-    property page_size : Int32? = nil
-    property page_cursor : String? = nil
-    property filter_text : String? = nil
-    property? filter_case_sensitive : Bool? = nil
     property writing_style : String? = nil
     property tone : String? = nil
-    property translation_memory_name : String? = nil
-    property? force : Bool = false
   end
 end

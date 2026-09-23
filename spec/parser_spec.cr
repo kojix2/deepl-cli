@@ -30,8 +30,6 @@ describe DeepL::Parser do
       "--glossary-id", "glossary-1",
       "--glossary-id", "glossary-2",
       "--style-id", "style-1",
-      "--translation-memory-id", "memory-1",
-      "--translation-memory-threshold", "75",
       "--tag-handling", "xml",
       "--tag-handling-version", "v2",
       "--reporting-tag", "batch-42",
@@ -40,8 +38,6 @@ describe DeepL::Parser do
     option.action.should eq(DeepL::Action::TranslateText)
     option.glossary_ids.should eq(["glossary-1", "glossary-2"])
     option.style_id.should eq("style-1")
-    option.translation_memory_id.should eq("memory-1")
-    option.translation_memory_threshold.should eq(75)
     option.tag_handling.should eq("xml")
     option.tag_handling_version.should eq("v2")
     option.reporting_tag.should eq("batch-42")
@@ -53,8 +49,6 @@ describe DeepL::Parser do
       "--from", "EN",
       "--glossary-id", "glossary-1,glossary-2",
       "--style-id", "style-1",
-      "--translation-memory-id", "memory-1",
-      "--translation-memory-threshold", "80",
       "--poll-timeout", "30",
       "--watermark",
     ])
@@ -62,50 +56,7 @@ describe DeepL::Parser do
     option.action.should eq(DeepL::Action::TranslateDocument)
     option.glossary_ids.should eq(["glossary-1", "glossary-2"])
     option.style_id.should eq("style-1")
-    option.translation_memory_id.should eq("memory-1")
-    option.translation_memory_threshold.should eq(80)
     option.poll_timeout.should eq(30.seconds)
     option.enable_watermark.should be_true
-  end
-
-  it "parses translation memory subcommands" do
-    list = DeepL::Parser.new.parse(["memory", "list", "--page", "2", "--page-size", "25"])
-    list.action.should eq(DeepL::Action::ListTranslationMemories)
-    list.page.should eq(2)
-    list.page_size.should eq(25)
-
-    args = ["memory", "segments", "--page-size", "10", "--cursor", "next", "--filter", "term", "--case-sensitive", "memory-1"]
-    segments = DeepL::Parser.new.parse(args)
-    segments.action.should eq(DeepL::Action::ListTranslationMemorySegments)
-    segments.page_size.should eq(10)
-    segments.page_cursor.should eq("next")
-    segments.filter_text.should eq("term")
-    segments.filter_case_sensitive?.should be_true
-    args.should eq(["memory-1"])
-
-    args = ["memory", "import", "--name", "Legal", "--interval", "1", "--poll-timeout", "60", "legal.tmx"]
-    import = DeepL::Parser.new.parse(args)
-    import.action.should eq(DeepL::Action::ImportTranslationMemory)
-    import.translation_memory_name.should eq("Legal")
-    import.interval.should eq(1.0)
-    import.poll_timeout.should eq(60.seconds)
-    args.should eq(["legal.tmx"])
-
-    args = ["memory", "export", "--output", "legal.tmx", "memory-1"]
-    export = DeepL::Parser.new.parse(args)
-    export.action.should eq(DeepL::Action::ExportTranslationMemory)
-    export.output_file.should eq(Path["legal.tmx"])
-    args.should eq(["memory-1"])
-
-    job_args = ["memory", "job", "job-1"]
-    job = DeepL::Parser.new.parse(job_args)
-    job.action.should eq(DeepL::Action::ShowTranslationMemoryJob)
-    job_args.should eq(["job-1"])
-
-    delete_args = ["memory", "delete", "--force", "memory-1"]
-    delete = DeepL::Parser.new.parse(delete_args)
-    delete.action.should eq(DeepL::Action::DeleteTranslationMemory)
-    delete.force?.should be_true
-    delete_args.should eq(["memory-1"])
   end
 end

@@ -11,26 +11,6 @@ module Term
       prompt_for_selection(label, items)
     end
 
-    # Returns nil when confirmation cannot be requested interactively.
-    def confirm(label : String) : Bool?
-      return unless interactive?
-
-      loop do
-        @output.print "#{label} [y/N]> "
-        input = @input.gets
-        return false if input.nil?
-
-        case input.strip.downcase
-        when "y", "yes"
-          return true
-        when "", "n", "no"
-          return false
-        else
-          @output.puts "Enter y or n."
-        end
-      end
-    end
-
     private def interactive? : Bool
       @input.tty? && @output.tty?
     end

@@ -86,8 +86,6 @@ describe DeepL do
           "--glossary-id", "glossary-1",
           "--glossary-id", "glossary-2",
           "--style-id", "style-1",
-          "--translation-memory-id", "memory-1",
-          "--translation-memory-threshold", "75",
           "--tag-handling", "xml",
           "--tag-handling-version", "v2",
           "--reporting-tag", "batch-42",
@@ -110,8 +108,6 @@ describe DeepL do
     body = JSON.parse(server.requests.first.body)
     body["glossary_ids"].as_a.map(&.as_s).should eq(["glossary-1", "glossary-2"])
     body["style_id"].as_s.should eq("style-1")
-    body["translation_memory_id"].as_s.should eq("memory-1")
-    body["translation_memory_threshold"].as_i.should eq(75)
     body["tag_handling"].as_s.should eq("xml")
     body["tag_handling_version"].as_s.should eq("v2")
     server.requests.first.headers["X-DeepL-Reporting-Tag"].should eq("batch-42")
@@ -121,19 +117,6 @@ describe DeepL do
     validator = TranslationOptionValidator.new
     validator.option.glossary_ids = ["glossary-1"]
     expect_raises(ArgumentError, "--from is required with --glossary-id.") do
-      validator.validate
-    end
-
-    validator = TranslationOptionValidator.new
-    validator.option.translation_memory_threshold = 101
-    validator.option.translation_memory_id = "memory-1"
-    expect_raises(ArgumentError, "--translation-memory-threshold must be between 0 and 100.") do
-      validator.validate
-    end
-
-    validator = TranslationOptionValidator.new
-    validator.option.translation_memory_threshold = 75
-    expect_raises(ArgumentError, "--translation-memory-threshold requires --translation-memory-id.") do
       validator.validate
     end
 
@@ -386,8 +369,6 @@ describe DeepL do
           "--from", "EN",
           "--glossary-id", "glossary-1,glossary-2",
           "--style-id", "style-1",
-          "--translation-memory-id", "memory-1",
-          "--translation-memory-threshold", "75",
           "--watermark",
           input_path.to_s,
         ],
@@ -414,10 +395,6 @@ describe DeepL do
       request_body.should contain("glossary-1,glossary-2")
       request_body.should contain("style_id")
       request_body.should contain("style-1")
-      request_body.should contain("translation_memory_id")
-      request_body.should contain("memory-1")
-      request_body.should contain("translation_memory_threshold")
-      request_body.should contain("75")
       request_body.should contain("enable_watermark")
       request_body.should contain("true")
     ensure
@@ -425,148 +402,6 @@ describe DeepL do
       File.delete?(input_path)
       File.delete?(handle_path)
     end
-  end
-
-  it "imports a Translation Memory and prints the completed job" do
-    server = ScriptedServer.new([
-      ScriptedServer::Response.new(
-        201,
-        %({"job_id":"job-import","upload_url":"{{SERVER_URL}}/signed-upload","expires_at":"2026-09-23T01:00:00Z"}),
-        {"Content-Type" => "application/json"},
-      ),
-      ScriptedServer::Response.new(204),
-      ScriptedServer::Response.new(
-        200,
-        translation_memory_job_json("job-import", "import", translation_memory_id: "memory-new"),
-        {"Content-Type" => "application/json"},
-      ),
-    ])
-    input = File.tempfile("deepl-cli-memory", ".tmx")
-    input.print("<tmx>test</tmx>")
-    input.close
-    stdout = IO::Memory.new
-    stderr = IO::Memory.new
-
-    begin
-      status = Process.run(
-        "crystal",
-        ["run", "src/cli.cr", "--", "memory", "import", "--name", "Legal", input.path],
-        env: cli_test_env(server),
-        output: stdout,
-        error: stderr,
-      )
-    ensure
-      server.close
-      File.delete?(input.path)
-    end
-
-    status.success?.should be_true
-    JSON.parse(stdout.to_s)["job_id"].as_s.should eq("job-import")
-    stderr.to_s.should_not contain("ERROR")
-    server.requests.map { |request| {request.method, request.resource} }.should eq([
-      {"POST", "/v3/translation_memories/import"},
-      {"PUT", "/signed-upload"},
-      {"GET", "/v3/translation_memories/jobs/job-import"},
-    ])
-    import_body = JSON.parse(server.requests[0].body)
-    import_body["source_file"]["file_name"].as_s.should eq(Path[input.path].basename.to_s)
-    import_body["parameters"]["display_name"].as_s.should eq("Legal")
-    server.requests[1].body.should eq("<tmx>test</tmx>")
-    server.requests[1].headers.has_key?("Authorization").should be_false
-  end
-
-  it "exports a Translation Memory through its signed download URL" do
-    server = ScriptedServer.new([
-      ScriptedServer::Response.new(
-        201,
-        %({"job_id":"job-export","parameters":{"translation_memory_id":"memory-1"}}),
-        {"Content-Type" => "application/json"},
-      ),
-      ScriptedServer::Response.new(
-        200,
-        translation_memory_job_json("job-export", "export", download_url: "{{SERVER_URL}}/signed-download"),
-        {"Content-Type" => "application/json"},
-      ),
-      ScriptedServer::Response.new(200, "<tmx>exported</tmx>"),
-    ])
-    output = File.tempfile("deepl-cli-memory-export", ".tmx")
-    output_path = output.path
-    output.close
-    stdout = IO::Memory.new
-    stderr = IO::Memory.new
-
-    begin
-      status = Process.run(
-        "crystal",
-        ["run", "src/cli.cr", "--", "memory", "export", "--output", output_path, "memory-1"],
-        env: cli_test_env(server),
-        output: stdout,
-        error: stderr,
-      )
-
-      status.success?.should be_true
-      File.read(output_path).should eq("<tmx>exported</tmx>")
-    ensure
-      server.close
-      File.delete?(output_path)
-    end
-
-    JSON.parse(stdout.to_s)["job_id"].as_s.should eq("job-export")
-    stderr.to_s.should contain("Translation Memory exported")
-    server.requests.map { |request| {request.method, request.resource} }.should eq([
-      {"POST", "/v3/translation_memories/memory-1/export"},
-      {"GET", "/v3/translation_memories/jobs/job-export"},
-      {"GET", "/signed-download"},
-    ])
-    server.requests[2].headers.has_key?("Authorization").should be_false
-  end
-
-  it "shows Translation Memory jobs and force-deletes memories" do
-    job_server = ScriptedServer.new([
-      ScriptedServer::Response.new(
-        200,
-        translation_memory_job_json("job-1", "import", translation_memory_id: "memory-1"),
-        {"Content-Type" => "application/json"},
-      ),
-    ])
-    stdout = IO::Memory.new
-    stderr = IO::Memory.new
-
-    begin
-      status = Process.run(
-        "crystal",
-        ["run", "src/cli.cr", "--", "memory", "job", "job-1"],
-        env: cli_test_env(job_server),
-        output: stdout,
-        error: stderr,
-      )
-    ensure
-      job_server.close
-    end
-
-    status.success?.should be_true
-    JSON.parse(stdout.to_s)["job_id"].as_s.should eq("job-1")
-
-    delete_server = ScriptedServer.new([ScriptedServer::Response.new(204)])
-    stdout = IO::Memory.new
-    stderr = IO::Memory.new
-    begin
-      status = Process.run(
-        "crystal",
-        ["run", "src/cli.cr", "--", "memory", "delete", "--force", "memory-1"],
-        env: cli_test_env(delete_server),
-        output: stdout,
-        error: stderr,
-      )
-    ensure
-      delete_server.close
-    end
-
-    status.success?.should be_true
-    delete_server.requests.map { |request| {request.method, request.resource} }.should eq([
-      {"DELETE", "/v3/translation_memories/memory-1"},
-    ])
-    stderr.to_s.should contain("Translation Memory memory-1 is deleted")
   end
 end
 
@@ -577,35 +412,4 @@ private def cli_test_env(server : ScriptedServer) : Process::Env
     "NO_PROXY"         => "127.0.0.1,localhost",
     "no_proxy"         => "127.0.0.1,localhost",
   }
-end
-
-private def translation_memory_job_json(
-  job_id : String,
-  operation : String,
-  translation_memory_id : String? = nil,
-  download_url : String? = nil,
-) : String
-  JSON.build do |json|
-    json.object do
-      json.field "job_id", job_id
-      json.field "product", "translation_memory"
-      json.field "operation", operation
-      json.field "creation_time", "2026-09-23T00:00:00Z"
-      json.field "updated_time", "2026-09-23T00:00:01Z"
-      json.field "parameters" do
-        json.object do
-          json.field "translation_memory_id", translation_memory_id if translation_memory_id
-        end
-      end
-      json.field "results" do
-        json.array do
-          json.object do
-            json.field "status", "completed"
-            json.field "translation_memory_id", translation_memory_id if translation_memory_id
-            json.field "download_url", download_url if download_url
-          end
-        end
-      end
-    end
-  end
 end

@@ -52,20 +52,6 @@ module DeepL
         print_glossary_list
       when Action::ListGlossariesLong
         print_glossary_list_long
-      when Action::ListTranslationMemories
-        print_translation_memories
-      when Action::ShowTranslationMemory
-        print_translation_memory
-      when Action::ListTranslationMemorySegments
-        print_translation_memory_segments
-      when Action::ImportTranslationMemory
-        import_translation_memory
-      when Action::ExportTranslationMemory
-        export_translation_memory
-      when Action::ShowTranslationMemoryJob
-        print_translation_memory_job
-      when Action::DeleteTranslationMemory
-        delete_translation_memory
       when Action::OutputGlossaryEntriesByName
         output_glossary_entries_by_name
       when Action::OutputGlossaryEntriesById
@@ -144,8 +130,6 @@ module DeepL
           model_type: option.model_type,
           style_id: option.style_id,
           tag_handling_version: option.tag_handling_version,
-          translation_memory_id: option.translation_memory_id,
-          translation_memory_threshold: option.translation_memory_threshold,
           reporting_tag: option.reporting_tag,
         )
       end
@@ -334,15 +318,12 @@ module DeepL
         output_format: option.output_format,
         glossary_ids: option.glossary_ids,
         style_id: option.style_id,
-        translation_memory_id: option.translation_memory_id,
-        translation_memory_threshold: option.translation_memory_threshold,
         enable_watermark: option.enable_watermark,
       )
     end
 
     private def validate_translation_options : Nil
       validate_glossary_options
-      validate_translation_memory_options
       validate_tag_handling_options
     end
 
@@ -355,17 +336,6 @@ module DeepL
       raise ArgumentError.new("--from is required with --glossary-id.") unless option.source_lang
       if option.glossary_name
         raise ArgumentError.new("--glossary-id cannot be combined with --glossary.")
-      end
-    end
-
-    private def validate_translation_memory_options : Nil
-      if threshold = option.translation_memory_threshold
-        unless option.translation_memory_id
-          raise ArgumentError.new("--translation-memory-threshold requires --translation-memory-id.")
-        end
-        unless (0..100).includes?(threshold)
-          raise ArgumentError.new("--translation-memory-threshold must be between 0 and 100.")
-        end
       end
     end
 
@@ -710,104 +680,6 @@ module DeepL
           glossary_item.creation_time,
           glossary_item.glossary_id,
         ].join("\t")
-      end
-    end
-
-    def print_translation_memories
-      translator = DeepL::Translator.new
-      memories = translator.list_translation_memories(
-        page: option.page,
-        page_size: option.page_size,
-      )
-      puts memories.to_pretty_json
-    end
-
-    def print_translation_memory
-      translator = DeepL::Translator.new
-      memory_id = ARGV.shift? || abort_with_help("Translation Memory ID is not specified")
-      puts translator.get_translation_memory(memory_id).to_pretty_json
-    end
-
-    def print_translation_memory_segments
-      translator = DeepL::Translator.new
-      memory_id = ARGV.shift? || abort_with_help("Translation Memory ID is not specified")
-      segments = translator.list_translation_memory_segments(
-        memory_id,
-        page_size: option.page_size,
-        page_cursor: option.page_cursor,
-        filter_text: option.filter_text,
-        filter_case_sensitive: option.filter_case_sensitive?,
-      )
-      puts segments.to_pretty_json
-    end
-
-    def import_translation_memory
-      source = ARGV.shift? || abort_with_help("Translation Memory import file is not specified")
-      abort_with_help("Unexpected argument: #{ARGV.first}") unless ARGV.empty?
-      validate_translation_memory_polling_options
-      source_path = Path[source]
-      raise ArgumentError.new("Translation Memory import file does not exist: #{source_path}") unless File.file?(source_path)
-
-      job = with_spinner do
-        DeepL::Translator.new.import_translation_memory(
-          source_path,
-          display_name: option.translation_memory_name,
-          interval: option.interval,
-          timeout: option.poll_timeout,
-        )
-      end
-      puts job.to_pretty_json
-    end
-
-    def export_translation_memory
-      memory_id = ARGV.shift? || abort_with_help("Translation Memory ID is not specified")
-      abort_with_help("Unexpected argument: #{ARGV.first}") unless ARGV.empty?
-      output_file = option.output_file || abort_with_help("Output file is not specified")
-      validate_translation_memory_polling_options
-
-      job = with_spinner do
-        DeepL::Translator.new.export_translation_memory(
-          memory_id,
-          output_file,
-          interval: option.interval,
-          timeout: option.poll_timeout,
-        )
-      end
-      puts job.to_pretty_json
-      STDERR.puts "[deepl-cli] Translation Memory exported to #{output_file}"
-    end
-
-    def print_translation_memory_job
-      job_id = ARGV.shift? || abort_with_help("Translation Memory job ID is not specified")
-      abort_with_help("Unexpected argument: #{ARGV.first}") unless ARGV.empty?
-      puts DeepL::Translator.new.get_translation_memory_job(job_id).to_pretty_json
-    end
-
-    def delete_translation_memory
-      memory_id = ARGV.shift? || abort_with_help("Translation Memory ID is not specified")
-      abort_with_help("Unexpected argument: #{ARGV.first}") unless ARGV.empty?
-
-      unless option.force?
-        confirmed = Term::Prompt.new.confirm("Delete Translation Memory #{memory_id}?")
-        if confirmed.nil?
-          raise ArgumentError.new("--force is required when input is not an interactive terminal.")
-        end
-        unless confirmed
-          STDERR.puts "[deepl-cli] Deletion cancelled"
-          return
-        end
-      end
-
-      DeepL::Translator.new.delete_translation_memory(memory_id)
-      STDERR.puts "[deepl-cli] Translation Memory #{memory_id} is deleted"
-    end
-
-    private def validate_translation_memory_polling_options : Nil
-      unless option.interval > 0
-        raise ArgumentError.new("Translation Memory polling interval must be positive.")
-      end
-      if (timeout = option.poll_timeout) && timeout < Time::Span.zero
-        raise ArgumentError.new("Translation Memory polling timeout must not be negative.")
       end
     end
 

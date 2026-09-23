@@ -7,7 +7,6 @@ DeepL CLI is a fast and lightweight command-line tool for using [DeepL API](http
 
 - Supports document translation `pdf`, `docx`, `txt`, etc.
 - Supports glossaries
-- Supports Translation Memory for translation and read-only inspection
 - Precompiled binaries available
 
 ## Installation
@@ -65,8 +64,6 @@ Options:
     -g, --glossary NAME              Glossary name
         --glossary-id IDS            Glossary ID (comma-separated or repeatable, up to 5)
         --style-id ID                Style Rule ID
-        --translation-memory-id ID   Translation Memory ID
-        --translation-memory-threshold PERCENT
         --reporting-tag TAG          Reporting tag
     -F, --formality OPT              Formality (default more less)
     -C, --context TEXT               Context (experimental)
@@ -96,8 +93,6 @@ Options for document translation:
     -g, --glossary NAME              Glossary name
         --glossary-id IDS            Glossary ID (comma-separated or repeatable, up to 5)
         --style-id ID                Style Rule ID
-        --translation-memory-id ID   Translation Memory ID
-        --translation-memory-threshold PERCENT
     -F, --formality OPT              Formality (default more less)
     -o, --output FILE                Output file
     -O, --output-format FORMAT       Output file format
@@ -135,26 +130,6 @@ Options for glossary management:
     view                             View glossaries
     -l, --list                       List glossaries
 ```
-
-### Manage Translation Memories
-
-Translation Memory commands print job and resource data as JSON so the result
-can be consumed directly by tools such as `jq`.
-
-```sh
-deepl memory list [--page NUMBER] [--page-size NUMBER]
-deepl memory view <id>
-deepl memory segments [--page-size NUMBER] [--cursor CURSOR] [--filter TEXT] [--case-sensitive] <id>
-deepl memory import [-n NAME] [--interval SEC] [--poll-timeout SEC] <file.tmx>
-deepl memory export -o FILE [--interval SEC] [--poll-timeout SEC] <id>
-deepl memory job <job-id>
-deepl memory delete [--force] <id>
-```
-
-Importing a TMX file stores a Translation Memory in your DeepL account. It is
-not used automatically: pass its ID with `--translation-memory-id` when you
-want to use it. Deletion asks for confirmation on an interactive terminal;
-scripts must specify `--force`.
 
 ### Improve text (Rephrase)
 
@@ -267,14 +242,11 @@ deepl --from EN --to DE --glossary-id id-1,id-2 --input "Hello"
 ```
 
 The following advanced options require the corresponding feature to be enabled
-for your DeepL account. A Translation Memory threshold must be between 0 and
-100 and can only be used together with its memory ID:
+for your DeepL account:
 
 ```sh
 deepl --from EN --to DE \
   --style-id style-id \
-  --translation-memory-id memory-id \
-  --translation-memory-threshold 75 \
   --reporting-tag batch-42 \
   --input "Hello"
 ```
@@ -309,27 +281,16 @@ To translate a PDF document and save it in docx format:
 deepl doc input.pdf -O docx -o output.docx
 ```
 
-The same glossary, Style Rule, and Translation Memory IDs can be used for
-document translation. Long-running jobs can also be bounded with
+The same glossary and Style Rule IDs can be used for document translation.
+Long-running jobs can also be bounded with
 `--poll-timeout`:
 
 ```sh
 deepl doc --from EN --to DE \
   --glossary-id id-1,id-2 \
   --style-id style-id \
-  --translation-memory-id memory-id \
-  --translation-memory-threshold 75 \
   --watermark \
   --poll-timeout 600 input.pdf
-```
-
-Translation Memories can be imported from and exported to TMX files:
-
-```sh
-deepl memory import --name "Legal" legal.tmx
-deepl memory list | jq '.translation_memories[] | {name, translation_memory_id}'
-deepl memory export --output legal-export.tmx memory-id
-deepl memory delete memory-id
 ```
 
 Document translation temporarily writes a handle file such as `input.pdf.deepl-handle.json`

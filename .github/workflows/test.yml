@@ -142,15 +142,6 @@ jobs:
           bin/deepl correct -f EN -i "any input text"
           bin/deepl correct -f EN-GB -i "any input text"
 
-      - name: Run executable (translation memory)
-        run: |
-          set -eux
-          memory_id=a74d88fb-ed2a-4943-a664-a4512398b994
-          bin/deepl memory list --page-size 10
-          bin/deepl memory view "$memory_id"
-          bin/deepl memory segments --page-size 2 --filter "Nummer 7" --case-sensitive "$memory_id"
-          bin/deepl text --from DE --to EN --translation-memory-id "$memory_id" --translation-memory-threshold 75 --input "proton beam"
-
       - name: Show deepl-mock log
         if: failure()
         run: cat "$RUNNER_TEMP/deepl-mock.log"
