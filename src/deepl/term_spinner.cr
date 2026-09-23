@@ -29,16 +29,12 @@ module Term
         end
       end
 
-      result = uninitialized T
-
       begin
-        result = block.call
+        block.call
       ensure
         @running = false
         clear_line if @clear
       end
-
-      result
     end
 
     private def clear_line
