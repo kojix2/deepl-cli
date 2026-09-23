@@ -346,7 +346,7 @@ module DeepL
         _on_help_
       end
 
-      on("memory", "Inspect translation memories") do
+      on("memory", "Manage translation memories") do
         _set_action_(Action::Help, "Usage: deepl memory <subcommand>")
         opt.help_error_message = "Subcommand is not specified"
 
@@ -391,6 +391,66 @@ module DeepL
 
           on("--case-sensitive", "Use a case-sensitive filter") do
             opt.filter_case_sensitive = true
+          end
+
+          _on_debug_
+
+          _on_help_
+        end
+
+        on("import", "Import a translation memory") do
+          _set_action_(Action::ImportTranslationMemory, "Usage: deepl memory import [options] <file.tmx>")
+
+          on("-n", "--name NAME", "Translation Memory display name") do |name|
+            opt.translation_memory_name = name
+          end
+
+          on("-s", "--interval SEC", "Polling interval") do |sec|
+            opt.interval = sec.to_f32
+          end
+
+          on("--poll-timeout SEC", "Polling timeout") do |sec|
+            opt.poll_timeout = sec.to_f.seconds
+          end
+
+          _on_debug_
+
+          _on_help_
+        end
+
+        on("export", "Export a translation memory") do
+          _set_action_(Action::ExportTranslationMemory, "Usage: deepl memory export [options] <id>")
+
+          on("-o", "--output FILE", "Output file (required)") do |file|
+            opt.output_file = Path[file]
+          end
+
+          on("-s", "--interval SEC", "Polling interval") do |sec|
+            opt.interval = sec.to_f32
+          end
+
+          on("--poll-timeout SEC", "Polling timeout") do |sec|
+            opt.poll_timeout = sec.to_f.seconds
+          end
+
+          _on_debug_
+
+          _on_help_
+        end
+
+        on("job", "Show an import or export job") do
+          _set_action_(Action::ShowTranslationMemoryJob, "Usage: deepl memory job <job-id>")
+
+          _on_debug_
+
+          _on_help_
+        end
+
+        on("delete", "Delete a translation memory") do
+          _set_action_(Action::DeleteTranslationMemory, "Usage: deepl memory delete [--force] <id>")
+
+          on("-f", "--force", "Delete without confirmation") do
+            opt.force = true
           end
 
           _on_debug_

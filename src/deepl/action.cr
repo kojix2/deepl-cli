@@ -19,6 +19,10 @@ module DeepL
     ListTranslationMemories
     ShowTranslationMemory
     ListTranslationMemorySegments
+    ImportTranslationMemory
+    ExportTranslationMemory
+    ShowTranslationMemoryJob
+    DeleteTranslationMemory
     ListFromLanguages
     ListTargetLanguages
     RetrieveUsage

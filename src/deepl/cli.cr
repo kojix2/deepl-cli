@@ -58,6 +58,14 @@ module DeepL
         print_translation_memory
       when Action::ListTranslationMemorySegments
         print_translation_memory_segments
+      when Action::ImportTranslationMemory
+        import_translation_memory
+      when Action::ExportTranslationMemory
+        export_translation_memory
+      when Action::ShowTranslationMemoryJob
+        print_translation_memory_job
+      when Action::DeleteTranslationMemory
+        delete_translation_memory
       when Action::OutputGlossaryEntriesByName
         output_glossary_entries_by_name
       when Action::OutputGlossaryEntriesById
@@ -731,6 +739,76 @@ module DeepL
         filter_case_sensitive: option.filter_case_sensitive?,
       )
       puts segments.to_pretty_json
+    end
+
+    def import_translation_memory
+      source = ARGV.shift? || abort_with_help("Translation Memory import file is not specified")
+      abort_with_help("Unexpected argument: #{ARGV.first}") unless ARGV.empty?
+      validate_translation_memory_polling_options
+      source_path = Path[source]
+      raise ArgumentError.new("Translation Memory import file does not exist: #{source_path}") unless File.file?(source_path)
+
+      job = with_spinner do
+        DeepL::Translator.new.import_translation_memory(
+          source_path,
+          display_name: option.translation_memory_name,
+          interval: option.interval,
+          timeout: option.poll_timeout,
+        )
+      end
+      puts job.to_pretty_json
+    end
+
+    def export_translation_memory
+      memory_id = ARGV.shift? || abort_with_help("Translation Memory ID is not specified")
+      abort_with_help("Unexpected argument: #{ARGV.first}") unless ARGV.empty?
+      output_file = option.output_file || abort_with_help("Output file is not specified")
+      validate_translation_memory_polling_options
+
+      job = with_spinner do
+        DeepL::Translator.new.export_translation_memory(
+          memory_id,
+          output_file,
+          interval: option.interval,
+          timeout: option.poll_timeout,
+        )
+      end
+      puts job.to_pretty_json
+      STDERR.puts "[deepl-cli] Translation Memory exported to #{output_file}"
+    end
+
+    def print_translation_memory_job
+      job_id = ARGV.shift? || abort_with_help("Translation Memory job ID is not specified")
+      abort_with_help("Unexpected argument: #{ARGV.first}") unless ARGV.empty?
+      puts DeepL::Translator.new.get_translation_memory_job(job_id).to_pretty_json
+    end
+
+    def delete_translation_memory
+      memory_id = ARGV.shift? || abort_with_help("Translation Memory ID is not specified")
+      abort_with_help("Unexpected argument: #{ARGV.first}") unless ARGV.empty?
+
+      unless option.force?
+        confirmed = Term::Prompt.new.confirm("Delete Translation Memory #{memory_id}?")
+        if confirmed.nil?
+          raise ArgumentError.new("--force is required when input is not an interactive terminal.")
+        end
+        unless confirmed
+          STDERR.puts "[deepl-cli] Deletion cancelled"
+          return
+        end
+      end
+
+      DeepL::Translator.new.delete_translation_memory(memory_id)
+      STDERR.puts "[deepl-cli] Translation Memory #{memory_id} is deleted"
+    end
+
+    private def validate_translation_memory_polling_options : Nil
+      unless option.interval > 0
+        raise ArgumentError.new("Translation Memory polling interval must be positive.")
+      end
+      if (timeout = option.poll_timeout) && timeout < Time::Span.zero
+        raise ArgumentError.new("Translation Memory polling timeout must not be negative.")
+      end
     end
 
     # Resolve language pair from options or interactively select from glossary dictionaries

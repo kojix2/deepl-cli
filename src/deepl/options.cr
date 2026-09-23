@@ -45,5 +45,7 @@ module DeepL
     property? filter_case_sensitive : Bool? = nil
     property writing_style : String? = nil
     property tone : String? = nil
+    property translation_memory_name : String? = nil
+    property? force : Bool = false
   end
 end

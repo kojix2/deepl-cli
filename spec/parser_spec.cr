@@ -82,5 +82,30 @@ describe DeepL::Parser do
     segments.filter_text.should eq("term")
     segments.filter_case_sensitive?.should be_true
     args.should eq(["memory-1"])
+
+    args = ["memory", "import", "--name", "Legal", "--interval", "1", "--poll-timeout", "60", "legal.tmx"]
+    import = DeepL::Parser.new.parse(args)
+    import.action.should eq(DeepL::Action::ImportTranslationMemory)
+    import.translation_memory_name.should eq("Legal")
+    import.interval.should eq(1.0)
+    import.poll_timeout.should eq(60.seconds)
+    args.should eq(["legal.tmx"])
+
+    args = ["memory", "export", "--output", "legal.tmx", "memory-1"]
+    export = DeepL::Parser.new.parse(args)
+    export.action.should eq(DeepL::Action::ExportTranslationMemory)
+    export.output_file.should eq(Path["legal.tmx"])
+    args.should eq(["memory-1"])
+
+    job_args = ["memory", "job", "job-1"]
+    job = DeepL::Parser.new.parse(job_args)
+    job.action.should eq(DeepL::Action::ShowTranslationMemoryJob)
+    job_args.should eq(["job-1"])
+
+    delete_args = ["memory", "delete", "--force", "memory-1"]
+    delete = DeepL::Parser.new.parse(delete_args)
+    delete.action.should eq(DeepL::Action::DeleteTranslationMemory)
+    delete.force?.should be_true
+    delete_args.should eq(["memory-1"])
   end
 end
