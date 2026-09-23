@@ -1,8 +1,56 @@
 require "./spec_helper"
 
+private class UsagePrinter < DeepL::CLI
+  def render_products(usage : DeepL::UsagePro) : String
+    String.build do |output|
+      print_usage_products(usage, output)
+    end
+  end
+end
+
 describe DeepL do
   it "has a version number" do
     DeepL::CLI::VERSION.should be_a(String)
+  end
+
+  it "prints non-empty Pro products without deprecated character fields" do
+    usage = DeepL::UsagePro.from_json(<<-JSON)
+      {
+        "character_count": 0,
+        "character_limit": 1,
+        "products": [
+          {
+            "product_type": "translate",
+            "billing_unit": "characters",
+            "api_key_unit_count": 42,
+            "account_unit_count": 84,
+            "character_count": 100,
+            "api_key_character_count": 50
+          },
+          {
+            "billing_unit": "minutes"
+          }
+        ]
+      }
+      JSON
+
+    expected = <<-TEXT
+      products:
+        product 1:
+          product_type: translate
+          billing_unit: characters
+          api_key_unit_count: 42
+          account_unit_count: 84
+        product 2:
+          billing_unit: minutes
+      TEXT
+    UsagePrinter.new.render_products(usage).should eq(expected + "\n")
+  end
+
+  it "does not print empty Pro products" do
+    usage = DeepL::UsagePro.from_json(%({"character_count":0,"character_limit":1}))
+
+    UsagePrinter.new.render_products(usage).should eq("")
   end
 
   it "prints document command help to stderr when the input file is missing" do

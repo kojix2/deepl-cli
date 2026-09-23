@@ -680,6 +680,28 @@ module DeepL
           puts "#{field}: #{value}" unless value.raw.nil?
         end
       end
+      print_usage_products(usage) if usage.is_a?(UsagePro)
+    end
+
+    private def print_usage_products(usage : UsagePro, output : IO = STDOUT) : Nil
+      return if usage.products.empty?
+
+      output.puts "products:"
+      usage.products.each_with_index do |product, index|
+        output.puts "  product #{index + 1}:"
+        if product_type = product.product_type
+          output.puts "    product_type: #{product_type}"
+        end
+        if billing_unit = product.billing_unit
+          output.puts "    billing_unit: #{billing_unit}"
+        end
+        if api_key_unit_count = product.api_key_unit_count
+          output.puts "    api_key_unit_count: #{api_key_unit_count}"
+        end
+        if account_unit_count = product.account_unit_count
+          output.puts "    account_unit_count: #{account_unit_count}"
+        end
+      end
     end
 
     private def usage_field_names : Array(String)
