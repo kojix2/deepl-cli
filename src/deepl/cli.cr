@@ -157,7 +157,7 @@ module DeepL
       result = with_spinner do
         translator.rephrase_text(
           text: input_text,
-          target_lang: option.source_lang, # source_lang is correct here.
+          target_lang: normalize_write_language(option.source_lang), # source_lang is correct here.
           writing_style: option.writing_style,
           tone: option.tone
         )
@@ -187,7 +187,7 @@ module DeepL
       result = with_spinner do
         translator.correct_text(
           text: input_text,
-          target_lang: option.source_lang,
+          target_lang: normalize_write_language(option.source_lang),
         )
       end
 
@@ -205,6 +205,19 @@ module DeepL
           output.to_s(output_file_handle)
         end
         STDERR.puts "[deepl-cli] Corrected text is written to #{output_file}"
+      end
+    end
+
+    private def normalize_write_language(language : String?) : String?
+      return unless language
+
+      case language.upcase
+      when "EN-GB"   then "en-GB"
+      when "EN-US"   then "en-US"
+      when "PT-BR"   then "pt-BR"
+      when "PT-PT"   then "pt-PT"
+      when "ZH-HANS" then "zh-Hans"
+      else                language.downcase
       end
     end
 

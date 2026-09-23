@@ -1,10 +1,17 @@
 require "./spec_helper"
+require "./support/scripted_server"
 
 private class UsagePrinter < DeepL::CLI
   def render_products(usage : DeepL::UsagePro) : String
     String.build do |output|
       print_usage_products(usage, output)
     end
+  end
+end
+
+private class WriteLanguageNormalizer < DeepL::CLI
+  def normalize(language : String?) : String?
+    normalize_write_language(language)
   end
 end
 
@@ -51,6 +58,16 @@ describe DeepL do
     usage = DeepL::UsagePro.from_json(%({"character_count":0,"character_limit":1}))
 
     UsagePrinter.new.render_products(usage).should eq("")
+  end
+
+  it "normalizes CLI language codes for the Write API" do
+    normalizer = WriteLanguageNormalizer.new
+
+    normalizer.normalize("EN").should eq("en")
+    normalizer.normalize("EN-GB").should eq("en-GB")
+    normalizer.normalize("PT-BR").should eq("pt-BR")
+    normalizer.normalize("ZH-HANS").should eq("zh-Hans")
+    normalizer.normalize(nil).should be_nil
   end
 
   it "prints document command help to stderr when the input file is missing" do
@@ -111,41 +128,78 @@ describe DeepL do
   end
 
   it "corrects --input text using the library command" do
+    server = ScriptedServer.new([
+      ScriptedServer::Response.new(
+        200,
+        %({"improvements":[{"detected_source_language":"EN","text":"proton beam","target_language":"EN"}]}),
+        {"Content-Type" => "application/json"},
+      ),
+    ])
     stdout = IO::Memory.new
     stderr = IO::Memory.new
 
-    status = Process.run(
-      "crystal",
-      ["run", "-Ddeepl_mock", "src/cli.cr", "--", "correct", "--input", "helo", "--from", "EN"],
-      env: {"DEEPL_AUTH_KEY" => "mock"},
-      output: stdout,
-      error: stderr
-    )
+    begin
+      status = Process.run(
+        "crystal",
+        ["run", "src/cli.cr", "--", "correct", "--input", "helo", "--from", "EN"],
+        env: cli_test_env(server),
+        output: stdout,
+        error: stderr
+      )
+    ensure
+      server.close
+    end
 
     status.success?.should be_true
     stdout.to_s.should eq("proton beam\n")
     stderr.to_s.should_not contain("ERROR")
+    server.requests.map { |request| {request.method, request.resource} }.should eq([
+      {"POST", "/v2/write/correct"},
+    ])
+    server.requests.first.body.should contain(%("text":["helo"]))
+    server.requests.first.body.should contain(%("target_lang":"en"))
   end
 
   it "corrects standard input to standard output" do
+    server = ScriptedServer.new([
+      ScriptedServer::Response.new(
+        200,
+        %({"improvements":[{"detected_source_language":"EN","text":"proton beam","target_language":"EN"}]}),
+        {"Content-Type" => "application/json"},
+      ),
+    ])
     stdout = IO::Memory.new
     stderr = IO::Memory.new
 
-    status = Process.run(
-      "crystal",
-      ["run", "-Ddeepl_mock", "src/cli.cr", "--", "correct", "--from", "EN"],
-      env: {"DEEPL_AUTH_KEY" => "mock"},
-      input: IO::Memory.new("helo\n"),
-      output: stdout,
-      error: stderr
-    )
+    begin
+      status = Process.run(
+        "crystal",
+        ["run", "src/cli.cr", "--", "correct", "--from", "EN"],
+        env: cli_test_env(server),
+        input: IO::Memory.new("helo\n"),
+        output: stdout,
+        error: stderr
+      )
+    ensure
+      server.close
+    end
 
     status.success?.should be_true
     stdout.to_s.should eq("proton beam\n")
     stderr.to_s.should_not contain("ERROR")
+    server.requests.map(&.resource).should eq(["/v2/write/correct"])
+    server.requests.first.body.should contain(%q("text":["helo\n"]))
+    server.requests.first.body.should contain(%("target_lang":"en"))
   end
 
   it "stores an uploaded document handle with owner-only permissions without printing its key" do
+    server = ScriptedServer.new([
+      ScriptedServer::Response.new(
+        200,
+        %({"document_id":"mock-document-id","document_key":"mock-document-key"}),
+        {"Content-Type" => "application/json"},
+      ),
+    ])
     input = File.tempfile("deepl-cli-spec", ".txt")
     input.print("hello")
     input.close
@@ -157,8 +211,8 @@ describe DeepL do
       stderr = IO::Memory.new
       status = Process.run(
         "crystal",
-        ["run", "-Ddeepl_mock", "src/cli.cr", "--", "doc", "--upload-only", "--handle", handle_path.to_s, input_path.to_s],
-        env: {"DEEPL_AUTH_KEY" => "mock"},
+        ["run", "src/cli.cr", "--", "doc", "--upload-only", "--handle", handle_path.to_s, input_path.to_s],
+        env: cli_test_env(server),
         output: stdout,
         error: stderr
       )
@@ -173,9 +227,22 @@ describe DeepL do
       {% end %}
       File.read(handle_path).should contain("mock-document-key")
       stderr.to_s.should_not contain("mock-document-key")
+      server.requests.map { |request| {request.method, request.resource} }.should eq([
+        {"POST", "/v2/document"},
+      ])
     ensure
+      server.close
       File.delete?(input_path)
       File.delete?(handle_path)
     end
   end
+end
+
+private def cli_test_env(server : ScriptedServer) : Process::Env
+  {
+    "DEEPL_AUTH_KEY"   => "cli-test-key",
+    "DEEPL_SERVER_URL" => server.url,
+    "NO_PROXY"         => "127.0.0.1,localhost",
+    "no_proxy"         => "127.0.0.1,localhost",
+  }
 end
