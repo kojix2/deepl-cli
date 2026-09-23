@@ -176,7 +176,7 @@
   </h2>
   
     
-      <a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L2" target="_blank">
+      <a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L2" target="_blank">
         deepl/action.cr
       </a>
     
@@ -292,28 +292,48 @@
       </dt>
       
     
+      <dt class="entry-const" id="ImportTranslationMemory">
+        <strong>ImportTranslationMemory</strong> = <code><span class="n">19_u8</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="ExportTranslationMemory">
+        <strong>ExportTranslationMemory</strong> = <code><span class="n">20_u8</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="ShowTranslationMemoryJob">
+        <strong>ShowTranslationMemoryJob</strong> = <code><span class="n">21_u8</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="DeleteTranslationMemory">
+        <strong>DeleteTranslationMemory</strong> = <code><span class="n">22_u8</span></code>
+      </dt>
+      
+    
       <dt class="entry-const" id="ListFromLanguages">
-        <strong>ListFromLanguages</strong> = <code><span class="n">19_u8</span></code>
+        <strong>ListFromLanguages</strong> = <code><span class="n">23_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="ListTargetLanguages">
-        <strong>ListTargetLanguages</strong> = <code><span class="n">20_u8</span></code>
+        <strong>ListTargetLanguages</strong> = <code><span class="n">24_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="RetrieveUsage">
-        <strong>RetrieveUsage</strong> = <code><span class="n">21_u8</span></code>
+        <strong>RetrieveUsage</strong> = <code><span class="n">25_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="Version">
-        <strong>Version</strong> = <code><span class="n">22_u8</span></code>
+        <strong>Version</strong> = <code><span class="n">26_u8</span></code>
       </dt>
       
     
       <dt class="entry-const" id="Help">
-        <strong>Help</strong> = <code><span class="n">23_u8</span></code>
+        <strong>Help</strong> = <code><span class="n">27_u8</span></code>
       </dt>
       
     
@@ -367,6 +387,13 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#delete_translation_memory%3F-instance-method" class="signature"><strong>#delete_translation_memory?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#DeleteTranslationMemory">DeleteTranslationMemory</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#edit_glossary_by_id%3F-instance-method" class="signature"><strong>#edit_glossary_by_id?</strong></a>
         
           <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#EditGlossaryById">EditGlossaryById</a></code></p></div>
@@ -381,9 +408,23 @@
       </li>
     
       <li class="entry-summary">
+        <a href="#export_translation_memory%3F-instance-method" class="signature"><strong>#export_translation_memory?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#ExportTranslationMemory">ExportTranslationMemory</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
         <a href="#help%3F-instance-method" class="signature"><strong>#help?</strong></a>
         
           <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#Help">Help</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#import_translation_memory%3F-instance-method" class="signature"><strong>#import_translation_memory?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#ImportTranslationMemory">ImportTranslationMemory</a></code></p></div>
         
       </li>
     
@@ -461,6 +502,13 @@
         <a href="#show_translation_memory%3F-instance-method" class="signature"><strong>#show_translation_memory?</strong></a>
         
           <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#ShowTranslationMemory">ShowTranslationMemory</a></code></p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#show_translation_memory_job%3F-instance-method" class="signature"><strong>#show_translation_memory_job?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#ShowTranslationMemoryJob">ShowTranslationMemoryJob</a></code></p></div>
         
       </li>
     
@@ -598,7 +646,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L5" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L5" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -619,7 +667,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L10" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L10" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -640,7 +688,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L12" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L12" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -661,7 +709,28 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L11" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L11" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="delete_translation_memory?-instance-method">
+      <div class="signature">
+        
+        def <strong>delete_translation_memory?</strong>
+
+        <a class="method-permalink" href="#delete_translation_memory%3F-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#DeleteTranslationMemory">DeleteTranslationMemory</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L25" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -682,7 +751,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L14" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L14" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -703,7 +772,28 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L13" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L13" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="export_translation_memory?-instance-method">
+      <div class="signature">
+        
+        def <strong>export_translation_memory?</strong>
+
+        <a class="method-permalink" href="#export_translation_memory%3F-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#ExportTranslationMemory">ExportTranslationMemory</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L23" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -724,7 +814,28 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L26" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L30" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="import_translation_memory?-instance-method">
+      <div class="signature">
+        
+        def <strong>import_translation_memory?</strong>
+
+        <a class="method-permalink" href="#import_translation_memory%3F-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#ImportTranslationMemory">ImportTranslationMemory</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L22" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -745,7 +856,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L22" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L26" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -766,7 +877,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L17" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L17" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -787,7 +898,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L18" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L18" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -808,7 +919,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L23" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L27" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -829,7 +940,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L19" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L19" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -850,7 +961,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L21" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L21" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -871,7 +982,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L16" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L16" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -892,7 +1003,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L15" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L15" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -913,7 +1024,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L4" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L4" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -934,7 +1045,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L24" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L28" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -955,7 +1066,28 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L20" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L20" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="show_translation_memory_job?-instance-method">
+      <div class="signature">
+        
+        def <strong>show_translation_memory_job?</strong>
+
+        <a class="method-permalink" href="#show_translation_memory_job%3F-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>Returns <code>true</code> if this enum value equals <code><a href="../DeepL/Action.html#ShowTranslationMemoryJob">ShowTranslationMemoryJob</a></code></p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L24" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -976,7 +1108,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L6" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L6" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -997,7 +1129,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L9" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L9" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1018,7 +1150,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L8" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L8" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1039,7 +1171,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L7" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L7" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1060,7 +1192,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L3" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L3" target="_blank">View source</a>]
         
       </div>
     </div>
@@ -1081,7 +1213,7 @@
       <br/>
       <div>
         
-          [<a href="https://github.com/kojix2/deepl-cli/blob/4e05a338dd587e43bd59352bec73a7e9165ce284/src/deepl/action.cr#L25" target="_blank">View source</a>]
+          [<a href="https://github.com/kojix2/deepl-cli/blob/0cab203ec0fef5e70db733118c250758909e6ceb/src/deepl/action.cr#L29" target="_blank">View source</a>]
         
       </div>
     </div>

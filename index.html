@@ -210,6 +210,7 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
         --style-id ID                Style Rule ID
         --translation-memory-id ID   Translation Memory ID
         --translation-memory-threshold PERCENT
+        --reporting-tag TAG          Reporting tag
     -F, --formality OPT              Formality (default more less)
     -C, --context TEXT               Context (experimental)
     -s, --split-sentences OPT        Split sentences
@@ -237,6 +238,7 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
     -o, --output FILE                Output file
     -O, --output-format FORMAT       Output file format
         --poll-timeout SEC           Document polling timeout
+        --watermark                  Enable document watermark
     -U, --upload-only                Upload file only
         --handle FILE                Document handle file</code></pre>
 <p>Supported file formats.</p>
@@ -263,16 +265,24 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
     edit                             Edit glossaries
     view                             View glossaries
     -l, --list                       List glossaries</code></pre>
-<h3><a id="inspect-translation-memories" class="anchor" href="#inspect-translation-memories">
+<h3><a id="manage-translation-memories" class="anchor" href="#manage-translation-memories">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
   </svg>
-</a>Inspect Translation Memories</h3>
-<p>Translation Memory management remains read-only. Commands print JSON so the
-result can be consumed directly by tools such as <code>jq</code>.</p>
+</a>Manage Translation Memories</h3>
+<p>Translation Memory commands print job and resource data as JSON so the result
+can be consumed directly by tools such as <code>jq</code>.</p>
 <pre><code class="language-sh">deepl memory list [--page NUMBER] [--page-size NUMBER]
 deepl memory view &lt;id&gt;
-deepl memory segments [--page-size NUMBER] [--cursor CURSOR] [--filter TEXT] [--case-sensitive] &lt;id&gt;</code></pre>
+deepl memory segments [--page-size NUMBER] [--cursor CURSOR] [--filter TEXT] [--case-sensitive] &lt;id&gt;
+deepl memory import [-n NAME] [--interval SEC] [--poll-timeout SEC] &lt;file.tmx&gt;
+deepl memory export -o FILE [--interval SEC] [--poll-timeout SEC] &lt;id&gt;
+deepl memory job &lt;job-id&gt;
+deepl memory delete [--force] &lt;id&gt;</code></pre>
+<p>Importing a TMX file stores a Translation Memory in your DeepL account. It is
+not used automatically: pass its ID with <code>--translation-memory-id</code> when you
+want to use it. Deletion asks for confirmation on an interactive terminal;
+scripts must specify <code>--force</code>.</p>
 <h3><a id="improve-text-rephrase" class="anchor" href="#improve-text-rephrase">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
@@ -341,7 +351,10 @@ for your DeepL account. A Translation Memory threshold must be between 0 and
   --style-id style-id \
   --translation-memory-id memory-id \
   --translation-memory-threshold 75 \
+  --reporting-tag batch-42 \
   --input &quot;Hello&quot;</code></pre>
+<p><code>--reporting-tag</code> attaches a tag to the request for DeepL usage reporting. It
+does not change the translated text.</p>
 <p>To refer to the original text, you can use <code>tee dev/stderr</code>:</p>
 <pre><code class="language-sh">fortune | tee /dev/stderr | deepl</code></pre>
 <h3><a id="translate-documents-1" class="anchor" href="#translate-documents-1">
@@ -364,7 +377,13 @@ document translation. Long-running jobs can also be bounded with
   --style-id style-id \
   --translation-memory-id memory-id \
   --translation-memory-threshold 75 \
+  --watermark \
   --poll-timeout 600 input.pdf</code></pre>
+<p>Translation Memories can be imported from and exported to TMX files:</p>
+<pre><code class="language-sh">deepl memory import --name &quot;Legal&quot; legal.tmx
+deepl memory list | jq '.translation_memories[] | {name, translation_memory_id}'
+deepl memory export --output legal-export.tmx memory-id
+deepl memory delete memory-id</code></pre>
 <p>Document translation temporarily writes a handle file such as <code>input.pdf.deepl-handle.json</code>
 and removes it after a successful download, unless <code>--handle FILE</code> is specified.
 The handle file contains the DeepL document key. Treat it as a secret.
