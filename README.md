@@ -63,19 +63,13 @@ Options:
     -p, --paste                      Input text from clipboard
     -g, --glossary NAME              Glossary name
         --glossary-id IDS            Glossary ID (comma-separated or repeatable, up to 5)
-        --style-id ID                Style Rule ID
-        --reporting-tag TAG          Reporting tag
     -F, --formality OPT              Formality (default more less)
     -C, --context TEXT               Context (experimental)
     -s, --split-sentences OPT        Split sentences
-        --tag-handling-version VERSION
     -A, --ansi                       Do not remove ANSI escape codes
 ```
 
 Note: ANSI escape sequences are removed by default.
-
-`--tag-handling-version` accepts `v1` or `v2` and requires
-`--tag-handling xml` or `--tag-handling html`.
 
 ### Translate documents
 
@@ -92,11 +86,9 @@ Options for document translation:
     -t, --to [LANG]                  Target language [EN]
     -g, --glossary NAME              Glossary name
         --glossary-id IDS            Glossary ID (comma-separated or repeatable, up to 5)
-        --style-id ID                Style Rule ID
     -F, --formality OPT              Formality (default more less)
     -o, --output FILE                Output file
     -O, --output-format FORMAT       Output file format
-        --poll-timeout SEC           Document polling timeout
         --watermark                  Enable document watermark
     -U, --upload-only                Upload file only
         --handle FILE                Document handle file
@@ -241,19 +233,6 @@ deepl --from EN --to DE --glossary-id id-1,id-2 --input "Hello"
 # Equivalent: --glossary-id id-1 --glossary-id id-2
 ```
 
-The following advanced options require the corresponding feature to be enabled
-for your DeepL account:
-
-```sh
-deepl --from EN --to DE \
-  --style-id style-id \
-  --reporting-tag batch-42 \
-  --input "Hello"
-```
-
-`--reporting-tag` attaches a tag to the request for DeepL usage reporting. It
-does not change the translated text.
-
 To refer to the original text, you can use `tee dev/stderr`:
 
 ```sh
@@ -281,16 +260,14 @@ To translate a PDF document and save it in docx format:
 deepl doc input.pdf -O docx -o output.docx
 ```
 
-The same glossary and Style Rule IDs can be used for document translation.
-Long-running jobs can also be bounded with
-`--poll-timeout`:
+Glossary IDs can also be used for document translation. A watermark can be
+added to supported output formats:
 
 ```sh
 deepl doc --from EN --to DE \
   --glossary-id id-1,id-2 \
-  --style-id style-id \
   --watermark \
-  --poll-timeout 600 input.pdf
+  input.pdf
 ```
 
 Document translation temporarily writes a handle file such as `input.pdf.deepl-handle.json`

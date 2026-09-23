@@ -128,10 +128,6 @@ module DeepL
           opt.model_type = type
         end
 
-        on("--tag-handling-version VERSION", "Tag handling version") do |version|
-          opt.tag_handling_version = version
-        end
-
         _on_debug_
 
         _on_help_
@@ -200,10 +196,6 @@ module DeepL
           add_glossary_ids(glossary_ids)
         end
 
-        on("--style-id ID", "Style Rule ID") do |style_id|
-          opt.style_id = style_id
-        end
-
         on("-F", "--formality OPT", "Formality (default more less)") do |v|
           opt.formality = v
         end
@@ -218,10 +210,6 @@ module DeepL
 
         on("-s", "--interval SEC", "Interval between requests") do |sec|
           opt.interval = sec.to_f32
-        end
-
-        on("--poll-timeout SEC", "Document polling timeout") do |sec|
-          opt.poll_timeout = sec.to_f.seconds
         end
 
         on("--watermark", "Enable document watermark") do
@@ -429,14 +417,6 @@ module DeepL
 
       on("--glossary-id IDS", "Glossary ID (comma-separated or repeatable, up to 5)") do |glossary_ids|
         add_glossary_ids(glossary_ids)
-      end
-
-      on("--style-id ID", "Style Rule ID") do |style_id|
-        opt.style_id = style_id
-      end
-
-      on("--reporting-tag TAG", "Reporting tag") do |tag|
-        opt.reporting_tag = tag
       end
 
       on("-D", "--detect-language", "Output detected source language") do

@@ -29,18 +29,12 @@ describe DeepL::Parser do
       "--from", "EN",
       "--glossary-id", "glossary-1",
       "--glossary-id", "glossary-2",
-      "--style-id", "style-1",
       "--tag-handling", "xml",
-      "--tag-handling-version", "v2",
-      "--reporting-tag", "batch-42",
     ])
 
     option.action.should eq(DeepL::Action::TranslateText)
     option.glossary_ids.should eq(["glossary-1", "glossary-2"])
-    option.style_id.should eq("style-1")
     option.tag_handling.should eq("xml")
-    option.tag_handling_version.should eq("v2")
-    option.reporting_tag.should eq("batch-42")
   end
 
   it "parses current document translation options" do
@@ -48,15 +42,11 @@ describe DeepL::Parser do
       "doc",
       "--from", "EN",
       "--glossary-id", "glossary-1,glossary-2",
-      "--style-id", "style-1",
-      "--poll-timeout", "30",
       "--watermark",
     ])
 
     option.action.should eq(DeepL::Action::TranslateDocument)
     option.glossary_ids.should eq(["glossary-1", "glossary-2"])
-    option.style_id.should eq("style-1")
-    option.poll_timeout.should eq(30.seconds)
     option.enable_watermark.should be_true
   end
 end

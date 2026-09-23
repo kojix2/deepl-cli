@@ -6,35 +6,24 @@ class ScriptedServer
     body : String = "",
     headers : Hash(String, String) = {} of String => String
 
-  record Request,
-    method : String,
-    resource : String,
-    body : String,
-    headers : HTTP::Headers
+  record Request, method : String, resource : String, body : String
 
   getter requests : Array(Request)
   getter url : String
 
   def initialize(@responses : Array(Response))
     @requests = [] of Request
-    @url = ""
     @server = HTTP::Server.new do |context|
       body = context.request.body.try(&.gets_to_end) || ""
-      @requests << Request.new(
-        context.request.method,
-        context.request.resource,
-        body,
-        context.request.headers.clone,
-      )
+      @requests << Request.new(context.request.method, context.request.resource, body)
 
       response = @responses.shift? || Response.new(500, "No scripted response")
-      response_body = response.body.gsub("{{SERVER_URL}}", @url)
       context.response.status_code = response.status_code
       response.headers.each do |name, value|
         context.response.headers[name] = value
       end
-      context.response.content_length = response_body.bytesize
-      context.response.print(response_body) unless response_body.empty?
+      context.response.content_length = response.body.bytesize
+      context.response.print(response.body) unless response.body.empty?
       context.response.close
     end
 

@@ -20,7 +20,6 @@ module DeepL
     property split_sentences : String? = nil
     property? preserve_formatting : Bool = false
     property tag_handling : String? = nil
-    property tag_handling_version : String? = nil
     property? outline_detection : Bool = false
     property non_splitting_tags : Array(String)? = nil
     property splitting_tags : Array(String)? = nil
@@ -28,13 +27,10 @@ module DeepL
     property output_format : String? = nil
     property? no_ansi : Bool = true
     property interval : Float32 = 5.0
-    property poll_timeout : Time::Span? = nil
     property document_id : String? = nil
     property document_key : String? = nil
     property document_handle_file : Path? = nil
     property model_type : String? = nil
-    property style_id : String? = nil
-    property reporting_tag : String? = nil
     property enable_watermark : Bool? = nil
     property writing_style : String? = nil
     property tone : String? = nil

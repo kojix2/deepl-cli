@@ -85,10 +85,7 @@ describe DeepL do
           "--input", "hello", "--from", "EN", "--to", "DE",
           "--glossary-id", "glossary-1",
           "--glossary-id", "glossary-2",
-          "--style-id", "style-1",
           "--tag-handling", "xml",
-          "--tag-handling-version", "v2",
-          "--reporting-tag", "batch-42",
         ],
         env: cli_test_env(server),
         output: stdout,
@@ -107,28 +104,13 @@ describe DeepL do
 
     body = JSON.parse(server.requests.first.body)
     body["glossary_ids"].as_a.map(&.as_s).should eq(["glossary-1", "glossary-2"])
-    body["style_id"].as_s.should eq("style-1")
     body["tag_handling"].as_s.should eq("xml")
-    body["tag_handling_version"].as_s.should eq("v2")
-    server.requests.first.headers["X-DeepL-Reporting-Tag"].should eq("batch-42")
   end
 
   it "validates advanced translation options before sending a request" do
     validator = TranslationOptionValidator.new
     validator.option.glossary_ids = ["glossary-1"]
     expect_raises(ArgumentError, "--from is required with --glossary-id.") do
-      validator.validate
-    end
-
-    validator = TranslationOptionValidator.new
-    validator.option.tag_handling_version = "v3"
-    expect_raises(ArgumentError, "--tag-handling-version must be v1 or v2.") do
-      validator.validate
-    end
-
-    validator = TranslationOptionValidator.new
-    validator.option.tag_handling_version = "v2"
-    expect_raises(ArgumentError, "--tag-handling-version requires --tag-handling.") do
       validator.validate
     end
   end
@@ -368,7 +350,6 @@ describe DeepL do
           "--upload-only", "--handle", handle_path.to_s,
           "--from", "EN",
           "--glossary-id", "glossary-1,glossary-2",
-          "--style-id", "style-1",
           "--watermark",
           input_path.to_s,
         ],
@@ -393,8 +374,6 @@ describe DeepL do
       request_body = server.requests.first.body
       request_body.should contain("glossary_ids")
       request_body.should contain("glossary-1,glossary-2")
-      request_body.should contain("style_id")
-      request_body.should contain("style-1")
       request_body.should contain("enable_watermark")
       request_body.should contain("true")
     ensure

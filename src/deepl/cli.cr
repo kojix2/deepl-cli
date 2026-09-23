@@ -128,9 +128,6 @@ module DeepL
           context: option.context,
           show_billed_characters: option.show_billed_characters?,
           model_type: option.model_type,
-          style_id: option.style_id,
-          tag_handling_version: option.tag_handling_version,
-          reporting_tag: option.reporting_tag,
         )
       end
 
@@ -255,7 +252,6 @@ module DeepL
         translator.translate_document_wait_until_done(
           handle: document_handle,
           interval: option.interval,
-          timeout: option.poll_timeout,
         ) do |document_status|
           STDERR.puts avoid_spinner("[deepl-cli] Status: #{document_status.status}")
           STDERR.puts avoid_spinner("[deepl-cli] Seconds Remaining: #{document_status.seconds_remaining}") if document_status.seconds_remaining
@@ -273,9 +269,6 @@ module DeepL
 
     private def validate_document_polling_options : Nil
       raise ArgumentError.new("Document polling interval must not be negative.") if option.interval < 0
-      if (timeout = option.poll_timeout) && timeout < Time::Span.zero
-        raise ArgumentError.new("Document polling timeout must not be negative.")
-      end
     end
 
     def upload_document_to_translate
@@ -317,14 +310,12 @@ module DeepL
         glossary_name: option.glossary_name,
         output_format: option.output_format,
         glossary_ids: option.glossary_ids,
-        style_id: option.style_id,
         enable_watermark: option.enable_watermark,
       )
     end
 
     private def validate_translation_options : Nil
       validate_glossary_options
-      validate_tag_handling_options
     end
 
     private def validate_glossary_options : Nil
@@ -336,17 +327,6 @@ module DeepL
       raise ArgumentError.new("--from is required with --glossary-id.") unless option.source_lang
       if option.glossary_name
         raise ArgumentError.new("--glossary-id cannot be combined with --glossary.")
-      end
-    end
-
-    private def validate_tag_handling_options : Nil
-      if version = option.tag_handling_version
-        unless {"v1", "v2"}.includes?(version)
-          raise ArgumentError.new("--tag-handling-version must be v1 or v2.")
-        end
-        unless option.tag_handling
-          raise ArgumentError.new("--tag-handling-version requires --tag-handling.")
-        end
       end
     end
 
