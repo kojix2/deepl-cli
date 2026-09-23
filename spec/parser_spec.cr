@@ -27,7 +27,8 @@ describe DeepL::Parser do
     option = DeepL::Parser.new.parse([
       "text",
       "--from", "EN",
-      "--glossary-ids", "glossary-1, glossary-2",
+      "--glossary-id", "glossary-1",
+      "--glossary-id", "glossary-2",
       "--style-id", "style-1",
       "--translation-memory-id", "memory-1",
       "--translation-memory-threshold", "75",
@@ -48,7 +49,7 @@ describe DeepL::Parser do
     option = DeepL::Parser.new.parse([
       "doc",
       "--from", "EN",
-      "--glossary-ids", "glossary-1,glossary-2",
+      "--glossary-id", "glossary-1,glossary-2",
       "--style-id", "style-1",
       "--translation-memory-id", "memory-1",
       "--translation-memory-threshold", "80",

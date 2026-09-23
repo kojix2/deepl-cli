@@ -83,7 +83,8 @@ describe DeepL do
         [
           "run", "src/cli.cr", "--", "text",
           "--input", "hello", "--from", "EN", "--to", "DE",
-          "--glossary-ids", "glossary-1,glossary-2",
+          "--glossary-id", "glossary-1",
+          "--glossary-id", "glossary-2",
           "--style-id", "style-1",
           "--translation-memory-id", "memory-1",
           "--translation-memory-threshold", "75",
@@ -117,7 +118,7 @@ describe DeepL do
   it "validates advanced translation options before sending a request" do
     validator = TranslationOptionValidator.new
     validator.option.glossary_ids = ["glossary-1"]
-    expect_raises(ArgumentError, "--from is required with --glossary-ids.") do
+    expect_raises(ArgumentError, "--from is required with --glossary-id.") do
       validator.validate
     end
 
@@ -336,7 +337,7 @@ describe DeepL do
           "run", "src/cli.cr", "--", "doc",
           "--upload-only", "--handle", handle_path.to_s,
           "--from", "EN",
-          "--glossary-ids", "glossary-1,glossary-2",
+          "--glossary-id", "glossary-1,glossary-2",
           "--style-id", "style-1",
           "--translation-memory-id", "memory-1",
           "--translation-memory-threshold", "75",

@@ -196,12 +196,8 @@ module DeepL
           opt.glossary_name = glossary_name
         end
 
-        on("--glossary-id ID", "Glossary ID") do |glossary_id|
-          opt.glossary_id = glossary_id
-        end
-
-        on("--glossary-ids IDS", "Comma-separated glossary IDs (up to 5)") do |glossary_ids|
-          opt.glossary_ids = glossary_ids.split(',').map(&.strip).reject(&.empty?)
+        on("--glossary-id IDS", "Glossary ID (comma-separated or repeatable, up to 5)") do |glossary_ids|
+          add_glossary_ids(glossary_ids)
         end
 
         on("--style-id ID", "Style Rule ID") do |style_id|
@@ -492,12 +488,8 @@ module DeepL
         opt.glossary_name = glossary_name
       end
 
-      on("--glossary-id ID", "Glossary ID") do |glossary_id|
-        opt.glossary_id = glossary_id
-      end
-
-      on("--glossary-ids IDS", "Comma-separated glossary IDs (up to 5)") do |glossary_ids|
-        opt.glossary_ids = glossary_ids.split(',').map(&.strip).reject(&.empty?)
+      on("--glossary-id IDS", "Glossary ID (comma-separated or repeatable, up to 5)") do |glossary_ids|
+        add_glossary_ids(glossary_ids)
       end
 
       on("--style-id ID", "Style Rule ID") do |style_id|
@@ -564,6 +556,23 @@ module DeepL
     def parse(args)
       super
       opt
+    end
+
+    private def add_glossary_ids(value : String) : Nil
+      ids = [] of String
+      if glossary_id = opt.glossary_id
+        ids << glossary_id
+      end
+      ids.concat(opt.glossary_ids || [] of String)
+      ids.concat(value.split(',').map(&.strip).reject(&.empty?))
+
+      if ids.size == 1
+        opt.glossary_id = ids.first
+        opt.glossary_ids = nil
+      else
+        opt.glossary_id = nil
+        opt.glossary_ids = ids
+      end
     end
   end
 end

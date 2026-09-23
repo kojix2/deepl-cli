@@ -63,8 +63,7 @@ Options:
     -t, --to [LANG]                  Target language [EN]
     -p, --paste                      Input text from clipboard
     -g, --glossary NAME              Glossary name
-        --glossary-id ID             Glossary ID
-        --glossary-ids IDS           Comma-separated glossary IDs (up to 5)
+        --glossary-id IDS            Glossary ID (comma-separated or repeatable, up to 5)
         --style-id ID                Style Rule ID
         --translation-memory-id ID   Translation Memory ID
         --translation-memory-threshold PERCENT
@@ -94,8 +93,7 @@ Options for document translation:
     -f, --from [LANG]                Source language [AUTO]
     -t, --to [LANG]                  Target language [EN]
     -g, --glossary NAME              Glossary name
-        --glossary-id ID             Glossary ID
-        --glossary-ids IDS           Comma-separated glossary IDs (up to 5)
+        --glossary-id IDS            Glossary ID (comma-separated or repeatable, up to 5)
         --style-id ID                Style Rule ID
         --translation-memory-id ID   Translation Memory ID
         --translation-memory-threshold PERCENT
@@ -248,11 +246,13 @@ When a glossary name is not unique, use its explicit ID instead:
 deepl --glossary-id 01234567-89ab-cdef-0123-456789abcdef -f ru
 ```
 
-Up to five glossary IDs can be supplied together. This requires an explicit
-source language and cannot be combined with `--glossary` or `--glossary-id`:
+Glossary IDs require an explicit source language and cannot be combined with
+`--glossary`. Up to five IDs can be supplied together, either comma-separated
+or by repeating `--glossary-id`:
 
 ```sh
-deepl --from EN --to DE --glossary-ids id-1,id-2 --input "Hello"
+deepl --from EN --to DE --glossary-id id-1,id-2 --input "Hello"
+# Equivalent: --glossary-id id-1 --glossary-id id-2
 ```
 
 The following advanced options require the corresponding feature to be enabled
@@ -300,7 +300,7 @@ document translation. Long-running jobs can also be bounded with
 
 ```sh
 deepl doc --from EN --to DE \
-  --glossary-ids id-1,id-2 \
+  --glossary-id id-1,id-2 \
   --style-id style-id \
   --translation-memory-id memory-id \
   --translation-memory-threshold 75 \

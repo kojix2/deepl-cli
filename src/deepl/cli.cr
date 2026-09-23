@@ -337,13 +337,14 @@ module DeepL
     end
 
     private def validate_glossary_options : Nil
-      if glossary_ids = option.glossary_ids
-        raise ArgumentError.new("--glossary-ids requires at least one glossary ID.") if glossary_ids.empty?
-        raise ArgumentError.new("--glossary-ids accepts at most 5 glossary IDs.") if glossary_ids.size > 5
-        raise ArgumentError.new("--from is required with --glossary-ids.") unless option.source_lang
-        if option.glossary_id || option.glossary_name
-          raise ArgumentError.new("--glossary-ids cannot be combined with --glossary-id or --glossary.")
-        end
+      glossary_ids = option.glossary_ids || option.glossary_id.try { |id| [id] }
+      return unless glossary_ids
+
+      raise ArgumentError.new("--glossary-id requires at least one glossary ID.") if glossary_ids.empty?
+      raise ArgumentError.new("--glossary-id accepts at most 5 glossary IDs.") if glossary_ids.size > 5
+      raise ArgumentError.new("--from is required with --glossary-id.") unless option.source_lang
+      if option.glossary_name
+        raise ArgumentError.new("--glossary-id cannot be combined with --glossary.")
       end
     end
 
