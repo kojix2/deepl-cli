@@ -1,6 +1,14 @@
 require "./spec_helper"
 
 describe DeepL::Parser do
+  it "shows file arguments in the text command help" do
+    parser = DeepL::Parser.new
+    option = parser.parse(["text", "--help"])
+
+    option.action.should eq(DeepL::Action::Help)
+    parser.help_message.should contain("Usage: deepl text [options] [file ...]")
+  end
+
   it "parses the correct command options" do
     option = DeepL::Parser.new.parse(["correct", "--input", "helo", "--from", "EN"])
 

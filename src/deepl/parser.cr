@@ -85,7 +85,7 @@ module DeepL
         opt.action = Action::TranslateText
         self.banner = <<-BANNER
 
-          Usage: deepl text [options] <text>
+          Usage: deepl text [options] [file ...]
 
           BANNER
 

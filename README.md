@@ -51,8 +51,11 @@ deepl [options] <file>
 For text-specific options, use the `text` subcommand:
 
 ```sh
-deepl text [options] <text>
+deepl text [options] [file ...]
 ```
+
+Pass file paths as positional arguments, use `--input` for literal text, or
+read from standard input when no files are given.
 
 Options:
 
