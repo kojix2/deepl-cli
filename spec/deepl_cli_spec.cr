@@ -222,6 +222,26 @@ describe DeepL do
     stderr_output.should contain("Usage: deepl doc [options] <file>")
   end
 
+  it "reports invalid document intervals as option errors" do
+    {"--interval" => "not-a-number", "-s" => "1e100"}.each do |flag, value|
+      stdout = IO::Memory.new
+      stderr = IO::Memory.new
+
+      status = Process.run(
+        "crystal",
+        ["run", "src/cli.cr", "--", "doc", flag, value],
+        output: stdout,
+        error: stderr,
+      )
+
+      status.exit_code.should eq(1)
+      stdout.to_s.should eq("")
+      stderr.to_s.should contain("[deepl-cli] ERROR: Invalid --interval value: #{value.inspect}.")
+      stderr.to_s.should contain("Usage: deepl doc [options] <file>")
+      stderr.to_s.should_not contain("Unhandled exception")
+    end
+  end
+
   it "prints glossary command help to stderr when the subcommand is missing" do
     stdout = IO::Memory.new
     stderr = IO::Memory.new

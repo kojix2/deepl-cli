@@ -209,7 +209,13 @@ module DeepL
         end
 
         on("-s", "--interval SEC", "Interval between requests") do |sec|
-          opt.interval = sec.to_f32
+          if interval = sec.to_f32?
+            opt.interval = interval
+          else
+            STDERR.puts "[deepl-cli] ERROR: Invalid --interval value: #{sec.inspect}."
+            STDERR.puts self
+            exit(1)
+          end
         end
 
         on("--watermark", "Enable document watermark") do
