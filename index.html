@@ -97,8 +97,18 @@
       
     </li>
   
-  <li class=" " data-id="deepl-cli/DeepL/Parser" data-name="deepl::parser">
+  <li class="parent " data-id="deepl-cli/DeepL/Parser" data-name="deepl::parser">
       <a href="DeepL/Parser.html">Parser</a>
+      
+        <ul>
+  
+  <li class=" " data-id="deepl-cli/DeepL/Parser/ParseError" data-name="deepl::parser::parseerror">
+      <a href="DeepL/Parser/ParseError.html">ParseError</a>
+      
+    </li>
+  
+</ul>
+
       
     </li>
   
@@ -198,7 +208,9 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
   </svg>
 </a>Translate text</h3>
 <p>For text-specific options, use the <code>text</code> subcommand:</p>
-<pre><code class="language-sh">deepl text [options] &lt;text&gt;</code></pre>
+<pre><code class="language-sh">deepl text [options] [file ...]</code></pre>
+<p>Pass file paths as positional arguments, use <code>--input</code> for literal text, or
+read from standard input when no files are given.</p>
 <p>Options:</p>
 <pre><code class="language-txt">    -i, --input TEXT                 Input text
     -f, --from [LANG]                Source language [AUTO]
