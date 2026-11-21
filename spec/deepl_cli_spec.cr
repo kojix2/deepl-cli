@@ -299,6 +299,67 @@ describe DeepL do
     end
   end
 
+  it "uses an explicit target language to narrow glossary view pairs" do
+    glossary_info = %({"glossaries":[{"glossary_id":"glossary-1","name":"MyGlossary","dictionaries":[{"source_lang":"en","target_lang":"ja"},{"source_lang":"de","target_lang":"fr"}],"creation_time":"2026-09-23T00:00:00Z"}]})
+    server = ScriptedServer.new([
+      ScriptedServer::Response.new(200, glossary_info, {"Content-Type" => "application/json"}),
+      ScriptedServer::Response.new(
+        200,
+        %({"dictionaries":[{"source_lang":"en","target_lang":"ja","entries":"hello\\tこんにちは"}]}),
+        {"Content-Type" => "application/json"},
+      ),
+    ])
+    stdout = IO::Memory.new
+    stderr = IO::Memory.new
+
+    begin
+      status = Process.run(
+        "crystal",
+        ["run", "src/cli.cr", "--", "glossary", "view", "MyGlossary", "--to", "JA"],
+        env: cli_test_env(server),
+        output: stdout,
+        error: stderr,
+      )
+
+      status.success?.should be_true
+      stdout.to_s.should eq("hello\tこんにちは\n")
+      stderr.to_s.should eq("")
+      server.requests.map { |request| {request.method, request.resource.split('?').first} }.should eq([
+        {"GET", "/v3/glossaries"},
+        {"GET", "/v3/glossaries/glossary-1/entries"},
+      ])
+      server.requests.last.resource.should contain("source_lang=en")
+      server.requests.last.resource.should contain("target_lang=ja")
+    ensure
+      server.close
+    end
+  end
+
+  it "does not narrow glossary view pairs using the default target language" do
+    glossary_info = %({"glossaries":[{"glossary_id":"glossary-1","name":"MyGlossary","dictionaries":[{"source_lang":"en","target_lang":"ja"},{"source_lang":"de","target_lang":"fr"}],"creation_time":"2026-09-23T00:00:00Z"}]})
+    server = ScriptedServer.new([
+      ScriptedServer::Response.new(200, glossary_info, {"Content-Type" => "application/json"}),
+    ])
+    stdout = IO::Memory.new
+    stderr = IO::Memory.new
+
+    begin
+      status = Process.run(
+        "crystal",
+        ["run", "src/cli.cr", "--", "glossary", "view", "MyGlossary"],
+        env: cli_test_env(server).merge({"DEEPL_TARGET_LANG" => "JA"}),
+        output: stdout,
+        error: stderr,
+      )
+
+      status.exit_code.should eq(1)
+      stderr.to_s.should contain("Selection cancelled")
+      server.requests.map(&.resource).should eq(["/v3/glossaries"])
+    ensure
+      server.close
+    end
+  end
+
   it "uses v3 language discovery for source and target lists" do
     languages = <<-JSON
       [

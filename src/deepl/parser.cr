@@ -204,6 +204,7 @@ module DeepL
             opt.action = Action::ListDocumentTargetLanguages
           else
             opt.target_lang = to_.upcase
+            opt.target_lang_explicit = true
           end
         end
 
@@ -279,6 +280,7 @@ module DeepL
 
           on("-t", "--to LANG", "Target language [#{opt.target_lang}]") do |to_|
             opt.target_lang = to_.upcase
+            opt.target_lang_explicit = true
           end
 
           _on_debug_
@@ -327,6 +329,7 @@ module DeepL
 
           on("-t", "--to LANG", "Target language [#{opt.target_lang}]") do |to_|
             opt.target_lang = to_.upcase
+            opt.target_lang_explicit = true
           end
 
           on("-o", "--output FILE", "Output file") do |file|
@@ -431,6 +434,7 @@ module DeepL
           opt.action = Action::ListTargetLanguages
         else
           opt.target_lang = to_.upcase
+          opt.target_lang_explicit = true
         end
       end
 

@@ -72,6 +72,14 @@ describe DeepL::Parser do
     option.source_lang.should eq("EN-US")
   end
 
+  it "tracks whether a glossary view target language was explicitly provided" do
+    DeepL::Parser.new.parse(["glossary", "view", "MyGlossary"]).target_lang_explicit?.should be_false
+
+    option = DeepL::Parser.new.parse(["glossary", "view", "MyGlossary", "--to", "JA"])
+    option.target_lang.should eq("JA")
+    option.target_lang_explicit?.should be_true
+  end
+
   it "parses current text translation options" do
     option = DeepL::Parser.new.parse([
       "text",

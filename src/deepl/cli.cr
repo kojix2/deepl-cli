@@ -694,8 +694,20 @@ module DeepL
       if src && tgt
         return {normalize_glossary_language(src), normalize_glossary_language(tgt)}
       end
+
+      dictionaries = glossary_info.dictionaries
+      if src.nil? && option.target_lang_explicit?
+        normalized_target = normalize_glossary_language(tgt)
+        dictionaries = dictionaries.select do |dictionary|
+          normalize_glossary_language(dictionary.target_lang) == normalized_target
+        end
+        if dictionaries.empty?
+          raise ArgumentError.new("No glossary dictionary found for target language #{tgt}.")
+        end
+      end
+
       prompt = Term::Prompt.new
-      pairs = glossary_info.dictionaries.map { |dictionary| "#{dictionary.source_lang} -> #{dictionary.target_lang}" }
+      pairs = dictionaries.map { |dictionary| "#{dictionary.source_lang} -> #{dictionary.target_lang}" }
       selected = prompt.select("Select language pair", pairs) || raise "Selection cancelled"
       parts = selected.split(" -> ")
       {parts[0], parts[1]}
