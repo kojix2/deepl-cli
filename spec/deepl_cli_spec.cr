@@ -323,6 +323,47 @@ describe DeepL do
     end
   end
 
+  it "rejects a directory as the document handle before upload" do
+    {false, true}.each do |upload_only|
+      server = ScriptedServer.new([
+        ScriptedServer::Response.new(
+          200,
+          %({"document_id":"mock-document-id","document_key":"mock-document-key"}),
+          {"Content-Type" => "application/json"},
+        ),
+      ])
+      input = File.tempfile("deepl-cli-spec", ".txt")
+      input.puts "hello"
+      input.close
+      handle_path = Path["#{input.path}.handle"]
+      Dir.mkdir(handle_path)
+      existing_file = handle_path / "existing.txt"
+      File.write(existing_file, "keep")
+      stdout = IO::Memory.new
+      stderr = IO::Memory.new
+      args = ["run", "src/cli.cr", "--", "doc"]
+      args << "--upload-only" if upload_only
+      args.concat(["--handle", handle_path.to_s, input.path])
+
+      begin
+        status = Process.run("crystal", args, env: cli_test_env(server), output: stdout, error: stderr)
+
+        status.exit_code.should eq(1)
+        stdout.to_s.should eq("")
+        stderr.to_s.should contain("Cannot write document handle before upload:")
+        stderr.to_s.should contain("The document was not uploaded.")
+        stderr.to_s.should contain("Document handle path is a directory.")
+        server.requests.should be_empty
+        File.read(existing_file).should eq("keep")
+      ensure
+        server.close
+        File.delete?(input.path)
+        File.delete?(existing_file)
+        Dir.delete(handle_path)
+      end
+    end
+  end
+
   it "prints glossary command help to stderr when the subcommand is missing" do
     stdout = IO::Memory.new
     stderr = IO::Memory.new

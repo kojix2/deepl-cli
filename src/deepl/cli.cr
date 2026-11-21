@@ -368,6 +368,10 @@ module DeepL
     end
 
     private def check_document_handle_file_writable(handle_file : Path) : Nil
+      if File.info?(handle_file, follow_symlinks: false).try(&.directory?)
+        raise ArgumentError.new("Document handle path is a directory.")
+      end
+
       tmp = File.tempfile("deepl-handle", ".json", dir: handle_file.dirname)
       tmp.chmod(0o600)
     rescue ex
