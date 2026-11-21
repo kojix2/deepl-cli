@@ -187,7 +187,8 @@
   </svg>
 </a>Proxy settings (optional)</h3>
 <pre><code class="language-sh">export HTTP_PROXY=http://[IP]:[port]
-export HTTPS_PROXY=https://[IP]:[port]</code></pre>
+export HTTPS_PROXY=http://[IP]:[port]</code></pre>
+<p>The connection to the proxy itself is not encrypted, so <code>https://</code> proxy URLs with credentials are rejected.</p>
 <h2><a id="prerequisites" class="anchor" href="#prerequisites">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
