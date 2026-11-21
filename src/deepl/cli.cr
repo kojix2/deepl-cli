@@ -427,13 +427,21 @@ module DeepL
       temporary_file = File.tempfile("deepl-document-output", ".tmp", dir: output_file.parent.to_s)
       temporary_path = Path[temporary_file.path]
       temporary_file.close
+      downloaded = false
+      published = false
 
       begin
         translator.translate_document_download(document_handle, temporary_path)
-        link_document_output_file(temporary_path, output_file)
+        downloaded = true
+        result = link_document_output_file(temporary_path, output_file)
+        published = true
+        result
+      rescue error
+        raise DocumentDownloadError.new(temporary_path.to_s, error) if downloaded
+        raise error
       ensure
-        temporary_file.close unless temporary_file.closed?
-        File.delete?(temporary_path)
+        # Only successful publication permits deleting a received result.
+        File.delete?(temporary_path) if !downloaded || published
       end
     end
 

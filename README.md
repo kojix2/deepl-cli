@@ -298,6 +298,10 @@ If a handle cannot be installed after upload, the CLI preserves it in a recovery
 
 When the automatic translated-document filename already exists, the CLI chooses a timestamped unique name
 instead of replacing the existing file.
+If receiving or saving the result fails after a successful download response,
+the CLI keeps a recovery file and prints its path. It may contain incomplete
+data. Recover that file rather than relying on another download: DeepL can
+delete the translated document after it has been downloaded.
 
 To upload a document and check or download it later:
 
