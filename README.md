@@ -362,6 +362,9 @@ To display the contents of the glossary:
 deepl glossary view mydict
 ```
 
+With `--output FILE`, an existing file is replaced only after all requested
+glossary entries have been retrieved successfully.
+
 To edit a glossary:
 
 ```sh

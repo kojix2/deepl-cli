@@ -284,13 +284,16 @@ describe DeepL do
       end
 
       server = ScriptedServer.new(responses)
-      output = File.tempfile("deepl-cli-glossary", ".tsv")
-      output.close
+      output_dir = File.tempname("deepl-cli-glossary", nil)
+      Dir.mkdir(output_dir, 0o700)
+      output = File.join(output_dir, "entries.tsv")
+      File.write(output, "existing contents")
+      original_permissions = File.info(output).permissions
       stdout = IO::Memory.new
       stderr = IO::Memory.new
       args = ["run", "src/cli.cr", "--", "glossary", "view"]
       args << "--id" if by_id
-      args.concat(["--from", "EN", "--to", "DE", "--output", output.path])
+      args.concat(["--from", "EN", "--to", "DE", "--output", output])
       args.concat(glossaries.map { |glossary| by_id ? glossary[:glossary_id] : glossary[:name] })
 
       begin
@@ -298,7 +301,86 @@ describe DeepL do
 
         status.success?.should be_true
         stdout.to_s.should eq("")
-        File.read(output.path).should eq("one\teins\ntwo\tzwei\nthree\tdrei\nfour\tvier")
+        File.read(output).should eq("one\teins\ntwo\tzwei\nthree\tdrei\nfour\tvier")
+        File.info(output).permissions.should eq(original_permissions)
+        Dir.children(output_dir).should eq(["entries.tsv"])
+      ensure
+        server.close
+        File.delete?(output)
+        Dir.delete(output_dir)
+      end
+    end
+  end
+
+  it "preserves glossary output when a request fails" do
+    glossary = {
+      glossary_id:   "glossary-1",
+      name:          "First",
+      dictionaries:  [{source_lang: "en", target_lang: "de"}],
+      creation_time: "2026-09-23T00:00:00Z",
+    }
+    headers = {"Content-Type" => "application/json"}
+
+    {false, true}.each do |by_id|
+      {false, true}.each do |after_first|
+        responses = [] of ScriptedServer::Response
+        if after_first
+          metadata = by_id ? glossary.to_json : {glossaries: [glossary]}.to_json
+          responses << ScriptedServer::Response.new(200, metadata, headers)
+          responses << ScriptedServer::Response.new(
+            200,
+            %({"dictionaries":[{"source_lang":"en","target_lang":"de","entries":"one\\teins"}]}),
+            headers,
+          )
+        end
+        responses << ScriptedServer::Response.new(404)
+
+        server = ScriptedServer.new(responses)
+        output_dir = File.tempname("deepl-cli-glossary", nil)
+        Dir.mkdir(output_dir)
+        output = File.join(output_dir, "entries.tsv")
+        File.write(output, "existing contents")
+        stderr = IO::Memory.new
+        args = ["run", "src/cli.cr", "--", "glossary", "view"]
+        args << "--id" if by_id
+        args.concat(["--from", "EN", "--to", "DE", "--output", output])
+        args.concat([by_id ? "glossary-1" : "First", "missing"])
+
+        begin
+          status = Process.run("crystal", args, env: cli_test_env(server), error: stderr)
+
+          status.success?.should be_false
+          stderr.to_s.should contain("ERROR")
+          stderr.to_s.should_not contain("are written to")
+          server.requests.size.should eq(after_first ? 3 : 1)
+          File.read(output).should eq("existing contents")
+          Dir.children(output_dir).should eq(["entries.tsv"])
+        ensure
+          server.close
+          File.delete?(output)
+          Dir.delete(output_dir)
+        end
+      end
+    end
+  end
+
+  it "preserves glossary output when no glossary is selected" do
+    {false, true}.each do |by_id|
+      server = ScriptedServer.new([
+        ScriptedServer::Response.new(200, %({"glossaries":[]}), {"Content-Type" => "application/json"}),
+      ])
+      output = File.tempfile("deepl-cli-glossary", ".tsv")
+      output.print("existing contents")
+      output.close
+      args = ["run", "src/cli.cr", "--", "glossary", "view"]
+      args << "--id" if by_id
+      args.concat(["--output", output.path])
+
+      begin
+        status = Process.run("crystal", args, env: cli_test_env(server))
+
+        status.success?.should be_true
+        File.read(output.path).should eq("existing contents")
       ensure
         server.close
         File.delete?(output.path)

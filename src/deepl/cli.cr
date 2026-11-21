@@ -665,48 +665,65 @@ module DeepL
     end
 
     def output_glossary_entries_by_name
-      glossary_names = argv_or_select_name_from_glossary_list
-      translator = DeepL::Translator.new
-      output_file = option.output_file
-      needs_separator = false
-      File.delete?(output_file) if output_file
-      glossary_names.each do |glossary_name|
-        info = translator.find_multilingual_glossary_by_name(glossary_name)
-        src, tgt = resolve_or_select_language_pair(info)
-        dict = translator.get_multilingual_glossary_entries(info.glossary_id, src, tgt)
-        entries_text = dict.entries.to_s
-        if output_file
-          needs_separator = append_glossary_entries(output_file, entries_text, needs_separator)
-          STDERR.puts "[deepl-cli] Glossary entries of #{glossary_name} are written to #{output_file}"
-        else
-          puts entries_text
-        end
-      end
+      output_glossary_entries(argv_or_select_name_from_glossary_list, by_id: false)
     end
 
     def output_glossary_entries_by_id
-      glossary_ids = argv_or_select_id_from_glossary_list_long
+      output_glossary_entries(argv_or_select_id_from_glossary_list_long, by_id: true)
+    end
+
+    private def output_glossary_entries(glossaries : Array(String), *, by_id : Bool) : Nil
+      return if glossaries.empty?
+
       translator = DeepL::Translator.new
-      output_file = option.output_file
+      if output_file = option.output_file
+        # A private directory lets File.open honor the normal file permissions and umask.
+        temp_dir = File.tempname("deepl-glossary", nil, dir: output_file.dirname)
+        Dir.mkdir(temp_dir, 0o700)
+        temp_file = File.join(temp_dir, "entries")
+        begin
+          {% if flag?(:unix) %}
+            File.chmod(temp_dir, 0o700)
+          {% end %}
+          File.open(temp_file, "w") do |output|
+            write_glossary_entries(translator, glossaries, output, by_id: by_id, file_output: true)
+          end
+          File.rename(temp_file, output_file)
+        ensure
+          File.delete?(temp_file)
+          Dir.delete(temp_dir)
+        end
+        glossaries.each do |glossary|
+          STDERR.puts "[deepl-cli] Glossary entries of #{glossary} are written to #{output_file}"
+        end
+      else
+        write_glossary_entries(translator, glossaries, STDOUT, by_id: by_id, file_output: false)
+      end
+    end
+
+    private def write_glossary_entries(translator : Translator, glossaries : Array(String), output : IO, *, by_id : Bool, file_output : Bool) : Nil
       needs_separator = false
-      File.delete?(output_file) if output_file
-      glossary_ids.each do |glossary_id|
-        info = translator.get_multilingual_glossary(glossary_id)
+      glossaries.each do |glossary|
+        info = if by_id
+                 translator.get_multilingual_glossary(glossary)
+               else
+                 translator.find_multilingual_glossary_by_name(glossary)
+               end
         src, tgt = resolve_or_select_language_pair(info)
+        glossary_id = by_id ? glossary : info.glossary_id
         dict = translator.get_multilingual_glossary_entries(glossary_id, src, tgt)
         entries_text = dict.entries.to_s
-        if output_file
-          needs_separator = append_glossary_entries(output_file, entries_text, needs_separator)
-          STDERR.puts "[deepl-cli] Glossary entries of #{glossary_id} are written to #{output_file}"
+        if file_output
+          needs_separator = append_glossary_entries(output, entries_text, needs_separator)
         else
-          puts entries_text
+          output.puts entries_text
         end
       end
     end
 
-    private def append_glossary_entries(output_file : Path, entries : String, needs_separator : Bool) : Bool
-      separator = needs_separator && !entries.empty? && !entries.starts_with?('\n') ? "\n" : ""
-      File.write(output_file, separator + entries, mode: "a")
+    private def append_glossary_entries(output : IO, entries : String, needs_separator : Bool) : Bool
+      output << '\n' if needs_separator && !entries.empty? && !entries.starts_with?('\n')
+      output << entries
       entries.empty? ? needs_separator : !entries.ends_with?('\n')
     end
 
