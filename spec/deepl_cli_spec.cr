@@ -151,9 +151,72 @@ describe DeepL do
   it "validates advanced translation options before sending a request" do
     validator = TranslationOptionValidator.new
     validator.option.glossary_ids = ["glossary-1"]
-    expect_raises(ArgumentError, "--from is required with --glossary-id.") do
+    validator.option.glossary_name = "MyGlossary"
+    expect_raises(ArgumentError, "--glossary-id cannot be combined with --glossary.") do
       validator.validate
     end
+  end
+
+  it "infers the source language from the glossary when --from is omitted" do
+    glossaries = %({"glossaries":[{"glossary_id":"glossary-1","name":"MyGlossary","dictionaries":[{"source_lang":"en","target_lang":"ja"},{"source_lang":"de","target_lang":"fr"}],"creation_time":"2026-09-23T00:00:00Z"}]})
+    server = ScriptedServer.new([
+      ScriptedServer::Response.new(200, glossaries, {"Content-Type" => "application/json"}),
+      ScriptedServer::Response.new(
+        200,
+        %({"translations":[{"detected_source_language":"EN","text":"こんにちは"}]}),
+        {"Content-Type" => "application/json"},
+      ),
+    ])
+    stdout = IO::Memory.new
+    stderr = IO::Memory.new
+
+    begin
+      status = Process.run(
+        "crystal",
+        ["run", "src/cli.cr", "--", "text", "--input", "hello", "--to", "JA", "-g", "MyGlossary"],
+        env: cli_test_env(server),
+        output: stdout,
+        error: stderr
+      )
+    ensure
+      server.close
+    end
+
+    status.success?.should be_true
+    stdout.to_s.should eq("こんにちは\n")
+    stderr.to_s.should contain("Source language from glossary: EN")
+    server.requests.map { |request| {request.method, request.resource.split('?').first} }.should eq([
+      {"GET", "/v3/glossaries"},
+      {"POST", "/v2/translate"},
+    ])
+    body = JSON.parse(server.requests.last.body)
+    body["source_lang"].as_s.should eq("EN")
+    body["glossary_id"].as_s.should eq("glossary-1")
+  end
+
+  it "requires --from when the glossary source language is ambiguous" do
+    glossary = %({"glossary_id":"glossary-1","name":"MyGlossary","dictionaries":[{"source_lang":"en","target_lang":"ja"},{"source_lang":"de","target_lang":"ja"}],"creation_time":"2026-09-23T00:00:00Z"})
+    server = ScriptedServer.new([
+      ScriptedServer::Response.new(200, glossary, {"Content-Type" => "application/json"}),
+    ])
+    stderr = IO::Memory.new
+
+    begin
+      status = Process.run(
+        "crystal",
+        ["run", "src/cli.cr", "--", "text", "--input", "hello", "--to", "JA", "--glossary-id", "glossary-1"],
+        env: cli_test_env(server),
+        error: stderr
+      )
+    ensure
+      server.close
+    end
+
+    status.success?.should be_false
+    stderr.to_s.should contain("multiple source languages for JA (EN, DE). Specify --from.")
+    server.requests.map { |request| {request.method, request.resource} }.should eq([
+      {"GET", "/v3/glossaries/glossary-1"},
+    ])
   end
 
   it "normalizes CLI language codes for the Write API" do

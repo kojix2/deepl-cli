@@ -120,6 +120,7 @@ module DeepL
       validate_translation_options
       input_text = prepared_input_text
       translator = DeepL::Translator.new
+      infer_source_lang_from_glossaries(translator)
 
       result = with_spinner do
         translator.translate_text(
@@ -256,6 +257,7 @@ module DeepL
           raise ArgumentError.new("Output file and document handle file must be different.")
         end
       end
+      infer_source_lang_from_glossaries(translator)
 
       with_spinner do
         document_handle = upload_document(translator)
@@ -305,6 +307,7 @@ module DeepL
       translator = DeepL::Translator.new
       handle_file = option.document_handle_file || default_document_handle_file
       check_document_handle_file_writable(handle_file)
+      infer_source_lang_from_glossaries(translator)
 
       document_handle = with_spinner do
         upload_document(translator)
@@ -342,10 +345,49 @@ module DeepL
 
       raise ArgumentError.new("--glossary-id requires at least one glossary ID.") if glossary_ids.empty?
       raise ArgumentError.new("--glossary-id accepts at most 5 glossary IDs.") if glossary_ids.size > 5
-      raise ArgumentError.new("--from is required with --glossary-id.") unless option.source_lang
       if option.glossary_name
         raise ArgumentError.new("--glossary-id cannot be combined with --glossary.")
       end
+    end
+
+    # DeepL requires source_lang with glossaries. When --from is omitted, use
+    # the only source language the glossaries define for the target language.
+    private def infer_source_lang_from_glossaries(translator : Translator) : Nil
+      return if option.source_lang
+
+      glossaries = if name = option.glossary_name
+                     glossary = translator.find_multilingual_glossary_by_name(name)
+                     option.glossary_id = glossary.glossary_id
+                     option.glossary_name = nil
+                     [glossary]
+                   elsif ids = option.glossary_ids || option.glossary_id.try { |id| [id] }
+                     ids.map { |id| translator.get_multilingual_glossary(id) }
+                   else
+                     return
+                   end
+
+      target = glossary_base_language(option.target_lang)
+      candidates = glossaries.map do |glossary|
+        glossary.dictionaries
+          .select { |dictionary| glossary_base_language(dictionary.target_lang) == target }
+          .map { |dictionary| glossary_base_language(dictionary.source_lang) }
+          .uniq
+      end
+      sources = candidates.reduce { |common, langs| common & langs }
+
+      case sources.size
+      when 0
+        raise ArgumentError.new("No glossary dictionary found for target language #{option.target_lang}. Specify --from.")
+      when 1
+        option.source_lang = sources.first.upcase
+        STDERR.puts "[deepl-cli] Source language from glossary: #{option.source_lang}"
+      else
+        raise ArgumentError.new("Glossary has multiple source languages for #{option.target_lang} (#{sources.map(&.upcase).join(", ")}). Specify --from.")
+      end
+    end
+
+    private def glossary_base_language(language : String) : String
+      language.split('-', 2).first.downcase
     end
 
     def check_document_translation_status

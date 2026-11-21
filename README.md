@@ -240,14 +240,17 @@ When a glossary name is not unique, use its explicit ID instead:
 deepl --glossary-id 01234567-89ab-cdef-0123-456789abcdef -f ru
 ```
 
-Glossary IDs require an explicit source language and cannot be combined with
-`--glossary`. Up to five IDs can be supplied together, either comma-separated
-or by repeating `--glossary-id`:
+Glossary IDs cannot be combined with `--glossary`. Up to five IDs can be
+supplied together, either comma-separated or by repeating `--glossary-id`:
 
 ```sh
 deepl --from EN --to DE --glossary-id id-1,id-2 --input "Hello"
 # Equivalent: --glossary-id id-1 --glossary-id id-2
 ```
+
+DeepL requires a source language when a glossary is used. If `--from` is
+omitted, the CLI uses the glossary's source language for the target language.
+When that is ambiguous, specify `--from`.
 
 To refer to the original text, you can use `tee dev/stderr`:
 
