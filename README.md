@@ -106,6 +106,8 @@ Options for document translation:
         --handle FILE                Document handle file
 ```
 
+The output file must be different from the document handle file.
+
 Supported file formats.
 
 - `docx` - Microsoft Word Document

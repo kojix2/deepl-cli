@@ -250,6 +250,12 @@ module DeepL
       handle_file = option.document_handle_file || default_document_handle_file
       remove_handle_file_after_download = option.document_handle_file.nil?
       check_document_handle_file_writable(handle_file)
+      if requested_output = option.output_file
+        if requested_output.basename == handle_file.basename &&
+           File.realpath(requested_output.parent) == File.realpath(handle_file.parent)
+          raise ArgumentError.new("Output file and document handle file must be different.")
+        end
+      end
 
       with_spinner do
         document_handle = upload_document(translator)
