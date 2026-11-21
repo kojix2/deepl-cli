@@ -295,6 +295,10 @@ module DeepL
             opt.action = Action::DeleteGlossaryById
           end
 
+          on("-y", "--yes", "Delete without confirmation") do
+            opt.assume_yes = true
+          end
+
           _on_debug_
 
           _on_help_

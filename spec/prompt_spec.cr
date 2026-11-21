@@ -70,4 +70,19 @@ describe Term::Prompt do
     selected.should eq("b")
     output.to_s.should contain("Invalid selection")
   end
+
+  it "confirms only on yes when interactive" do
+    {"y\n" => true, "YES\n" => true, "\n" => false, "n\n" => false, "" => false}.each do |answer, expected|
+      prompt = Term::Prompt.new(TTYMemory.new(answer), TTYMemory.new)
+      prompt.confirm?("Delete?").should eq(expected)
+    end
+  end
+
+  it "confirms without asking when not interactive" do
+    output = IO::Memory.new
+    prompt = Term::Prompt.new(IO::Memory.new, output)
+
+    prompt.confirm?("Delete?").should be_true
+    output.to_s.should be_empty
+  end
 end

@@ -27,6 +27,7 @@ module DeepL
     property ignore_tags : Array(String)? = nil
     property output_format : String? = nil
     property? no_ansi : Bool = true
+    property? assume_yes : Bool = false
     property interval : Float32 = 5.0
     property document_id : String? = nil
     property document_key : String? = nil

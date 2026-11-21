@@ -385,6 +385,9 @@ operations on a duplicate name, use the existing ID mode instead:
 deepl glossary delete --id 01234567-89ab-cdef-0123-456789abcdef
 ```
 
+When run in a terminal, `glossary delete` asks for confirmation before deleting
+each glossary. Use `--yes` to skip the prompt.
+
 ### Rephrase
 
 Change writing style:

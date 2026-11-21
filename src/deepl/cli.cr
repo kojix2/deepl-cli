@@ -670,8 +670,7 @@ module DeepL
       translator = DeepL::Translator.new
       glossary_names.each do |glossary_name|
         info = translator.find_multilingual_glossary_by_name(glossary_name)
-        translator.delete_multilingual_glossary(info.glossary_id)
-        STDERR.puts "[deepl-cli] Glossary #{glossary_name} is deleted"
+        delete_glossary_with_confirmation(translator, info)
       end
     end
 
@@ -680,9 +679,19 @@ module DeepL
       translator = DeepL::Translator.new
       glossary_ids.each do |glossary_id|
         info = translator.get_multilingual_glossary(glossary_id)
-        translator.delete_multilingual_glossary(glossary_id)
-        STDERR.puts "[deepl-cli] Glossary #{info.name} is deleted"
+        delete_glossary_with_confirmation(translator, info)
       end
+    end
+
+    private def delete_glossary_with_confirmation(translator, info) : Nil
+      unless option.assume_yes? ||
+             Term::Prompt.new.confirm?("Delete glossary #{info.name} (#{info.glossary_id})?")
+        STDERR.puts "[deepl-cli] Glossary #{info.name} is not deleted"
+        return
+      end
+
+      translator.delete_multilingual_glossary(info.glossary_id)
+      STDERR.puts "[deepl-cli] Glossary #{info.name} is deleted"
     end
 
     def edit_glossary_by_name
