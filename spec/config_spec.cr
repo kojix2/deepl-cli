@@ -54,4 +54,37 @@ describe DeepL::Config do
       end
     end
   end
+
+  it "skips empty locale variables when choosing a target language" do
+    saved = {
+      "DEEPL_TARGET_LANG" => ENV["DEEPL_TARGET_LANG"]?,
+      "LC_ALL"            => ENV["LC_ALL"]?,
+      "LC_MESSAGES"       => ENV["LC_MESSAGES"]?,
+      "LANG"              => ENV["LANG"]?,
+    }
+
+    begin
+      ENV.delete("DEEPL_TARGET_LANG")
+      ENV["LC_ALL"] = ""
+      ENV["LC_MESSAGES"] = "fr_FR.UTF-8"
+      ENV["LANG"] = "de_DE.UTF-8"
+      DeepL::Config.default_target_lang.should eq("FR")
+
+      ENV["LC_MESSAGES"] = ""
+      DeepL::Config.default_target_lang.should eq("DE")
+
+      {% if flag?(:unix) || flag?(:darwin) %}
+        ENV["LANG"] = ""
+        DeepL::Config.default_target_lang.should eq("EN")
+      {% end %}
+    ensure
+      saved.each do |key, value|
+        if value
+          ENV[key] = value
+        else
+          ENV.delete(key)
+        end
+      end
+    end
+  end
 end

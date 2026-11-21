@@ -36,7 +36,7 @@ module DeepL
     end
 
     private def self.locale_to_language_code(locale : String?) : String?
-      return unless locale
+      return if locale.nil? || locale.empty?
 
       code = locale.split(/[_.@]/).first?.try(&.upcase)
       return if code.nil? || code == "C" || code == "POSIX" || code.starts_with?("C.")
