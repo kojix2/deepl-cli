@@ -365,7 +365,11 @@ It is written with owner-only permissions on POSIX systems (mode <code>0600</cod
 Existing handle files are never overwritten; choose another path with <code>--handle FILE</code>.
 If a handle cannot be installed after upload, the CLI preserves it in a recovery file and prints its path.</p>
 <p>When the automatic translated-document filename already exists, the CLI chooses a timestamped unique name
-instead of replacing the existing file.</p>
+instead of replacing the existing file.
+If receiving or saving the result fails after a successful download response,
+the CLI keeps a recovery file and prints its path. It may contain incomplete
+data. Recover that file rather than relying on another download: DeepL can
+delete the translated document after it has been downloaded.</p>
 <p>To upload a document and check or download it later:</p>
 <pre><code class="language-sh">deepl doc -U input.pdf
 deepl doc status --handle input.pdf.deepl-handle.json
@@ -395,6 +399,9 @@ for the glossary file format.</p>
 <pre><code class="language-sh">deepl doc --glossary-id 01234567-89ab-cdef-0123-456789abcdef -f en deep.pdf</code></pre>
 <p>To display the contents of the glossary:</p>
 <pre><code class="language-sh">deepl glossary view mydict</code></pre>
+<p><code>--from</code> and <code>--to</code> independently filter the glossary's dictionaries. The default
+translation target is not used to select a dictionary. A single matching pair is
+selected automatically; multiple matches require an interactive selection.</p>
 <p>With <code>--output FILE</code>, an existing file is replaced only after all requested
 glossary entries have been retrieved successfully.</p>
 <p>To edit a glossary:</p>
@@ -404,7 +411,9 @@ glossary entries have been retrieved successfully.</p>
 operations on a duplicate name, use the existing ID mode instead:</p>
 <pre><code class="language-sh">deepl glossary delete --id 01234567-89ab-cdef-0123-456789abcdef</code></pre>
 <p>When run in a terminal, <code>glossary delete</code> asks for confirmation before deleting
-each glossary. Use <code>--yes</code> to skip the prompt.</p>
+each glossary. Use <code>--yes</code> to skip the prompt. In scripts, or whenever standard
+input or standard error is redirected, <code>--yes</code> is required; otherwise the command
+exits with an error without deleting anything.</p>
 <h3><a id="rephrase" class="anchor" href="#rephrase">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
