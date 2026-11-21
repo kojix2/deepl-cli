@@ -456,6 +456,8 @@ as well.
 
 DeepL CLI automatically detects the target language, but if this does not work, the environment variable `DEEPL_TARGET_LANG` can be set.
 
+If `DEEPL_TARGET_LANG` is unset or empty, the target language is taken from `LC_ALL`, `LC_MESSAGES`, or `LANG` (or the current Windows culture). Regions select DeepL language variants where available: for example, `en_GB` becomes `EN-GB`, `pt_BR` becomes `PT-BR`, and `zh_TW` or `zh_HK` becomes `ZH-HANT`. Other locales use the language code only, and `EN` is used when nothing is detected.
+
 ## Contributing
 
 - Fork this repository

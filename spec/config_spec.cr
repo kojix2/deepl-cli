@@ -87,4 +87,61 @@ describe DeepL::Config do
       end
     end
   end
+
+  it "falls back to locales when DEEPL_TARGET_LANG is empty" do
+    saved = {"DEEPL_TARGET_LANG" => ENV["DEEPL_TARGET_LANG"]?, "LC_ALL" => ENV["LC_ALL"]?}
+
+    begin
+      ENV["LC_ALL"] = "ja_JP.UTF-8"
+      ["", "  "].each do |value|
+        ENV["DEEPL_TARGET_LANG"] = value
+        DeepL::Config.default_target_lang.should eq("JA")
+      end
+    ensure
+      saved.each do |key, value|
+        if value
+          ENV[key] = value
+        else
+          ENV.delete(key)
+        end
+      end
+    end
+  end
+
+  it "keeps DeepL language variants from locale regions and scripts" do
+    saved = {"DEEPL_TARGET_LANG" => ENV["DEEPL_TARGET_LANG"]?, "LC_ALL" => ENV["LC_ALL"]?}
+
+    begin
+      ENV.delete("DEEPL_TARGET_LANG")
+      {
+        "en_GB.UTF-8"       => "EN-GB",
+        "en_US.UTF-8"       => "EN-US",
+        "en_AU.UTF-8"       => "EN",
+        "pt_BR.UTF-8"       => "PT-BR",
+        "pt_PT.UTF-8@euro"  => "PT-PT",
+        "zh_CN.UTF-8"       => "ZH-HANS",
+        "zh_SG.GB2312"      => "ZH-HANS",
+        "zh_TW.UTF-8"       => "ZH-HANT",
+        "zh_HK.Big5-HKSCS"  => "ZH-HANT",
+        "zh_MO"             => "ZH-HANT",
+        "zh-Hant-HK"        => "ZH-HANT",
+        "zh-Hans-HK"        => "ZH-HANS",
+        "zh"                => "ZH",
+        "de_DE.UTF-8"       => "DE",
+        "ja-JP"             => "JA",
+        "sr_RS.UTF-8@latin" => "SR",
+      }.each do |locale, expected|
+        ENV["LC_ALL"] = locale
+        DeepL::Config.default_target_lang.should eq(expected)
+      end
+    ensure
+      saved.each do |key, value|
+        if value
+          ENV[key] = value
+        else
+          ENV.delete(key)
+        end
+      end
+    end
+  end
 end
