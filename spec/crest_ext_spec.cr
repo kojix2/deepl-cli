@@ -58,7 +58,7 @@ describe Crest::Request do
   it "uses unbracketed IPv6 proxy hostnames" do
     {"http", "https"}.each do |scheme|
       ENV["#{scheme}_proxy"] = "http://[::1]:3001"
-      proxy = Crest::Request.new(:get, "#{scheme}://example.com").proxy.not_nil!
+      proxy = Crest::Request.new(:get, "#{scheme}://example.com").proxy || raise "Expected a proxy"
 
       proxy.host.should eq("::1")
       proxy.port.should eq(3001)

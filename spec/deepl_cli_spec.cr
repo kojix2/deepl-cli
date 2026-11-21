@@ -871,7 +871,7 @@ describe DeepL do
 
       error.message.to_s.should contain("document was uploaded")
       error.message.to_s.should contain("use --handle")
-      recovery_path = Path[error.message.to_s.match(/preserved at (.+); use --handle/).not_nil![1]]
+      recovery_path = Path[error.message.to_s.match!(/preserved at (.+); use --handle/)[1]]
       recovered = JSON.parse(File.read(recovery_path))
       recovered["document_id"].as_s.should eq("document-id")
       recovered["document_key"].as_s.should eq("secret-key")
@@ -891,13 +891,13 @@ describe DeepL do
     Dir.mkdir(dir, 0o700)
     output_path = Path[dir] / "input_JA.txt"
     temporary_path = Path[dir] / "download.tmp"
-    result = output_path
-    second_result : Path? = nil
+    generated_paths = [] of Path
     begin
       File.write(output_path, "original output")
       File.write(temporary_path, "translated output")
 
       result = DocumentFileOperations.new.link_output_file(temporary_path, output_path)
+      generated_paths << result
 
       result.should_not eq(output_path)
       File.read(output_path).should eq("original output")
@@ -905,14 +905,14 @@ describe DeepL do
       File.read(temporary_path).should eq("translated output")
 
       second_result = DocumentFileOperations.new.link_output_file(temporary_path, output_path)
+      generated_paths << second_result
       second_result.should_not eq(result)
       File.read(output_path).should eq("original output")
       File.read(result).should eq("translated output")
     ensure
       File.delete?(output_path)
       File.delete?(temporary_path)
-      File.delete?(result) unless result == output_path
-      File.delete?(second_result) if second_result
+      generated_paths.each { |path| File.delete?(path) unless path == output_path }
       Dir.delete(dir)
     end
   end

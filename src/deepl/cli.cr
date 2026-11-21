@@ -273,10 +273,7 @@ module DeepL
           handle: document_handle,
           interval: option.interval,
         ) do |document_status|
-          STDERR.puts avoid_spinner("[deepl-cli] Status: #{document_status.status}")
-          STDERR.puts avoid_spinner("[deepl-cli] Seconds Remaining: #{document_status.seconds_remaining}") if document_status.seconds_remaining
-          STDERR.puts avoid_spinner("[deepl-cli] Billed Characters: #{document_status.billed_characters}") if document_status.billed_characters
-          STDERR.puts avoid_spinner("[deepl-cli] Error Message: #{document_status.error_message}") if document_status.error_message
+          print_document_status(document_status)
         end
 
         if output_file = option.output_file
@@ -290,6 +287,13 @@ module DeepL
         STDERR.puts avoid_spinner("[deepl-cli] Document saved as #{output_file}")
         delete_document_handle_file(handle_file) if remove_handle_file_after_download
       end
+    end
+
+    private def print_document_status(document_status : DocumentStatus) : Nil
+      STDERR.puts avoid_spinner("[deepl-cli] Status: #{document_status.status}")
+      STDERR.puts avoid_spinner("[deepl-cli] Seconds Remaining: #{document_status.seconds_remaining}") if document_status.seconds_remaining
+      STDERR.puts avoid_spinner("[deepl-cli] Billed Characters: #{document_status.billed_characters}") if document_status.billed_characters
+      STDERR.puts avoid_spinner("[deepl-cli] Error Message: #{document_status.error_message}") if document_status.error_message
     end
 
     private def validate_document_polling_options : Nil
@@ -372,11 +376,11 @@ module DeepL
                    end
 
       target = glossary_base_language(option.target_lang)
-      candidates = glossaries.map do |glossary|
-        glossary.dictionaries
+      candidates = glossaries.map do |item|
+        item.dictionaries
           .select { |dictionary| glossary_base_language(dictionary.target_lang) == target }
           .map { |dictionary| glossary_base_language(dictionary.source_lang) }
-          .uniq
+          .uniq!
       end
       sources = candidates.reduce { |common, langs| common & langs }
 
@@ -448,7 +452,7 @@ module DeepL
         begin
           File.link(temporary_path, candidate)
           return candidate
-        rescue ex : File::AlreadyExistsError
+        rescue File::AlreadyExistsError
           suffix += 1
         end
       end

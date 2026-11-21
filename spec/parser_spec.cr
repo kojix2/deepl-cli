@@ -14,7 +14,8 @@ describe DeepL::Parser do
       DeepL::Parser.new.parse(["doc", "--interval", "abc"])
     end
 
-    ex.help_message.not_nil!.should contain("Usage: deepl doc [options] <file>")
+    help_message = ex.help_message || raise "Expected subcommand help"
+    help_message.should contain("Usage: deepl doc [options] <file>")
   end
 
   it "parses the correct command options" do
