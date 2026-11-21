@@ -202,6 +202,62 @@ describe DeepL do
     end
   end
 
+  it "updates glossary entries only when the editor succeeds" do
+    {7, 0}.each do |editor_exit|
+      server = ScriptedServer.new([
+        ScriptedServer::Response.new(
+          200,
+          %({"glossary_id":"glossary-1","name":"Test Glossary","dictionaries":[{"source_lang":"en","target_lang":"de"}],"creation_time":"2026-09-23T00:00:00Z"}),
+          {"Content-Type" => "application/json"},
+        ),
+        ScriptedServer::Response.new(
+          200,
+          %({"dictionaries":[{"source_lang":"en","target_lang":"de","entries":"old\\talt"}]}),
+          {"Content-Type" => "application/json"},
+        ),
+        ScriptedServer::Response.new(
+          200,
+          %({"source_lang":"en","target_lang":"de","entry_count":1}),
+          {"Content-Type" => "application/json"},
+        ),
+      ])
+      stdout = IO::Memory.new
+      stderr = IO::Memory.new
+      editor = Process.quote([
+        "crystal", "eval", %Q(File.write(ARGV[0], "new\\tneu"); exit(#{editor_exit})), "--",
+      ])
+
+      begin
+        status = Process.run(
+          "crystal",
+          ["run", "src/cli.cr", "--", "glossary", "edit", "--id", "--editor", editor, "glossary-1"],
+          env: cli_test_env(server),
+          output: stdout,
+          error: stderr,
+        )
+
+        requests = server.requests.map { |request| {request.method, request.resource.split('?').first} }
+        expected_reads = [
+          {"GET", "/v3/glossaries/glossary-1"},
+          {"GET", "/v3/glossaries/glossary-1/entries"},
+        ]
+        if editor_exit == 0
+          status.success?.should be_true
+          requests.should eq(expected_reads + [{"PUT", "/v3/glossaries/glossary-1/dictionaries"}])
+          JSON.parse(server.requests.last.body)["entries"].as_s.should eq("new\tneu")
+          stderr.to_s.should contain("is updated")
+        else
+          status.exit_code.should eq(1)
+          stderr.to_s.should contain("Text editor failed (status: 7).")
+          stderr.to_s.should_not contain("is updated")
+          requests.should eq(expected_reads)
+        end
+      ensure
+        server.close
+      end
+    end
+  end
+
   it "uses v3 language discovery for source and target lists" do
     languages = <<-JSON
       [

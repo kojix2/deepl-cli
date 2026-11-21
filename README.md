@@ -346,6 +346,14 @@ To display the contents of the glossary:
 deepl glossary view mydict
 ```
 
+To edit a glossary:
+
+```sh
+deepl glossary edit mydict
+```
+
+The glossary is updated only when the editor exits successfully.
+
 Glossary names must identify exactly one glossary. For delete, edit, or view
 operations on a duplicate name, use the existing ID mode instead:
 

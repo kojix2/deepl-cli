@@ -27,6 +27,52 @@ describe DeepL::Utils do
       end
     end
   end
+
+  describe ".edit_text" do
+    it "rejects changes from a failed editor and removes the temporary file" do
+      marker = File.tempfile("deepl-editor-spec", ".path")
+      marker.close
+
+      begin
+        editor = Process.quote([
+          "crystal", "eval",
+          %q(File.write(ARGV[0], ARGV[1]); File.write(ARGV[1], "changed"); exit(7)),
+          "--", marker.path,
+        ])
+        with_editor(editor) do
+          expect_raises(Exception, "Text editor failed (status: 7).") do
+            DeepL::Utils.edit_text("original")
+          end
+        end
+
+        edited_path = File.read(marker.path)
+        edited_path.should_not be_empty
+        File.exists?(edited_path).should be_false
+      ensure
+        File.delete?(marker.path)
+      end
+    end
+
+    it "reports editor failure even if the editor removes the temporary file" do
+      editor = Process.quote(["crystal", "eval", "File.delete(ARGV[0]); exit(7)", "--"])
+      with_editor(editor) do
+        expect_raises(Exception, "Text editor failed (status: 7).") do
+          DeepL::Utils.edit_text("original")
+        end
+      end
+    end
+
+    {% if flag?(:unix) %}
+      it "reports an editor terminated by a signal" do
+        editor = Process.quote(["sh", "-c", "kill -TERM $$", "--"])
+        with_editor(editor) do
+          expect_raises(Exception, "Text editor failed (status: TERM).") do
+            DeepL::Utils.edit_text("original")
+          end
+        end
+      end
+    {% end %}
+  end
 end
 
 private def with_editor(value, &)

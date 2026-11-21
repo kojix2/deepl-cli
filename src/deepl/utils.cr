@@ -24,10 +24,12 @@ module DeepL
 
     def self.edit_text(text)
       tmp_file = File.tempfile(&.puts(text))
-      open_texteditor(tmp_file.path)
+      status = open_texteditor(tmp_file.path)
+      raise "Text editor failed (status: #{status})." unless status.success?
+
       File.read(tmp_file.path)
     ensure
-      tmp_file.try &.delete
+      tmp_file.try { |file| File.delete?(file.path) }
     end
   end
 end
