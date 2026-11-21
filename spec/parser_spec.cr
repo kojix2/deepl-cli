@@ -54,10 +54,22 @@ describe DeepL::Parser do
     end
   end
 
-  it "keeps source language listing for other commands" do
-    [["-f"], ["text", "-f"], ["rephrase", "-f"], ["correct", "-f"]].each do |args|
-      DeepL::Parser.new.parse(args).action.should eq(DeepL::Action::ListFromLanguages)
+  it "selects language lists for text translation and Write commands" do
+    [
+      {["-f"], DeepL::Action::ListFromLanguages},
+      {["text", "-f"], DeepL::Action::ListFromLanguages},
+      {["rephrase", "-f"], DeepL::Action::ListWriteLanguages},
+      {["correct", "-f"], DeepL::Action::ListWriteLanguages},
+    ].each do |args, action|
+      DeepL::Parser.new.parse(args).action.should eq(action)
     end
+  end
+
+  it "keeps an explicit rephrase language" do
+    option = DeepL::Parser.new.parse(["rephrase", "--input", "helo", "--from", "en-US"])
+
+    option.action.should eq(DeepL::Action::RephraseText)
+    option.source_lang.should eq("EN-US")
   end
 
   it "parses current text translation options" do

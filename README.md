@@ -403,6 +403,15 @@ To display a list of available target languages for document translation:
 deepl doc -t
 ```
 
+To display the target languages supported by DeepL Write:
+
+```sh
+deepl rephrase -f
+deepl correct -f
+```
+
+For these commands, `--from` selects the Write API's output language.
+
 To output usage information:
 
 ```sh

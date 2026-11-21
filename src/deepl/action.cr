@@ -20,6 +20,7 @@ module DeepL
     ListTargetLanguages
     ListDocumentFromLanguages
     ListDocumentTargetLanguages
+    ListWriteLanguages
     RetrieveUsage
     Version
     Help

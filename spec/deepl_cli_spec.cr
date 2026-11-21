@@ -303,6 +303,55 @@ describe DeepL do
     ])
   end
 
+  it "lists Write languages for rephrase and correct when --from has no value" do
+    languages = <<-JSON
+      [
+        {"lang":"en","name":"English","usable_as_source":true,"usable_as_target":false,"status":"stable","features":{}},
+        {"lang":"en-US","name":"English (American)","usable_as_source":false,"usable_as_target":true,"status":"stable","features":{}},
+        {"lang":"de","name":"German","usable_as_source":true,"usable_as_target":true,"status":"stable","features":{}},
+        {"lang":"ja","name":"Japanese","usable_as_source":false,"usable_as_target":false,"status":"stable","features":{}}
+      ]
+      JSON
+    commands = [
+      ["rephrase", "-f"],
+      ["correct", "--from"],
+      ["rephrase", "--from="],
+      ["correct", "--input", "hello", "-f"],
+    ]
+    server = ScriptedServer.new(Array.new(commands.size) do
+      ScriptedServer::Response.new(200, languages, {"Content-Type" => "application/json"})
+    end)
+
+    begin
+      commands.each do |command|
+        stdout = IO::Memory.new
+        stderr = IO::Memory.new
+        status = Process.run(
+          "crystal",
+          ["run", "src/cli.cr", "--"] + command,
+          env: cli_test_env(server).merge({"DEEPL_TARGET_LANG" => "DE"}),
+          output: stdout,
+          error: stderr,
+        )
+
+        status.success?.should be_true
+        stderr.to_s.should eq("")
+        server.requests.last.resource.should eq("/v3/languages?resource=write")
+        stdout.to_s.should contain("EN-US  English (American)")
+        stdout.to_s.should contain("- DE     German")
+        stdout.to_s.should_not contain("EN     English")
+        stdout.to_s.should_not contain("Japanese")
+        stdout.to_s.should_not contain("+ DE")
+      end
+
+      server.requests.map { |request| {request.method, request.resource} }.should eq(
+        Array.new(commands.size) { {"GET", "/v3/languages?resource=write"} }
+      )
+    ensure
+      server.close
+    end
+  end
+
   it "lists document source and target languages when their options have no values" do
     languages = <<-JSON
       [
