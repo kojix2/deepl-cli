@@ -39,6 +39,16 @@ describe Crest::Request do
     Crest::Request.new(:get, "http://example.com")
   end
 
+  it "uses unbracketed IPv6 proxy hostnames" do
+    {"http", "https"}.each do |scheme|
+      ENV["#{scheme}_proxy"] = "http://[::1]:3001"
+      proxy = Crest::Request.new(:get, "#{scheme}://example.com").proxy.not_nil!
+
+      proxy.host.should eq("::1")
+      proxy.port.should eq(3001)
+    end
+  end
+
   it "matches NO_PROXY entries with exact ports" do
     ENV["http_proxy"] = "localhost:3001"
     ENV["no_proxy"] = "example.com:80"

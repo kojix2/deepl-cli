@@ -56,7 +56,7 @@ module Crest
     end
 
     private def set_proxy_from_uri!(proxy_uri : URI) : Nil
-      @p_addr = proxy_uri.host
+      @p_addr = proxy_uri.hostname
       @p_port = proxy_uri.port || default_proxy_port(proxy_uri.scheme)
       @p_user = proxy_uri.user
       @p_pass = proxy_uri.password
