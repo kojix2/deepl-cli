@@ -409,6 +409,10 @@ operations on a duplicate name, use the existing ID mode instead:</p>
 <pre><code class="language-sh">deepl -t</code></pre>
 <p>To display a list of available target languages for document translation:</p>
 <pre><code class="language-sh">deepl doc -t</code></pre>
+<p>To display the target languages supported by DeepL Write:</p>
+<pre><code class="language-sh">deepl rephrase -f
+deepl correct -f</code></pre>
+<p>For these commands, <code>--from</code> selects the Write API's output language.</p>
 <p>To output usage information:</p>
 <pre><code class="language-sh">deepl -u
 
@@ -449,6 +453,7 @@ as well.</p>
   </tbody>
 </table>
 <p>DeepL CLI automatically detects the target language, but if this does not work, the environment variable <code>DEEPL_TARGET_LANG</code> can be set.</p>
+<p>If <code>DEEPL_TARGET_LANG</code> is unset or empty, the target language is taken from <code>LC_ALL</code>, <code>LC_MESSAGES</code>, or <code>LANG</code> (or the current Windows culture). Regions select DeepL language variants where available: for example, <code>en_GB</code> becomes <code>EN-GB</code>, <code>pt_BR</code> becomes <code>PT-BR</code>, and <code>zh_TW</code> or <code>zh_HK</code> becomes <code>ZH-HANT</code>. Other locales use the language code only, and <code>EN</code> is used when nothing is detected.</p>
 <h2><a id="contributing" class="anchor" href="#contributing">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
