@@ -117,8 +117,12 @@ module DeepL
           opt.tag_handling = v
         end
 
-        on("-O", "--outline-detection", "Outline detection") do
+        on("-O", "--outline-detection", "Enable automatic XML structure detection") do
           opt.outline_detection = true
+        end
+
+        on("--no-outline-detection", "Disable automatic XML structure detection") do
+          opt.outline_detection = false
         end
 
         on("-N", "--non-splitting-tags TAGS", "Non-splitting tags") do |tags|
@@ -127,6 +131,8 @@ module DeepL
 
         on("-S", "--splitting-tags TAGS", "Splitting tags") do |tags|
           opt.splitting_tags = tags.split(",")
+          # Preserve manual splitting unless detection was explicitly selected.
+          opt.outline_detection = false if opt.outline_detection?.nil?
         end
 
         on("-I", "--ignore-tags TAGS", "Ignore tags") do |tags|

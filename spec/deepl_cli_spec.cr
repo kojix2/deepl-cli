@@ -66,7 +66,7 @@ describe DeepL do
     UsagePrinter.new.render_products(usage).should eq("")
   end
 
-  it "forwards current text translation options" do
+  it "forwards current text translation options with default XML outline detection" do
     server = ScriptedServer.new([
       ScriptedServer::Response.new(
         200,
@@ -105,6 +105,47 @@ describe DeepL do
     body = JSON.parse(server.requests.first.body)
     body["glossary_ids"].as_a.map(&.as_s).should eq(["glossary-1", "glossary-2"])
     body["tag_handling"].as_s.should eq("xml")
+    body["outline_detection"]?.should be_nil
+  end
+
+  it "forwards manual and explicit XML outline detection settings" do
+    cases = [
+      {["--splitting-tags", "par,title"], false},
+      {["--outline-detection"], true},
+      {["--no-outline-detection"], false},
+    ]
+    server = ScriptedServer.new(Array.new(cases.size) do
+      ScriptedServer::Response.new(
+        200,
+        %({"translations":[{"detected_source_language":"EN","text":"Hallo"}]}),
+        {"Content-Type" => "application/json"},
+      )
+    end)
+
+    begin
+      cases.each do |flags, expected|
+        stderr = IO::Memory.new
+        status = Process.run(
+          "crystal",
+          ["run", "src/cli.cr", "--", "text", "--input", "<par>Hello</par>", "--to", "DE", "--tag-handling", "xml"] + flags,
+          env: cli_test_env(server),
+          output: IO::Memory.new,
+          error: stderr,
+        )
+
+        status.success?.should be_true
+        stderr.to_s.should_not contain("ERROR")
+        request = server.requests.last
+        {request.method, request.resource}.should eq({"POST", "/v2/translate"})
+        body = JSON.parse(request.body)
+        body["outline_detection"].as_bool.should eq(expected)
+        if flags.first == "--splitting-tags"
+          body["splitting_tags"].as_a.map(&.as_s).should eq(["par", "title"])
+        end
+      end
+    ensure
+      server.close
+    end
   end
 
   it "validates advanced translation options before sending a request" do

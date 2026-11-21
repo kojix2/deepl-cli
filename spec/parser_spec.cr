@@ -86,6 +86,19 @@ describe DeepL::Parser do
     option.tag_handling.should eq("xml")
   end
 
+  it "preserves manual XML splitting while allowing explicit outline detection" do
+    DeepL::Parser.new.parse(["text", "--tag-handling", "xml"]).outline_detection?.should be_nil
+    DeepL::Parser.new.parse(["text", "--splitting-tags", "par,title"]).outline_detection?.should be_false
+    DeepL::Parser.new.parse(["text", "--no-outline-detection"]).outline_detection?.should be_false
+
+    [
+      ["text", "--outline-detection", "--splitting-tags", "par"],
+      ["text", "--splitting-tags", "par", "--outline-detection"],
+    ].each do |args|
+      DeepL::Parser.new.parse(args).outline_detection?.should be_true
+    end
+  end
+
   it "parses current document translation options" do
     option = DeepL::Parser.new.parse([
       "doc",

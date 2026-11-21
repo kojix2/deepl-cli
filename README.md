@@ -69,10 +69,19 @@ Options:
     -F, --formality OPT              Formality (default more less)
     -C, --context TEXT               Context (experimental)
     -s, --split-sentences OPT        Split sentences
+    -T, --tag-handling OPT           Tag handling
+    -O, --outline-detection          Enable automatic XML structure detection
+        --no-outline-detection       Disable automatic XML structure detection
+    -S, --splitting-tags TAGS        Splitting tags
     -A, --ansi                       Do not remove ANSI escape codes
 ```
 
 Note: ANSI escape sequences are removed by default.
+
+With `--tag-handling xml`, DeepL detects XML structure automatically by default.
+`--splitting-tags` disables automatic detection for manual splitting unless
+`--outline-detection` is also specified. Use `--no-outline-detection` to disable
+automatic detection without specifying splitting tags.
 
 ### Translate documents
 

@@ -20,7 +20,7 @@ module DeepL
     property split_sentences : String? = nil
     property? preserve_formatting : Bool = false
     property tag_handling : String? = nil
-    property? outline_detection : Bool = false
+    property? outline_detection : Bool? = nil
     property non_splitting_tags : Array(String)? = nil
     property splitting_tags : Array(String)? = nil
     property ignore_tags : Array(String)? = nil
