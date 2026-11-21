@@ -213,7 +213,7 @@ export HTTPS_PROXY=https://[IP]:[port]</code></pre>
 read from standard input when no files are given.</p>
 <p>Options:</p>
 <pre><code class="language-txt">    -i, --input TEXT                 Input text
-    -f, --from [LANG]                Source language [AUTO]
+    -f, --from [LANG]                Source language [AUTO]; omit LANG to list
     -t, --to [LANG]                  Target language [EN]
     -p, --paste                      Input text from clipboard
     -g, --glossary NAME              Glossary name
@@ -231,8 +231,8 @@ read from standard input when no files are given.</p>
 <p>To translate a document, use the <code>doc</code> subcommand:</p>
 <pre><code class="language-sh">deepl doc [options] &lt;file&gt;</code></pre>
 <p>Options for document translation:</p>
-<pre><code class="language-txt">    -f, --from [LANG]                Source language [AUTO]
-    -t, --to [LANG]                  Target language [EN]
+<pre><code class="language-txt">    -f, --from [LANG]                Source language [AUTO]; omit LANG to list
+    -t, --to [LANG]                  Target language [EN]; omit LANG to list
     -g, --glossary NAME              Glossary name
         --glossary-id IDS            Glossary IDs (max 5)
     -F, --formality OPT              Formality (default more less)
@@ -401,10 +401,14 @@ operations on a duplicate name, use the existing ID mode instead:</p>
     <use href="#octicon-link"/>
   </svg>
 </a>Information</h3>
-<p>To display a list of available source languages:</p>
+<p>To display a list of available source languages for text translation:</p>
 <pre><code class="language-sh">deepl -f</code></pre>
-<p>To display a list of available target languages:</p>
+<p>To display a list of available source languages for document translation:</p>
+<pre><code class="language-sh">deepl doc -f</code></pre>
+<p>To display a list of available target languages for text translation:</p>
 <pre><code class="language-sh">deepl -t</code></pre>
+<p>To display a list of available target languages for document translation:</p>
+<pre><code class="language-sh">deepl doc -t</code></pre>
 <p>To output usage information:</p>
 <pre><code class="language-sh">deepl -u
 
