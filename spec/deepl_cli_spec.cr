@@ -159,6 +159,49 @@ describe DeepL do
     dictionary["target_lang"].as_s.should eq("de")
   end
 
+  it "separates glossary entries in output files by name and ID" do
+    entries = ["one\teins", "", "two\tzwei\n", "three\tdrei", "\nfour\tvier"]
+    glossaries = entries.map_with_index do |_, index|
+      {
+        glossary_id:   "glossary-#{index}",
+        name:          "Glossary #{index}",
+        dictionaries:  [{source_lang: "en", target_lang: "de"}],
+        creation_time: "2026-09-23T00:00:00Z",
+      }
+    end
+
+    {false, true}.each do |by_id|
+      responses = [] of ScriptedServer::Response
+      glossaries.each_with_index do |glossary, index|
+        metadata = by_id ? glossary.to_json : {glossaries: glossaries}.to_json
+        dictionaries = {dictionaries: [{source_lang: "en", target_lang: "de", entries: entries[index]}]}.to_json
+        responses << ScriptedServer::Response.new(200, metadata, {"Content-Type" => "application/json"})
+        responses << ScriptedServer::Response.new(200, dictionaries, {"Content-Type" => "application/json"})
+      end
+
+      server = ScriptedServer.new(responses)
+      output = File.tempfile("deepl-cli-glossary", ".tsv")
+      output.close
+      stdout = IO::Memory.new
+      stderr = IO::Memory.new
+      args = ["run", "src/cli.cr", "--", "glossary", "view"]
+      args << "--id" if by_id
+      args.concat(["--from", "EN", "--to", "DE", "--output", output.path])
+      args.concat(glossaries.map { |glossary| by_id ? glossary[:glossary_id] : glossary[:name] })
+
+      begin
+        status = Process.run("crystal", args, env: cli_test_env(server), output: stdout, error: stderr)
+
+        status.success?.should be_true
+        stdout.to_s.should eq("")
+        File.read(output.path).should eq("one\teins\ntwo\tzwei\nthree\tdrei\nfour\tvier")
+      ensure
+        server.close
+        File.delete?(output.path)
+      end
+    end
+  end
+
   it "uses v3 language discovery for source and target lists" do
     languages = <<-JSON
       [

@@ -610,6 +610,7 @@ module DeepL
       glossary_names = argv_or_select_name_from_glossary_list
       translator = DeepL::Translator.new
       output_file = option.output_file
+      needs_separator = false
       File.delete?(output_file) if output_file
       glossary_names.each do |glossary_name|
         info = translator.find_multilingual_glossary_by_name(glossary_name)
@@ -617,7 +618,7 @@ module DeepL
         dict = translator.get_multilingual_glossary_entries(info.glossary_id, src, tgt)
         entries_text = dict.entries.to_s
         if output_file
-          File.write(output_file, entries_text, mode: "a")
+          needs_separator = append_glossary_entries(output_file, entries_text, needs_separator)
           STDERR.puts "[deepl-cli] Glossary entries of #{glossary_name} are written to #{output_file}"
         else
           puts entries_text
@@ -629,6 +630,7 @@ module DeepL
       glossary_ids = argv_or_select_id_from_glossary_list_long
       translator = DeepL::Translator.new
       output_file = option.output_file
+      needs_separator = false
       File.delete?(output_file) if output_file
       glossary_ids.each do |glossary_id|
         info = translator.get_multilingual_glossary(glossary_id)
@@ -636,12 +638,18 @@ module DeepL
         dict = translator.get_multilingual_glossary_entries(glossary_id, src, tgt)
         entries_text = dict.entries.to_s
         if output_file
-          File.write(output_file, entries_text, mode: "a")
+          needs_separator = append_glossary_entries(output_file, entries_text, needs_separator)
           STDERR.puts "[deepl-cli] Glossary entries of #{glossary_id} are written to #{output_file}"
         else
           puts entries_text
         end
       end
+    end
+
+    private def append_glossary_entries(output_file : Path, entries : String, needs_separator : Bool) : Bool
+      separator = needs_separator && !entries.empty? && !entries.starts_with?('\n') ? "\n" : ""
+      File.write(output_file, separator + entries, mode: "a")
+      entries.empty? ? needs_separator : !entries.ends_with?('\n')
     end
 
     def print_glossary_list
