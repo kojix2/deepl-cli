@@ -242,6 +242,44 @@ describe DeepL do
     end
   end
 
+  it "rejects invalid document polling intervals before upload" do
+    {"0", "NaN"}.each do |interval|
+      server = ScriptedServer.new([
+        ScriptedServer::Response.new(
+          200,
+          %({"document_id":"mock-document-id","document_key":"mock-document-key"}),
+          {"Content-Type" => "application/json"},
+        ),
+      ])
+      input = File.tempfile("deepl-cli-spec", ".txt")
+      input.puts "hello"
+      input.close
+      handle_path = Path["#{input.path}.handle"]
+      stdout = IO::Memory.new
+      stderr = IO::Memory.new
+
+      begin
+        status = Process.run(
+          "crystal",
+          ["run", "src/cli.cr", "--", "doc", "--interval", interval, "--handle", handle_path.to_s, input.path],
+          env: cli_test_env(server),
+          output: stdout,
+          error: stderr,
+        )
+
+        status.exit_code.should eq(1)
+        stdout.to_s.should eq("")
+        stderr.to_s.should contain("Document polling interval must be positive.")
+        server.requests.should be_empty
+        File.exists?(handle_path).should be_false
+      ensure
+        server.close
+        File.delete?(input.path)
+        File.delete?(handle_path)
+      end
+    end
+  end
+
   it "prints glossary command help to stderr when the subcommand is missing" do
     stdout = IO::Memory.new
     stderr = IO::Memory.new

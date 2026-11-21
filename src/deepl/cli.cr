@@ -274,7 +274,7 @@ module DeepL
     end
 
     private def validate_document_polling_options : Nil
-      raise ArgumentError.new("Document polling interval must not be negative.") if option.interval < 0
+      raise ArgumentError.new("Document polling interval must be positive.") unless option.interval > 0
     end
 
     def upload_document_to_translate
