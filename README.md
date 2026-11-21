@@ -371,6 +371,10 @@ To display the contents of the glossary:
 deepl glossary view mydict
 ```
 
+`--from` and `--to` independently filter the glossary's dictionaries. The default
+translation target is not used to select a dictionary. A single matching pair is
+selected automatically; multiple matches require an interactive selection.
+
 With `--output FILE`, an existing file is replaced only after all requested
 glossary entries have been retrieved successfully.
 

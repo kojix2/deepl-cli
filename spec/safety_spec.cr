@@ -2,6 +2,12 @@ require "./spec_helper"
 require "./support/scripted_server"
 require "file_utils"
 
+private class GlossaryPairResolver < DeepL::CLI
+  def resolve(info : DeepL::MultilingualGlossaryInfo)
+    resolve_or_select_language_pair(info)
+  end
+end
+
 private class DownloadedDocumentTranslator < DeepL::Translator
   def translate_document_download(handle : DeepL::DocumentHandle, output_file)
     File.write(output_file, "received translation")
@@ -44,6 +50,29 @@ describe "CLI safety" do
     ensure
       FileUtils.rm_r(dir)
     end
+  end
+
+  it "uses an explicit source without the default target language" do
+    cli = GlossaryPairResolver.new
+    cli.option.source_lang = "DE"
+    cli.option.target_lang = "EN"
+    cli.resolve(safety_glossary).should eq({"de", "fr"})
+  end
+
+  it "filters both explicit languages against existing dictionaries" do
+    cli = GlossaryPairResolver.new
+    cli.option.source_lang = "EN"
+    cli.option.target_lang = "JA"
+    cli.option.target_lang_explicit = true
+    cli.resolve(safety_glossary).should eq({"en", "ja"})
+    cli.option.target_lang = "DE"
+    expect_raises(ArgumentError, /No glossary dictionary/) { cli.resolve(safety_glossary) }
+  end
+
+  it "refuses an ambiguous filtered pair in a non-interactive session" do
+    cli = GlossaryPairResolver.new
+    cli.option.source_lang = "EN"
+    expect_raises(Exception, "Selection cancelled") { cli.resolve(safety_glossary) }
   end
 
   it "requires --yes for non-interactive deletion by either name or ID" do

@@ -327,11 +327,11 @@ module DeepL
             opt.action = Action::OutputGlossaryEntriesById
           end
 
-          on("-f", "--from LANG", "Source language") do |from|
+          on("-f", "--from LANG", "Filter by source language") do |from|
             opt.source_lang = from.upcase
           end
 
-          on("-t", "--to LANG", "Target language [#{opt.target_lang}]") do |to_|
+          on("-t", "--to LANG", "Filter by target language") do |to_|
             opt.target_lang = to_.upcase
             opt.target_lang_explicit = true
           end

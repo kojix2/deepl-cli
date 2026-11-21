@@ -850,25 +850,27 @@ module DeepL
 
     # Resolve language pair from options or interactively select from glossary dictionaries
     private def resolve_or_select_language_pair(glossary_info)
-      src = option.source_lang
-      tgt = option.target_lang
-      if src && tgt
-        return {normalize_glossary_language(src), normalize_glossary_language(tgt)}
-      end
-
+      src = normalize_glossary_language(option.source_lang)
+      tgt = option.target_lang_explicit? ? normalize_glossary_language(option.target_lang) : nil
       dictionaries = glossary_info.dictionaries
-      if src.nil? && option.target_lang_explicit?
-        normalized_target = normalize_glossary_language(tgt)
+      if src
         dictionaries = dictionaries.select do |dictionary|
-          normalize_glossary_language(dictionary.target_lang) == normalized_target
+          normalize_glossary_language(dictionary.source_lang) == src
         end
-        if dictionaries.empty?
-          raise ArgumentError.new("No glossary dictionary found for target language #{tgt}.")
+      end
+      if tgt
+        dictionaries = dictionaries.select do |dictionary|
+          normalize_glossary_language(dictionary.target_lang) == tgt
         end
+      end
+      if dictionaries.empty?
+        raise ArgumentError.new("No glossary dictionary found for the specified languages (#{src || "any"} -> #{tgt || "any"}).")
       end
 
       prompt = Term::Prompt.new
-      pairs = dictionaries.map { |dictionary| "#{dictionary.source_lang} -> #{dictionary.target_lang}" }
+      pairs = dictionaries.map do |dictionary|
+        "#{normalize_glossary_language(dictionary.source_lang)} -> #{normalize_glossary_language(dictionary.target_lang)}"
+      end
       selected = prompt.select("Select language pair", pairs) || raise "Selection cancelled"
       parts = selected.split(" -> ")
       {parts[0], parts[1]}
