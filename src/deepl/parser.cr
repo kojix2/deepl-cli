@@ -7,6 +7,16 @@ require "./cli/version"
 
 module DeepL
   class Parser < OptionParser
+    # OptionParser restores the root command state after parsing, even when
+    # an exception is raised, so subcommand help must be captured on raise.
+    class ParseError < Exception
+      getter help_message : String?
+
+      def initialize(message : String, @help_message : String? = nil)
+        super(message)
+      end
+    end
+
     getter opt : Options
 
     property help_message : String
@@ -36,8 +46,7 @@ module DeepL
         on("-p", "--paste", "Input text from clipboard") do
           text = EasyClip.paste
           if text.empty?
-            STDERR.puts "[deepl-cli] ERROR: Clipboard is empty."
-            exit(1)
+            raise ParseError.new("Clipboard is empty.")
           end
           STDERR.puts "[deepl-cli] Input text from clipboard: \n#{text}\n\n"
           opt.input_text = text
@@ -212,9 +221,7 @@ module DeepL
           if interval = sec.to_f32?
             opt.interval = interval
           else
-            STDERR.puts "[deepl-cli] ERROR: Invalid --interval value: #{sec.inspect}."
-            STDERR.puts self
-            exit(1)
+            raise ParseError.new("Invalid --interval value: #{sec.inspect}.", to_s)
           end
         end
 
@@ -462,15 +469,11 @@ module DeepL
       _on_help_
 
       invalid_option do |flag|
-        STDERR.puts "[deepl-cli] ERROR: #{flag} is not a valid option."
-        STDERR.puts self
-        exit(1)
+        raise ParseError.new("#{flag} is not a valid option.", to_s)
       end
 
       missing_option do |flag|
-        STDERR.puts "[deepl-cli] ERROR: #{flag} option expects an argument."
-        STDERR.puts self
-        exit(1)
+        raise ParseError.new("#{flag} option expects an argument.", to_s)
       end
     end
 

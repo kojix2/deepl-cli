@@ -9,6 +9,14 @@ describe DeepL::Parser do
     parser.help_message.should contain("Usage: deepl text [options] [file ...]")
   end
 
+  it "raises parse errors with the active subcommand help" do
+    ex = expect_raises(DeepL::Parser::ParseError, "Invalid --interval value: \"abc\".") do
+      DeepL::Parser.new.parse(["doc", "--interval", "abc"])
+    end
+
+    ex.help_message.not_nil!.should contain("Usage: deepl doc [options] <file>")
+  end
+
   it "parses the correct command options" do
     option = DeepL::Parser.new.parse(["correct", "--input", "helo", "--from", "EN"])
 

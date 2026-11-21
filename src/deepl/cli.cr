@@ -18,8 +18,14 @@ module DeepL
     getter option : Options
 
     def initialize
-      @parser = DeepL::Parser.new
-      @option = parser.parse(ARGV)
+      @parser = parser = DeepL::Parser.new
+      @option = begin
+        parser.parse(ARGV)
+      rescue ex : Parser::ParseError
+        STDERR.puts "[deepl-cli] ERROR: #{ex.message}"
+        ex.help_message.try { |help| STDERR.puts help }
+        exit(1)
+      end
     end
 
     def run
