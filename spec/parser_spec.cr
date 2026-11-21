@@ -39,6 +39,27 @@ describe DeepL::Parser do
     option.glossary_id.should eq("glossary-123")
   end
 
+  it "keeps explicit document languages for translation and upload" do
+    [
+      {["doc", "-f", "en", "-t", "de", "file.pdf"], DeepL::Action::TranslateDocument},
+      {["doc", "--upload-only", "-f", "en", "-t", "de", "file.pdf"], DeepL::Action::TranslateDocumentUpload},
+      {["doc", "-f", "en", "-t", "de", "--upload-only", "file.pdf"], DeepL::Action::TranslateDocumentUpload},
+    ].each do |args, action|
+      option = DeepL::Parser.new.parse(args)
+
+      option.action.should eq(action)
+      option.source_lang.should eq("EN")
+      option.target_lang.should eq("DE")
+      args.should eq(["file.pdf"])
+    end
+  end
+
+  it "keeps source language listing for other commands" do
+    [["-f"], ["text", "-f"], ["rephrase", "-f"], ["correct", "-f"]].each do |args|
+      DeepL::Parser.new.parse(args).action.should eq(DeepL::Action::ListFromLanguages)
+    end
+  end
+
   it "parses current text translation options" do
     option = DeepL::Parser.new.parse([
       "text",

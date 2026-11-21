@@ -61,7 +61,7 @@ Options:
 
 ```txt
     -i, --input TEXT                 Input text
-    -f, --from [LANG]                Source language [AUTO]
+    -f, --from [LANG]                Source language [AUTO]; omit LANG to list
     -t, --to [LANG]                  Target language [EN]
     -p, --paste                      Input text from clipboard
     -g, --glossary NAME              Glossary name
@@ -85,8 +85,8 @@ deepl doc [options] <file>
 Options for document translation:
 
 ```txt
-    -f, --from [LANG]                Source language [AUTO]
-    -t, --to [LANG]                  Target language [EN]
+    -f, --from [LANG]                Source language [AUTO]; omit LANG to list
+    -t, --to [LANG]                  Target language [EN]; omit LANG to list
     -g, --glossary NAME              Glossary name
         --glossary-id IDS            Glossary IDs (max 5)
     -F, --formality OPT              Formality (default more less)
@@ -379,16 +379,28 @@ bin/deepl rephrase -i "Thanks" -t friendly
 
 ### Information
 
-To display a list of available source languages:
+To display a list of available source languages for text translation:
 
 ```sh
 deepl -f
 ```
 
-To display a list of available target languages:
+To display a list of available source languages for document translation:
+
+```sh
+deepl doc -f
+```
+
+To display a list of available target languages for text translation:
 
 ```sh
 deepl -t
+```
+
+To display a list of available target languages for document translation:
+
+```sh
+deepl doc -t
 ```
 
 To output usage information:

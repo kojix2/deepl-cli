@@ -66,6 +66,10 @@ module DeepL
         print_source_languages
       when Action::ListTargetLanguages
         print_target_languages
+      when Action::ListDocumentFromLanguages
+        print_source_languages("translate_document")
+      when Action::ListDocumentTargetLanguages
+        print_target_languages("translate_document")
       when Action::RetrieveUsage
         print_usage
       when Action::Version
@@ -704,15 +708,15 @@ module DeepL
       nil
     end
 
-    def print_source_languages
+    def print_source_languages(resource : String = "translate_text")
       translator = DeepL::Translator.new
-      languages = translator.get_languages("translate_text").select(&.usable_as_source)
+      languages = translator.get_languages(resource).select(&.usable_as_source)
       print_langinfo(languages)
     end
 
-    def print_target_languages
+    def print_target_languages(resource : String = "translate_text")
       translator = DeepL::Translator.new
-      languages = translator.get_languages("translate_text").select(&.usable_as_target)
+      languages = translator.get_languages(resource).select(&.usable_as_target)
       default_target_language = Config.default_target_lang
       print_langinfo(languages, default: default_target_language)
     end

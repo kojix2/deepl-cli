@@ -18,6 +18,8 @@ module DeepL
     ListGlossariesLong
     ListFromLanguages
     ListTargetLanguages
+    ListDocumentFromLanguages
+    ListDocumentTargetLanguages
     RetrieveUsage
     Version
     Help

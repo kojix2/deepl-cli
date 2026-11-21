@@ -54,10 +54,10 @@ module DeepL
       {% end %}
     end
 
-    macro _on_source_lang_
-      on("-f", "--from [LANG]", "Source language [AUTO]") do |from|
+    macro _on_source_lang_(list_action = Action::ListFromLanguages)
+      on("-f", "--from [LANG]", "Source language [AUTO]; omit LANG to list") do |from|
         if from.empty?
-          opt.action = Action::ListFromLanguages
+          opt.action = {{ list_action }}
         else
           opt.source_lang = from.upcase
         end
@@ -191,10 +191,14 @@ module DeepL
 
         separator
 
-        _on_source_lang_
+        _on_source_lang_(Action::ListDocumentFromLanguages)
 
-        on("-t", "--to [LANG]", "Target language [#{opt.target_lang}]") do |to_|
-          opt.target_lang = to_.upcase
+        on("-t", "--to [LANG]", "Target language [#{opt.target_lang}]; omit LANG to list") do |to_|
+          if to_.empty?
+            opt.action = Action::ListDocumentTargetLanguages
+          else
+            opt.target_lang = to_.upcase
+          end
         end
 
         on("-g", "--glossary NAME", "Glossary name") do |glossary_name|
@@ -234,7 +238,9 @@ module DeepL
         end
 
         on("-U", "--upload-only", "Upload file only") do
-          opt.action = Action::TranslateDocumentUpload
+          unless opt.action == Action::ListDocumentFromLanguages || opt.action == Action::ListDocumentTargetLanguages
+            opt.action = Action::TranslateDocumentUpload
+          end
         end
 
         _on_debug_

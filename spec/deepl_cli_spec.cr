@@ -303,6 +303,69 @@ describe DeepL do
     ])
   end
 
+  it "lists document source and target languages when their options have no values" do
+    languages = <<-JSON
+      [
+        {"lang":"en","name":"English","usable_as_source":true,"usable_as_target":false,"status":"stable","features":{}},
+        {"lang":"ja","name":"Japanese","usable_as_source":true,"usable_as_target":true,"status":"stable","features":{}},
+        {"lang":"de","name":"German","usable_as_source":true,"usable_as_target":true,"status":"stable","features":{"formality":{"status":"stable"}}},
+        {"lang":"fr","name":"French","usable_as_source":false,"usable_as_target":true,"status":"stable","features":{}}
+      ]
+      JSON
+    commands = [
+      {["doc", "-f"], true},
+      {["doc", "--from"], true},
+      {["doc", "--from="], true},
+      {["doc", "input.pdf", "-f"], true},
+      {["doc", "-f", "--upload-only"], true},
+      {["doc", "--upload-only", "-f"], true},
+      {["doc", "-t"], false},
+      {["doc", "--to"], false},
+      {["doc", "--to="], false},
+      {["doc", "input.pdf", "-t"], false},
+      {["doc", "-t", "--upload-only"], false},
+      {["doc", "--upload-only", "-t"], false},
+    ]
+    server = ScriptedServer.new(Array.new(commands.size) do
+      ScriptedServer::Response.new(200, languages, {"Content-Type" => "application/json"})
+    end)
+
+    begin
+      commands.each do |command, source|
+        stdout = IO::Memory.new
+        stderr = IO::Memory.new
+        status = Process.run(
+          "crystal",
+          ["run", "src/cli.cr", "--"] + command,
+          env: cli_test_env(server).merge({"DEEPL_TARGET_LANG" => "JA"}),
+          output: stdout,
+          error: stderr,
+        )
+
+        status.success?.should be_true
+        stderr.to_s.should eq("")
+        server.requests.last.resource.should eq("/v3/languages?resource=translate_document")
+        stdout.to_s.should contain("JA     Japanese")
+        stdout.to_s.should contain("DE     German")
+        stdout.to_s.should contain("supports formality")
+        if source
+          stdout.to_s.should contain("EN     English")
+          stdout.to_s.should_not contain("French")
+        else
+          stdout.to_s.should contain("+ JA     Japanese")
+          stdout.to_s.should contain("FR     French")
+          stdout.to_s.should_not contain("English")
+        end
+      end
+
+      server.requests.map { |request| {request.method, request.resource} }.should eq(
+        Array.new(commands.size) { {"GET", "/v3/languages?resource=translate_document"} }
+      )
+    ensure
+      server.close
+    end
+  end
+
   it "prints document command help to stderr when the input file is missing" do
     stdout = IO::Memory.new
     stderr = IO::Memory.new
@@ -551,7 +614,7 @@ describe DeepL do
           "--watermark",
           input_path.to_s,
         ],
-        env: cli_test_env(server),
+        env: cli_test_env(server).merge({"DEEPL_TARGET_LANG" => "JA"}),
         output: stdout,
         error: stderr
       )
@@ -570,6 +633,7 @@ describe DeepL do
         {"POST", "/v2/document"},
       ])
       request_body = server.requests.first.body
+      request_body.should contain("name=\"target_lang\"\r\n\r\nJA\r\n")
       request_body.should contain("glossary_ids")
       request_body.should contain("glossary-1,glossary-2")
       request_body.should contain("enable_watermark")
