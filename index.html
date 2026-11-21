@@ -331,11 +331,13 @@ output by default.</p>
 <pre><code class="language-sh">deepl -g myglossary -f ru</code></pre>
 <p>When a glossary name is not unique, use its explicit ID instead:</p>
 <pre><code class="language-sh">deepl --glossary-id 01234567-89ab-cdef-0123-456789abcdef -f ru</code></pre>
-<p>Glossary IDs require an explicit source language and cannot be combined with
-<code>--glossary</code>. Up to five IDs can be supplied together, either comma-separated
-or by repeating <code>--glossary-id</code>:</p>
+<p>Glossary IDs cannot be combined with <code>--glossary</code>. Up to five IDs can be
+supplied together, either comma-separated or by repeating <code>--glossary-id</code>:</p>
 <pre><code class="language-sh">deepl --from EN --to DE --glossary-id id-1,id-2 --input &quot;Hello&quot;
 # Equivalent: --glossary-id id-1 --glossary-id id-2</code></pre>
+<p>DeepL requires a source language when a glossary is used. If <code>--from</code> is
+omitted, the CLI uses the glossary's source language for the target language.
+When that is ambiguous, specify <code>--from</code>.</p>
 <p>To refer to the original text, you can use <code>tee dev/stderr</code>:</p>
 <pre><code class="language-sh">fortune | tee /dev/stderr | deepl</code></pre>
 <h3><a id="translate-documents-1" class="anchor" href="#translate-documents-1">
