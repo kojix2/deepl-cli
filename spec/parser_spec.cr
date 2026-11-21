@@ -58,8 +58,8 @@ describe DeepL::Parser do
     [
       {["-f"], DeepL::Action::ListFromLanguages},
       {["text", "-f"], DeepL::Action::ListFromLanguages},
-      {["rephrase", "-f"], DeepL::Action::ListWriteLanguages},
-      {["correct", "-f"], DeepL::Action::ListWriteLanguages},
+      {["rephrase", "-f"], DeepL::Action::ListWriteTargetLanguages},
+      {["correct", "-f"], DeepL::Action::ListWriteTargetLanguages},
     ].each do |args, action|
       DeepL::Parser.new.parse(args).action.should eq(action)
     end

@@ -70,7 +70,7 @@ module DeepL
         print_source_languages("translate_document")
       when Action::ListDocumentTargetLanguages
         print_target_languages("translate_document")
-      when Action::ListWriteLanguages
+      when Action::ListWriteTargetLanguages
         print_target_languages("write", default: nil)
       when Action::RetrieveUsage
         print_usage

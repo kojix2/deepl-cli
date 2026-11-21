@@ -361,7 +361,7 @@ module DeepL
         end
 
         # Source_lang is correct here. Not target_lang.
-        _on_source_lang_(Action::ListWriteLanguages)
+        _on_source_lang_(Action::ListWriteTargetLanguages)
 
         on("-D", "--detect-language", "Output detected source language") do
           opt.detect_source_language = true
@@ -390,7 +390,7 @@ module DeepL
         end
 
         # The Write API uses target_lang for the language of the input text.
-        _on_source_lang_(Action::ListWriteLanguages)
+        _on_source_lang_(Action::ListWriteTargetLanguages)
 
         on("-D", "--detect-language", "Output detected source language") do
           opt.detect_source_language = true
