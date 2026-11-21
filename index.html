@@ -403,6 +403,8 @@ glossary entries have been retrieved successfully.</p>
 <p>Glossary names must identify exactly one glossary. For delete, edit, or view
 operations on a duplicate name, use the existing ID mode instead:</p>
 <pre><code class="language-sh">deepl glossary delete --id 01234567-89ab-cdef-0123-456789abcdef</code></pre>
+<p>When run in a terminal, <code>glossary delete</code> asks for confirmation before deleting
+each glossary. Use <code>--yes</code> to skip the prompt.</p>
 <h3><a id="rephrase" class="anchor" href="#rephrase">
   <svg class="octicon-link" aria-hidden="true">
     <use href="#octicon-link"/>
