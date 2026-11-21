@@ -298,6 +298,7 @@ module DeepL
 
     private def validate_document_polling_options : Nil
       raise ArgumentError.new("Document polling interval must be positive.") unless option.interval > 0
+      raise ArgumentError.new("Document polling interval must be finite.") unless option.interval.finite?
     end
 
     def upload_document_to_translate
