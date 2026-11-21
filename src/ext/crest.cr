@@ -76,9 +76,19 @@ module Crest
         uri = URI.parse("http://#{proxy}")
       end
 
-      return uri unless blank?(uri.host)
+      raise ArgumentError.new("Invalid #{proxy_env} URL") if blank?(uri.host)
 
-      raise ArgumentError.new("Invalid #{proxy_env} URL")
+      # The proxy connection is always plain TCP, so https:// proxy URLs are
+      # not honored. Refuse to send credentials the user expects to be
+      # protected by TLS.
+      if uri.scheme.try(&.downcase) == "https" && (uri.user || uri.password)
+        raise ArgumentError.new(
+          "#{proxy_env}: https:// proxy URLs with credentials are not supported " \
+          "(credentials would be sent unencrypted). Use http:// instead."
+        )
+      end
+
+      uri
     rescue URI::Error
       raise ArgumentError.new("Invalid #{proxy_env} URL")
     end

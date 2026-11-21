@@ -33,6 +33,22 @@ describe Crest::Request do
     end
   end
 
+  it "rejects credentials in an https proxy URL" do
+    ENV["https_proxy"] = "https://user:pass@localhost:3001"
+
+    expect_raises(ArgumentError, "credentials would be sent unencrypted") do
+      Crest::Request.new(:get, "https://example.com")
+    end
+  end
+
+  it "accepts https proxy URLs without credentials and http proxy URLs with credentials" do
+    ENV["https_proxy"] = "https://localhost:3001"
+    Crest::Request.new(:get, "https://example.com").proxy.should_not be_nil
+
+    ENV["https_proxy"] = "http://user:pass@localhost:3001"
+    Crest::Request.new(:get, "https://example.com").proxy.should_not be_nil
+  end
+
   it "accepts a schemeless proxy host and port" do
     ENV["http_proxy"] = "localhost:3001"
 

@@ -27,8 +27,10 @@ brew install kojix2/brew/deepl-cli
 
 ```sh
 export HTTP_PROXY=http://[IP]:[port]
-export HTTPS_PROXY=https://[IP]:[port]
+export HTTPS_PROXY=http://[IP]:[port]
 ```
+
+The connection to the proxy itself is not encrypted, so `https://` proxy URLs with credentials are rejected.
 
 ## Prerequisites
 
