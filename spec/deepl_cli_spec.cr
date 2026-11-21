@@ -21,6 +21,16 @@ private class TranslationOptionValidator < DeepL::CLI
   end
 end
 
+private class DocumentFileOperations < DeepL::CLI
+  def save_handle_file(handle : DeepL::DocumentHandle, path : Path) : Nil
+    save_document_handle_file(handle, path)
+  end
+
+  def link_output_file(temporary_path : Path, output_path : Path) : Path
+    link_document_output_file(temporary_path, output_path)
+  end
+end
+
 describe DeepL do
   it "has a version number" do
     DeepL::CLI::VERSION.should be_a(String)
@@ -776,6 +786,134 @@ describe DeepL do
         File.delete?(existing_file)
         Dir.delete(handle_path)
       end
+    end
+  end
+
+  it "preserves an existing document handle and refuses to upload" do
+    {false, true}.each do |upload_only|
+      {false, true}.each do |explicit_handle|
+        server = ScriptedServer.new([] of ScriptedServer::Response)
+        input = File.tempfile("deepl-cli-spec", ".txt")
+        input.puts "hello"
+        input.close
+        handle_path = explicit_handle ? Path["#{input.path}.handle"] : Path["#{input.path}.deepl-handle.json"]
+        File.write(handle_path, "original handle")
+        stdout = IO::Memory.new
+        stderr = IO::Memory.new
+        args = ["run", "src/cli.cr", "--", "doc"]
+        args << "--upload-only" if upload_only
+        args.concat(["--handle", handle_path.to_s]) if explicit_handle
+        args << input.path
+
+        begin
+          status = Process.run("crystal", args, env: cli_test_env(server), output: stdout, error: stderr)
+
+          status.exit_code.should eq(1)
+          stdout.to_s.should eq("")
+          stderr.to_s.should contain("Document handle file already exists.")
+          stderr.to_s.should contain("The document was not uploaded.")
+          server.requests.should be_empty
+          File.read(handle_path).should eq("original handle")
+        ensure
+          server.close
+          File.delete?(input.path)
+          File.delete?(handle_path)
+        end
+      end
+    end
+  end
+
+  it "preserves a completed document handle for recovery if the destination appears after upload" do
+    dir = File.tempname("deepl-cli-handle-spec", nil)
+    Dir.mkdir(dir, 0o700)
+    handle_path = Path[dir] / "handle.json"
+    begin
+      File.write(handle_path, "existing file")
+      operations = DocumentFileOperations.new
+
+      error = expect_raises(Exception) do
+        operations.save_handle_file(DeepL::DocumentHandle.new("document-id", "secret-key"), handle_path)
+      end
+
+      error.message.to_s.should contain("document was uploaded")
+      error.message.to_s.should contain("use --handle")
+      File.read(handle_path).should eq("existing file")
+
+      recovery_paths = Dir.children(dir).select(&.starts_with?("deepl-handle"))
+      recovery_paths.size.should eq(1)
+      recovery_path = Path[dir] / recovery_paths.first
+      recovered = JSON.parse(File.read(recovery_path))
+      recovered["document_id"].as_s.should eq("document-id")
+      recovered["document_key"].as_s.should eq("secret-key")
+      {% if flag?(:windows) %}
+        File.info(recovery_path).permissions.should eq(File::Permissions.new(0o666))
+      {% else %}
+        File.info(recovery_path).permissions.should eq(File::Permissions.new(0o600))
+      {% end %}
+    ensure
+      Dir.children(dir).each { |path| File.delete?(Path[dir] / path) }
+      Dir.delete(dir)
+    end
+  end
+
+  it "writes a recovery handle outside an unavailable destination directory" do
+    dir = File.tempname("deepl-cli-handle-spec", nil)
+    Dir.mkdir(dir, 0o700)
+    handle_path = Path[dir] / "missing" / "handle.json"
+    recovery_path : Path? = nil
+    begin
+      error = expect_raises(Exception) do
+        DocumentFileOperations.new.save_handle_file(
+          DeepL::DocumentHandle.new("document-id", "secret-key"),
+          handle_path
+        )
+      end
+
+      error.message.to_s.should contain("document was uploaded")
+      error.message.to_s.should contain("use --handle")
+      recovery_path = Path[error.message.to_s.match(/preserved at (.+); use --handle/).not_nil![1]]
+      recovered = JSON.parse(File.read(recovery_path))
+      recovered["document_id"].as_s.should eq("document-id")
+      recovered["document_key"].as_s.should eq("secret-key")
+      {% if flag?(:windows) %}
+        File.info(recovery_path).permissions.should eq(File::Permissions.new(0o666))
+      {% else %}
+        File.info(recovery_path).permissions.should eq(File::Permissions.new(0o600))
+      {% end %}
+    ensure
+      File.delete?(recovery_path) if recovery_path
+      Dir.delete(dir)
+    end
+  end
+
+  it "chooses another automatic document output path instead of overwriting" do
+    dir = File.tempname("deepl-cli-output-spec", nil)
+    Dir.mkdir(dir, 0o700)
+    output_path = Path[dir] / "input_JA.txt"
+    temporary_path = Path[dir] / "download.tmp"
+    result = output_path
+    second_result : Path? = nil
+    begin
+      File.write(output_path, "original output")
+      File.write(temporary_path, "translated output")
+
+      result = DocumentFileOperations.new.link_output_file(temporary_path, output_path)
+
+      result.should_not eq(output_path)
+      File.read(output_path).should eq("original output")
+      File.read(result).should eq("translated output")
+      File.read(temporary_path).should eq("translated output")
+
+      second_result = DocumentFileOperations.new.link_output_file(temporary_path, output_path)
+      second_result.should_not eq(result)
+      File.read(output_path).should eq("original output")
+      File.read(result).should eq("translated output")
+    ensure
+      File.delete?(output_path)
+      File.delete?(temporary_path)
+      File.delete?(result) unless result == output_path
+      File.delete?(second_result) if second_result
+      Dir.delete(dir)
     end
   end
 

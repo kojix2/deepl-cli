@@ -293,6 +293,11 @@ Document translation temporarily writes a handle file such as `input.pdf.deepl-h
 and removes it after a successful download, unless `--handle FILE` is specified.
 The handle file contains the DeepL document key. Treat it as a secret.
 It is written with owner-only permissions on POSIX systems (mode `0600`).
+Existing handle files are never overwritten; choose another path with `--handle FILE`.
+If a handle cannot be installed after upload, the CLI preserves it in a recovery file and prints its path.
+
+When the automatic translated-document filename already exists, the CLI chooses a timestamped unique name
+instead of replacing the existing file.
 
 To upload a document and check or download it later:
 

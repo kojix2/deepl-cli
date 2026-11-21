@@ -279,9 +279,14 @@ module DeepL
           STDERR.puts avoid_spinner("[deepl-cli] Error Message: #{document_status.error_message}") if document_status.error_message
         end
 
-        output_file = option.output_file || generate_document_output_file(option.input_path, option.target_lang, option.output_format)
-        STDERR.puts avoid_spinner("[deepl-cli] Downloading translated document to #{output_file}")
-        translator.translate_document_download(document_handle, output_file)
+        if output_file = option.output_file
+          STDERR.puts avoid_spinner("[deepl-cli] Downloading translated document to #{output_file}")
+          translator.translate_document_download(document_handle, output_file)
+        else
+          output_file = generate_document_output_file(option.input_path, option.target_lang, option.output_format)
+          STDERR.puts avoid_spinner("[deepl-cli] Downloading translated document")
+          output_file = download_document_to_unique_file(translator, document_handle, output_file)
+        end
         STDERR.puts avoid_spinner("[deepl-cli] Document saved as #{output_file}")
         delete_document_handle_file(handle_file) if remove_handle_file_after_download
       end
@@ -411,19 +416,48 @@ module DeepL
     private def generate_document_output_file(source_path : Path, target_lang : String, output_format : String?) : Path
       output_base_name = "#{source_path.stem}_#{target_lang}"
       output_extension = output_format ? ".#{output_format.downcase}" : source_path.extension
-      ensure_unique_output_file(source_path.parent / (output_base_name + output_extension))
+      source_path.parent / (output_base_name + output_extension)
     end
 
-    private def ensure_unique_output_file(output_file : Path) : Path
-      return output_file unless File.exists?(output_file)
+    private def download_document_to_unique_file(translator : Translator, document_handle : DocumentHandle, output_file : Path) : Path
+      temporary_file = File.tempfile("deepl-document-output", ".tmp", dir: output_file.parent.to_s)
+      temporary_path = Path[temporary_file.path]
+      temporary_file.close
 
-      output_base_name = "#{output_file.stem}_#{Time.utc.to_unix}"
-      output_file.parent / (output_base_name + output_file.extension)
+      begin
+        translator.translate_document_download(document_handle, temporary_path)
+        link_document_output_file(temporary_path, output_file)
+      ensure
+        temporary_file.close unless temporary_file.closed?
+        File.delete?(temporary_path)
+      end
+    end
+
+    private def link_document_output_file(temporary_path : Path, output_file : Path) : Path
+      timestamp = Time.utc.to_unix
+      suffix = 0
+
+      loop do
+        candidate = if suffix == 0
+                      output_file
+                    else
+                      extra_suffix = suffix == 1 ? "" : "_#{suffix - 1}"
+                      output_file.parent / "#{output_file.stem}_#{timestamp}#{extra_suffix}#{output_file.extension}"
+                    end
+
+        begin
+          File.link(temporary_path, candidate)
+          return candidate
+        rescue ex : File::AlreadyExistsError
+          suffix += 1
+        end
+      end
     end
 
     private def check_document_handle_file_writable(handle_file : Path) : Nil
-      if File.info?(handle_file, follow_symlinks: false).try(&.directory?)
-        raise ArgumentError.new("Document handle path is a directory.")
+      if info = File.info?(handle_file, follow_symlinks: false)
+        message = info.directory? ? "Document handle path is a directory." : "Document handle file already exists."
+        raise ArgumentError.new(message)
       end
 
       tmp = File.tempfile("deepl-handle", ".json", dir: handle_file.dirname)
@@ -442,12 +476,70 @@ module DeepL
     end
 
     private def save_document_handle_file(document_handle : DocumentHandle, handle_file : Path) : Nil
-      write_document_handle_file(document_handle, handle_file)
+      tmp : File? = nil
+      recoverable = false
+      begin
+        tmp = File.tempfile("deepl-handle", ".json", dir: handle_file.dirname)
+        write_document_handle_contents(tmp, document_handle)
+        tmp.close
+        recoverable = true
+        File.link(tmp.path, handle_file)
+        File.delete(tmp.path)
+      rescue ex
+        if recoverable && tmp
+          raise "Failed to save document handle: #{handle_file}\n" \
+                "The document was uploaded. Its handle is preserved at #{tmp.path}; " \
+                "use --handle #{tmp.path} to resume or download it.\n" \
+                "#{ex.class}: #{ex.message}"
+        end
+
+        tmp.try do |file|
+          file.close unless file.closed?
+          File.delete?(file.path)
+        end
+        recovery_path, recovery_error = recover_document_handle(document_handle)
+        if recovery_path
+          raise "Failed to save document handle: #{handle_file}\n" \
+                "The document was uploaded. Its handle is preserved at #{recovery_path}; " \
+                "use --handle #{recovery_path} to resume or download it.\n" \
+                "#{ex.class}: #{ex.message}"
+        end
+
+        raise "Failed to save document handle: #{handle_file}\n" \
+              "The document was uploaded, but its handle could not be persisted and may be unrecoverable.\n" \
+              "#{ex.class}: #{ex.message}\n" \
+              "Recovery file error: #{recovery_error}"
+      ensure
+        tmp.try { |file| file.close unless file.closed? }
+      end
+    end
+
+    private def write_document_handle_contents(file : File, document_handle : DocumentHandle) : Nil
+      file.chmod(0o600)
+      JSON.build(file) do |json|
+        json.object do
+          json.field "document_id", document_handle.id
+          json.field "document_key", document_handle.key
+        end
+      end
+      file.puts
+      file.flush
+    end
+
+    private def recover_document_handle(document_handle : DocumentHandle) : {Path?, String?}
+      tmp = File.tempfile("deepl-handle-recovery", ".json")
+      begin
+        write_document_handle_contents(tmp, document_handle)
+        tmp.close
+        {Path[tmp.path], nil}
+      rescue ex
+        File.delete?(tmp.path)
+        {nil, "#{ex.class}: #{ex.message}"}
+      ensure
+        tmp.close unless tmp.closed?
+      end
     rescue ex
-      raise "Failed to write document handle: #{handle_file}\n" \
-            "The document was uploaded, but the key was not saved.\n" \
-            "Use --handle FILE to choose a writable location.\n" \
-            "#{ex.class}: #{ex.message}"
+      {nil, "#{ex.class}: #{ex.message}"}
     end
 
     private def delete_document_handle_file(handle_file : Path) : Nil
@@ -457,32 +549,6 @@ module DeepL
             "The translated document was downloaded, but the key file remains.\n" \
             "Delete it manually if you no longer need it.\n" \
             "#{ex.class}: #{ex.message}"
-    end
-
-    private def write_document_handle_file(document_handle : DocumentHandle, handle_file : Path) : Nil
-      # Write to a temporary file in the same directory, then atomically rename
-      # it into place. This keeps the handle file (which holds the secret key)
-      # from ever being left truncated/partial, and avoids writing through a
-      # symlink at the destination (rename replaces the symlink itself).
-      tmp = File.tempfile("deepl-handle", ".json", dir: handle_file.dirname)
-      begin
-        tmp.chmod(0o600)
-        JSON.build(tmp) do |json|
-          json.object do
-            json.field "document_id", document_handle.id
-            json.field "document_key", document_handle.key
-          end
-        end
-        tmp.puts
-        tmp.flush
-        tmp.close
-        File.rename(tmp.path, handle_file)
-      rescue ex
-        File.delete?(tmp.path)
-        raise ex
-      ensure
-        tmp.close unless tmp.closed?
-      end
     end
 
     private def read_document_handle_file(handle_file : Path) : {String, String}
