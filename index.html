@@ -361,7 +361,11 @@ added to supported output formats:</p>
 <p>Document translation temporarily writes a handle file such as <code>input.pdf.deepl-handle.json</code>
 and removes it after a successful download, unless <code>--handle FILE</code> is specified.
 The handle file contains the DeepL document key. Treat it as a secret.
-It is written with owner-only permissions on POSIX systems (mode <code>0600</code>).</p>
+It is written with owner-only permissions on POSIX systems (mode <code>0600</code>).
+Existing handle files are never overwritten; choose another path with <code>--handle FILE</code>.
+If a handle cannot be installed after upload, the CLI preserves it in a recovery file and prints its path.</p>
+<p>When the automatic translated-document filename already exists, the CLI chooses a timestamped unique name
+instead of replacing the existing file.</p>
 <p>To upload a document and check or download it later:</p>
 <pre><code class="language-sh">deepl doc -U input.pdf
 deepl doc status --handle input.pdf.deepl-handle.json
