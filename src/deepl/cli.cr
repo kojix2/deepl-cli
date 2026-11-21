@@ -678,6 +678,7 @@ module DeepL
     end
 
     def delete_glossary_by_name
+      validate_glossary_delete_confirmation
       glossary_names = argv_or_select_name_from_glossary_list
       translator = DeepL::Translator.new
       glossary_names.each do |glossary_name|
@@ -687,11 +688,18 @@ module DeepL
     end
 
     def delete_glossary_by_id
+      validate_glossary_delete_confirmation
       glossary_ids = argv_or_select_id_from_glossary_list_long
       translator = DeepL::Translator.new
       glossary_ids.each do |glossary_id|
         info = translator.get_multilingual_glossary(glossary_id)
         delete_glossary_with_confirmation(translator, info)
+      end
+    end
+
+    private def validate_glossary_delete_confirmation : Nil
+      unless option.assume_yes? || Term::Prompt.new.interactive?
+        raise ArgumentError.new("Non-interactive glossary deletion requires --yes.")
       end
     end
 

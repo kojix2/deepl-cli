@@ -78,11 +78,15 @@ describe Term::Prompt do
     end
   end
 
-  it "confirms without asking when not interactive" do
-    output = IO::Memory.new
-    prompt = Term::Prompt.new(IO::Memory.new, output)
-
-    prompt.confirm?("Delete?").should be_true
-    output.to_s.should be_empty
+  it "declines when either input or output is not a terminal" do
+    [
+      {IO::Memory.new("yes\n"), IO::Memory.new},
+      {TTYMemory.new("yes\n"), IO::Memory.new},
+      {IO::Memory.new("yes\n"), TTYMemory.new},
+    ].each do |input, output|
+      prompt = Term::Prompt.new(input, output)
+      prompt.confirm?("Delete?").should be_false
+      output.to_s.should be_empty
+    end
   end
 end

@@ -390,7 +390,9 @@ deepl glossary delete --id 01234567-89ab-cdef-0123-456789abcdef
 ```
 
 When run in a terminal, `glossary delete` asks for confirmation before deleting
-each glossary. Use `--yes` to skip the prompt.
+each glossary. Use `--yes` to skip the prompt. In scripts, or whenever standard
+input or standard error is redirected, `--yes` is required; otherwise the command
+exits with an error without deleting anything.
 
 ### Rephrase
 

@@ -22,6 +22,12 @@ private class FailingDocumentPublishCLI < DeepL::CLI
   end
 end
 
+private def safety_glossary : DeepL::MultilingualGlossaryInfo
+  DeepL::MultilingualGlossaryInfo.from_json(
+    %({"glossary_id":"id","name":"test","creation_time":"2026-01-01T00:00:00Z","dictionaries":[{"source_lang":"DE","target_lang":"fr"},{"source_lang":"en","target_lang":"ja"},{"source_lang":"en","target_lang":"fr"}]}),
+  )
+end
+
 describe "CLI safety" do
   it "preserves a received document and reports its location when publication fails" do
     dir = File.tempname("deepl-cli-recovery")
@@ -37,6 +43,38 @@ describe "CLI safety" do
       Dir.children(dir).should eq([File.basename(error.recovery_path)])
     ensure
       FileUtils.rm_r(dir)
+    end
+  end
+
+  it "requires --yes for non-interactive deletion by either name or ID" do
+    responses = [
+      ScriptedServer::Response.new(200, safety_glossary.to_json),
+      ScriptedServer::Response.new(204),
+    ]
+    server = ScriptedServer.new(responses)
+    env = {
+      "DEEPL_AUTH_KEY"   => "test-key",
+      "DEEPL_SERVER_URL" => server.url,
+      "NO_PROXY"         => "127.0.0.1,localhost",
+      "no_proxy"         => "127.0.0.1,localhost",
+    }
+    begin
+      [["test"], ["--id", "id"]].each do |args|
+        stderr = IO::Memory.new
+        status = Process.run("crystal", ["run", "src/cli.cr", "--", "glossary", "delete"] + args,
+          env: env, input: IO::Memory.new("yes\n"), output: IO::Memory.new, error: stderr)
+        status.exit_code.should eq(1)
+        stderr.to_s.should contain("requires --yes")
+        server.requests.should be_empty
+      end
+      stderr = IO::Memory.new
+      status = Process.run("crystal", ["run", "src/cli.cr", "--", "glossary", "delete", "--id", "--yes", "id"],
+        env: env, input: IO::Memory.new, output: IO::Memory.new, error: stderr)
+      status.success?.should be_true
+      stderr.to_s.should contain("is deleted")
+      server.requests.map(&.method).should eq(["GET", "DELETE"])
+    ensure
+      server.close
     end
   end
 end

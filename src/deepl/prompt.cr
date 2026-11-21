@@ -11,9 +11,8 @@ module Term
       prompt_for_selection(label, items)
     end
 
-    # Non-interactive sessions are treated as confirmed for script compatibility.
     def confirm?(message : String) : Bool
-      return true unless interactive?
+      return false unless interactive?
 
       @output.print "#{message} [y/N] "
       input = @input.gets
@@ -22,7 +21,7 @@ module Term
       input.strip.downcase.in?("y", "yes")
     end
 
-    private def interactive? : Bool
+    def interactive? : Bool
       @input.tty? && @output.tty?
     end
 
